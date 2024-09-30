@@ -7,12 +7,12 @@ namespace Farmru.IotMonitoring.EntityFrameworkCore
     {
         public static void Configure(DbContextOptionsBuilder<IotMonitoringDbContext> builder, string connectionString)
         {
-            builder.UseSqlServer(connectionString);
+            builder.UseLazyLoadingProxies().UseSqlServer(connectionString);
         }
 
         public static void Configure(DbContextOptionsBuilder<IotMonitoringDbContext> builder, DbConnection connection)
         {
-            builder.UseSqlServer(connection);
+            builder.UseLazyLoadingProxies().UseSqlServer(connection);
         }
     }
 }
