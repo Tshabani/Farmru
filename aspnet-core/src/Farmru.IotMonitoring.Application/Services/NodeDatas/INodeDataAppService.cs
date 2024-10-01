@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Farmru.IotMonitoring.Services.NodeData
+namespace Farmru.IotMonitoring.Services.NodeDatas
 {
     public interface INodeDataAppService : IApplicationService
     {
