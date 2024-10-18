@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  await UserSettings.init();
+  await UserSettings.setBackendUrl("http://farmapi.technobrainent.co.za/");
   runApp(const MyApp());
 }
 
