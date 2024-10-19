@@ -7,11 +7,11 @@ import {
 import { AppComponentBase } from '@shared/app-component-base';
 
 @Component({
-  selector: 'sidebar-user-panel',
-  templateUrl: './sidebar-user-panel.component.html',
+  selector: 'header-user-panel',
+  templateUrl: './header-user-panel.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidebarUserPanelComponent extends AppComponentBase
+export class HeaderUserPanelComponent extends AppComponentBase
   implements OnInit {
   shownLoginName = '';
 
