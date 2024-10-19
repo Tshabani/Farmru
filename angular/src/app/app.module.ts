@@ -17,10 +17,10 @@ import { HeaderComponent } from './layout/header.component';
 import { HeaderLeftNavbarComponent } from './layout/header-left-navbar.component';
 import { HeaderLanguageMenuComponent } from './layout/header-language-menu.component';
 import { HeaderUserMenuComponent } from './layout/header-user-menu.component';
+import { HeaderUserPanelComponent } from './layout/header-user-panel.component';
 import { FooterComponent } from './layout/footer.component';
 import { SidebarComponent } from './layout/sidebar.component';
 import { SidebarLogoComponent } from './layout/sidebar-logo.component';
-import { SidebarUserPanelComponent } from './layout/sidebar-user-panel.component';
 import { SidebarMenuComponent } from './layout/sidebar-menu.component';
 
 @NgModule({
@@ -34,7 +34,7 @@ import { SidebarMenuComponent } from './layout/sidebar-menu.component';
         FooterComponent,
         SidebarComponent,
         SidebarLogoComponent,
-        SidebarUserPanelComponent,
+        HeaderUserPanelComponent,
         SidebarMenuComponent
     ],
     imports: [

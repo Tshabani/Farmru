@@ -16,6 +16,8 @@ export class AccountComponent extends AppComponentBase implements OnInit {
     super(injector);
   }
 
+  imageUrl = './../assets/img/FARMRU.jpeg';
+
   showTenantChange(): boolean {
     return abp.multiTenancy.isEnabled;
   }
