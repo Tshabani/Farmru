@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:local_session_timeout/local_session_timeout.dart';
 
+import 'screens/auth/login_screen.dart';
 import 'utils/UserSettings.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await UserSettings.init();
-  await UserSettings.setBackendUrl("http://farmapi.technobrainent.co.za/");
+  await UserSettings.setBackendUrl("http://farmruapi.technobrainent.co.za/");
   runApp(MyApp());
 }
 
@@ -49,7 +50,7 @@ class MyApp extends StatelessWidget {
       },
     );
 
-      return SessionTimeoutManager(
+    return SessionTimeoutManager(
       sessionConfig: sessionConfig,
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,

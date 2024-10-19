@@ -8,11 +8,11 @@ class CustomContainer extends StatelessWidget {
   final Widget page;
 
   const CustomContainer({
-    Key? key,
+    super.key,
     required this.icon,
     required this.text,
     required this.page,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

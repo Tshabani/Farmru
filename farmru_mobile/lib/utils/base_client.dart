@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:get/get.dart';
 import '../models/ErrorResponse.dart';
-import '../screens/components/CustomToast.dart';
-import '../screens/login_screen.dart';
+import '../screens/auth/login_screen.dart';
+import '../screens/components/CustomToast.dart'; 
 import 'UserSettings.dart';
 import 'package:http/http.dart' as http;
 

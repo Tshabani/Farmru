@@ -2,13 +2,8 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:fluttericon/font_awesome5_icons.dart';
 
-import '../../services/user_services.dart';
-import '../../utils/UserSettings.dart';
-import '../components/CustomToast.dart';
-import '../home/home_grid_screen.dart';
- 
+import '../home/home_screen.dart';
 
 var isLoggedIn = false;
 
@@ -22,7 +17,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   // form key
   final _formKey = GlobalKey<FormState>();
-  bool _isLoading = false;
 
   //editing controller
   final TextEditingController emailController = TextEditingController();
@@ -32,44 +26,19 @@ class _LoginScreenState extends State<LoginScreen> {
     var email = emailController.text;
     var password = passwordController.text;
 
-    if (email.isEmpty) {
-      CustomToast.showCenterShortToast("Please email or username");
-      return;
-    }
-
-    if (password.isEmpty || password.length < 6) {
-      CustomToast.showCenterShortToast(
-          "Please password or make sure password has 6 characters");
-      return;
-    }
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    if (await UserService.login(email, password)) {
-      setState(() {
-        _isLoading = false;
-        isLoggedIn = true;
-      });
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomeGridScreen(),
-        ),
-      );
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const HomeScreen(),
+      ),
+    );
   }
 
   @override
   void initState() {
     super.initState();
-    isLoggedIn = UserSettings.getIsLoggedIn();
-    UserSettings.setIsLoggedIn(isLoggedIn);
+    // isLoggedIn = UserSettings.getIsLoggedIn();
+    // UserSettings.setIsLoggedIn(isLoggedIn);
   }
 
   @override
@@ -111,61 +80,48 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: isLoggedIn
-          ? const HomeGridScreen()
-          : Container(
-              child: _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : Center(
-                      child: SingleChildScrollView(
-                        child: Container(
-                          color: Colors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Form(
-                              key: _formKey,
-                              child: Column(children: <Widget>[
-                                const Icon(FontAwesome5.user, size: 150),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                const Text(
-                                  'Welcome back',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                emailField,
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                passwordField,
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    login();
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    minimumSize:
-                                        const Size(double.infinity, 35),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        10,
-                                      ),
-                                    ),
-                                  ),
-                                  child: const Text('Login'),
-                                ),
-                              ]),
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 250),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        emailField,
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        passwordField,
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            login();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size(double.infinity, 35),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
                           ),
+                          child: const Text('Login'),
                         ),
-                      ),
+                      ],
                     ),
+                  ),
+                ],
+              ),
             ),
+          ),
+        ],
+      ),
     );
   }
 }

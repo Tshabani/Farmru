@@ -9,14 +9,14 @@ class CustomGradientElevatedButton extends StatelessWidget {
   final Widget child;
 
   const CustomGradientElevatedButton({
-    Key? key,
+    super.key,
     required this.onPressed,
     required this.child,
     this.borderRadius,
     this.width,
     this.height = 44.0,
     this.gradient = const LinearGradient(colors: [Colors.cyan, Colors.indigo]),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

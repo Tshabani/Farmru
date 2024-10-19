@@ -8,6 +8,11 @@ import '../utils/base_client.dart';
 class AutocompleteService {
   static String backendUrl = UserSettings.getBackendUrl();
 
+  static Future<List<EntityWithDisplayNameDto>> vehicleAutoComplete(
+      String term) async {
+    return _autoCompleteRequest('VehicleAutoComplete', term);
+  }
+
   static Future<List<EntityWithDisplayNameDto>> usersAutoComplete(
       String term) async {
     return _autoCompleteRequest('UserAutoComplete', term);

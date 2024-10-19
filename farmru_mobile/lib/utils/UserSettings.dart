@@ -31,9 +31,6 @@ class UserSettings {
   static Future setCurrentUser(String user) async =>
       await _sharedPreferences.setString(_user, user);
 
-  // static Future setLogSheet(String logSheet) async =>
-  //     await _sharedPreferences.setString(_logSheet, logSheet);
-
   static String getLogSheet() => _sharedPreferences.getString(_logSheet) ?? "";
 
   static String getToken() => _sharedPreferences.getString(_keyToken) ?? "";
