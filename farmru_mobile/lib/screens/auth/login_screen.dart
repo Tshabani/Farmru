@@ -3,6 +3,9 @@
 
 import 'package:flutter/material.dart';
 
+import '../../services/user_services.dart';
+import '../../utils/UserSettings.dart';
+import '../components/CustomToast.dart';
 import '../home/home_screen.dart';
 
 var isLoggedIn = false;
@@ -17,6 +20,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   // form key
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
   //editing controller
   final TextEditingController emailController = TextEditingController();
@@ -26,19 +30,44 @@ class _LoginScreenState extends State<LoginScreen> {
     var email = emailController.text;
     var password = passwordController.text;
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const HomeScreen(),
-      ),
-    );
+    if (email.isEmpty) {
+      CustomToast.showCenterShortToast("Please email or username");
+      return;
+    }
+
+    if (password.isEmpty || password.length < 6) {
+      CustomToast.showCenterShortToast(
+          "Please password or make sure password has 6 characters");
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    if (await UserService.login(email, password)) {
+      setState(() {
+        _isLoading = false;
+        isLoggedIn = true;
+      });
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomeScreen(),
+        ),
+      );
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    // isLoggedIn = UserSettings.getIsLoggedIn();
-    // UserSettings.setIsLoggedIn(isLoggedIn);
+    isLoggedIn = UserSettings.getIsLoggedIn();
+    UserSettings.setIsLoggedIn(isLoggedIn);
   }
 
   @override
@@ -88,11 +117,18 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(height: 250),
+                  const SizedBox(height: 150),
                   Form(
                     key: _formKey,
                     child: Column(
                       children: <Widget>[
+                        Image.asset(
+                          'assets/FARMRU_no_bg.png', // replace with your image asset
+                          fit: BoxFit.cover,
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
                         emailField,
                         const SizedBox(
                           height: 15,
@@ -108,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size(double.infinity, 35),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(30.0),
                             ),
                           ),
                           child: const Text('Login'),

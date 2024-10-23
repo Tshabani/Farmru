@@ -1,7 +1,9 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
-import '../analysis/production.dart';
+import '../Incidents/IncidentsList.dart';
+import '../Nodes/NodeList.dart';
+import '../Task/TaskList.dart';
 import 'side_menu.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,9 +15,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final screens = [
-    const ProductionPage(),
-    const ProductionPage(),
-    const ProductionPage(),
+    const NodeListPage(),
+    const IncidentListPage(),
+    const TasksListPage(),
   ];
   int _page = 0;
 
