@@ -5,6 +5,7 @@ using Farmru.IotMonitoring.Users.Dto;
 using System;
 using System.Threading.Tasks;
 using Farmru.IotMonitoring.Domains.Nodes;
+using Abp.UI;
 
 namespace Farmru.IotMonitoring.Services.NodeDatas
 {
@@ -26,8 +27,8 @@ namespace Farmru.IotMonitoring.Services.NodeDatas
             ArgumentNullException.ThrowIfNull(input);
             if (string.IsNullOrWhiteSpace(input.SerialNumber)) throw new ArgumentNullException("Serial Number is required");
 
-            var node = await _nodeRepository.FirstOrDefaultAsync(x => x.SerialNumber == input.SerialNumber);
-
+            var node = await _nodeRepository.FirstOrDefaultAsync(x => x.SerialNumber == input.SerialNumber) ?? throw new UserFriendlyException("Node not found");
+            
             var nodeData = new Domains.Nodes.NodeData();
             ObjectMapper.Map(input, nodeData);
 

@@ -4,6 +4,7 @@ using Farmru.IotMonitoring.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Farmru.IotMonitoring.Migrations
 {
     [DbContext(typeof(IotMonitoringDbContext))]
-    partial class IotMonitoringDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241024210153_Added Log time to Node data")]
+    partial class AddedLogtimetoNodedata
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

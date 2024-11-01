@@ -26,5 +26,6 @@ namespace Farmru.IotMonitoring.Domains.Nodes
         /// </summary>
         public virtual Node? Node { get; set; }
         public virtual int TenantId { get; set; }
+        public virtual DateTime? LoggingTime { get; set; }
     }
 }

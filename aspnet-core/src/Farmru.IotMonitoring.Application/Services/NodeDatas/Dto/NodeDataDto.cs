@@ -23,6 +23,7 @@ namespace Farmru.IotMonitoring.Services.NodeData.Dto
         public long? Longitude { get; set; }
         public long? SolarPanelVoltage { get; set; }
         public long? BatteryVoltage { get; set; }
+        public DateTime? LoggingTime { get; set; }
         public EntityWithDisplayNameDto<Guid?> Node { get; set; }
     }
 }

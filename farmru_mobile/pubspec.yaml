@@ -48,6 +48,7 @@ dependencies:
   fluttertoast: ^8.2.8
   fluttericon: ^2.0.0
   get: ^4.6.6
+  fl_chart: ^0.69.0
 
 dev_dependencies:
   flutter_test:
