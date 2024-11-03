@@ -2,6 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 import '../Incidents/IncidentsList.dart';
+import '../Nodes/NodeDetails.dart';
 import '../Nodes/NodeList.dart';
 import '../Task/TaskList.dart';
 import 'side_menu.dart';
@@ -15,7 +16,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final screens = [
-    const NodeListPage(),
+    const NodeDetailsPage(),
     const IncidentListPage(),
     const TasksListPage(),
   ];
@@ -26,25 +27,25 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       drawer: const SideMenu(),
       appBar: AppBar(
-        backgroundColor: Colors.deepOrange,
+        backgroundColor: const Color(0xFFB7873B),
         title: const Text(
           'Dashboard',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
       ),
       body: screens[_page],
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.white,
-        color: Colors.deepOrange,
+        color: const Color(0xFFB7873B),
         height: 60,
         items: const <Widget>[
-          Icon(Icons.drive_eta, size: 20),
-          Icon(Icons.receipt_long, size: 20),
-          Icon(Icons.task, size: 20),
+          Icon(Icons.data_thresholding_outlined, size: 20),
+          Icon(Icons.receipt_long_outlined, size: 20),
+          Icon(Icons.task_alt_outlined, size: 20),
         ],
         animationDuration: const Duration(milliseconds: 200),
         animationCurve: Curves.ease,
-        index: 1,
+        index: 0,
         onTap: (index) {
           //Handle button tap
           setState(() {

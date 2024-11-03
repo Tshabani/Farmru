@@ -1,11 +1,12 @@
 // ignore_for_file: unused_field
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:get/get.dart';
 import '../models/ErrorResponse.dart';
 import '../screens/auth/login_screen.dart';
-import '../screens/components/CustomToast.dart'; 
+import '../screens/components/CustomToast.dart';
 import 'UserSettings.dart';
 import 'package:http/http.dart' as http;
 
@@ -61,12 +62,28 @@ class BaseClient {
         ..headers.addAll(headers)
         ..body = (payload != null ? json.encode(payload) : "");
 
-      final response =
-          await client.send(request).then(http.Response.fromStream);
+      final response = await client
+          .send(request)
+          .timeout(const Duration(seconds: 120))
+          .then(http.Response.fromStream);
+
       return await _handleResponse(response);
     } catch (e) {
-      CustomToast.errorShortToast('Failed to $method $api: $e');
-      return null;
+      print('Error: $e');
+      if (e is SocketException) {
+        CustomToast.errorShortToast(
+            'Network connection lost. Please check your internet.');
+      } else if (e is TimeoutException) {
+        CustomToast.errorShortToast('Request timed out. Please try again.');
+      } else if (e is HttpException) {
+        CustomToast.errorShortToast('HTTP exception occurred: $e');
+      } else if (e is FormatException) {
+        CustomToast.errorShortToast(
+            'Invalid data format received from server.');
+      } else {
+        CustomToast.errorShortToast('An unexpected error occurred: $e');
+      }
+      return "error";
     }
   }
 

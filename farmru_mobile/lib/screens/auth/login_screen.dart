@@ -109,55 +109,65 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 150),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: <Widget>[
-                        Image.asset(
-                          'assets/FARMRU_no_bg.png', // replace with your image asset
-                          fit: BoxFit.cover,
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        emailField,
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        passwordField,
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            login();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(double.infinity, 35),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                            ),
+      body: isLoggedIn
+          ? const HomeScreen()
+          : Container(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Form(
+                                key: _formKey,
+                                child: Column(
+                                  children: <Widget>[
+                                    Image.asset(
+                                      'assets/FARMRU_no_bg.png', // replace with your image asset
+                                      fit: BoxFit.cover,
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    emailField,
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    passwordField,
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        login();
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                          minimumSize:
+                                              const Size(double.infinity, 35),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30.0),
+                                          ),
+                                          backgroundColor:
+                                              const Color(0xFFB7873B)),
+                                      child: const Text(
+                                        'Login',
+                                        style:
+                                            TextStyle(color: Color(0xFFFFFFFF)),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                          child: const Text('Login'),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
             ),
-          ),
-        ],
-      ),
     );
   }
 }

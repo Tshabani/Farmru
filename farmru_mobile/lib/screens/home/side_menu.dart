@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/UserModel.dart';
 import '../../services/user_services.dart';
 import '../../utils/UserSettings.dart';
-import '../auth/login_screen.dart'; 
+import '../auth/login_screen.dart';
 
 class SideMenu extends StatefulWidget {
   const SideMenu({super.key});
@@ -78,7 +78,7 @@ class _SideMenuState extends State<SideMenu> {
             },
           ),
           const Divider(
-            color: Color.fromARGB(255, 202, 40, 40),
+            color: Color(0xFFB7873B),
           ),
           ListTile(
               leading: const Icon(Icons.notifications),
@@ -101,7 +101,7 @@ class _SideMenuState extends State<SideMenu> {
             title: Text('Settings'),
           ),
           const Divider(
-            color: Color.fromARGB(255, 202, 40, 40),
+            color: Color(0xFFB7873B),
           ),
           const ListTile(
             leading: Icon(Icons.description),
@@ -117,7 +117,7 @@ class _SideMenuState extends State<SideMenu> {
             },
           ),
           const Divider(
-            color: Color.fromARGB(255, 202, 40, 40),
+            color: Color(0xFFB7873B),
           ),
         ],
       ),
