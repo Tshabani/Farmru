@@ -13,6 +13,7 @@ import { AppComponent } from './app.component';
                     {
                         path: 'home',
                         loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
+                        data: { permission: 'Pages.Home' },
                         canActivate: [AppRouteGuard]
                     },
                     {
@@ -41,6 +42,12 @@ import { AppComponent } from './app.component';
                     {
                         path: 'update-password',
                         loadChildren: () => import('./users/users.module').then((m) => m.UsersModule),
+                        canActivate: [AppRouteGuard]
+                    },
+                    {
+                        path: 'node',
+                        loadChildren: () => import('./node/node.module').then((m) => m.NodeModule),
+                        data: { permission: 'Pages.Nodes' },
                         canActivate: [AppRouteGuard]
                     },
                 ]

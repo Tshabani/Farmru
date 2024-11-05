@@ -44,6 +44,6 @@ export class AppRouteGuard  {
             return '/app/admin/users';
         }
 
-        return '/app/home';
+        return '/app/about';
     }
 }

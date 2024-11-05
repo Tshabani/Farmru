@@ -1,0 +1,41 @@
+<form
+  class="form-horizontal"
+  autocomplete="off"
+  #createNodeForm="ngForm"
+  (ngSubmit)="save()"
+  >
+  <abp-modal-header
+    [title]="'EditNode' | localize"
+    (onCloseClick)="bsModalRef.hide()"
+  ></abp-modal-header>
+  <div class="modal-body">
+    <div class="form-group row required">
+        <label class="col-md-3 col-form-label" for="name">
+          {{ "Serial Number" | localize }}
+        </label>
+        <div class="col-md-9">
+          <input
+            type="text"
+            class="form-control"
+            name="serialNumber"
+            id="serialNumber"
+            required
+            minlength="2"
+            maxlength="32"
+            [(ngModel)]="node.serialNumber"
+            #serialNumberModel="ngModel"
+            #serialNumberEl
+            />
+            <abp-validation-summary
+              [control]="serialNumberModel"
+              [controlEl]="serialNumberEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+  </div>
+  <abp-modal-footer
+    [cancelDisabled]="saving"
+    [saveDisabled]="!createNodeForm.form.valid || saving"
+    (onCancelClick)="bsModalRef.hide()"
+  ></abp-modal-footer>
+</form>

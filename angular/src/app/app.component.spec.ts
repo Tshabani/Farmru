@@ -27,7 +27,6 @@ import { HeaderUserMenuComponent } from "./layout/header-user-menu.component";
 import { FooterComponent } from "./layout/footer.component";
 import { SidebarComponent } from "./layout/sidebar.component";
 import { SidebarLogoComponent } from "./layout/sidebar-logo.component";
-import { SidebarUserPanelComponent } from "./layout/sidebar-user-panel.component";
 import { SidebarMenuComponent } from "./layout/sidebar-menu.component";
 
 describe("AppComponent", () => {
@@ -46,7 +45,6 @@ describe("AppComponent", () => {
         FooterComponent,
         SidebarComponent,
         SidebarLogoComponent,
-        SidebarUserPanelComponent,
         SidebarMenuComponent,
       ],
       imports: [
