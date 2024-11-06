@@ -22,6 +22,7 @@ import { FooterComponent } from './layout/footer.component';
 import { SidebarComponent } from './layout/sidebar.component';
 import { SidebarLogoComponent } from './layout/sidebar-logo.component';
 import { SidebarMenuComponent } from './layout/sidebar-menu.component';
+import { Ng2GoogleChartsModule } from 'ng2-google-charts';
 
 @NgModule({
     declarations: [
@@ -38,6 +39,7 @@ import { SidebarMenuComponent } from './layout/sidebar-menu.component';
         SidebarMenuComponent
     ],
     imports: [
+        Ng2GoogleChartsModule,
         AppRoutingModule,
         CommonModule,
         FormsModule,

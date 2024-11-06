@@ -14,11 +14,10 @@ class PagedNodesRequestDto extends PagedRequestDto {
 
 @Component({
   templateUrl: './node.component.html',
-  animations: [appModuleAnimation()],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  animations: [appModuleAnimation()]
 })
-export class NodeComponent extends PagedListingComponentBase<NodeDto> {
 
+export class NodeComponent extends PagedListingComponentBase<NodeDto> {
   nodes: NodeDto[] = [];
   keyword = '';
 

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Injector, OnInit, output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Injector, OnInit, Output, output } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { AppComponentBase } from '@shared/app-component-base';
 import { forEach as _forEach, map as _map } from 'lodash-es';
@@ -12,6 +12,8 @@ export class EditNodeComponent extends AppComponentBase
     id: string;
     saving = false;
     node = new NodeDto();  
+
+    @Output() onSave = new EventEmitter<any>();
   
     constructor(
       injector: Injector,
@@ -39,7 +41,8 @@ export class EditNodeComponent extends AppComponentBase
         .subscribe(
           () => {
             this.notify.info(this.l('SavedSuccessfully'));
-            this.bsModalRef.hide();            
+            this.bsModalRef.hide();   
+            this.onSave.emit();         
           },
           () => {
             this.saving = false;

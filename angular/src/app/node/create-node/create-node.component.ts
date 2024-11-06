@@ -26,6 +26,7 @@ implements OnInit {
   ngOnInit(): void {
     this.cd.detectChanges();
   }
+
   save(): void {
     this.saving = true;
 
@@ -44,6 +45,6 @@ implements OnInit {
           this.saving = false;
           this.cd.detectChanges();
         }
-      );
+    );
   }
 }
