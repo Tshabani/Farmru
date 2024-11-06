@@ -1,17 +1,26 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NodeComponent } from './node.component';
-
-const routes: Routes = [
-    {
-        path: '',
-        component: NodeComponent,
-        pathMatch: 'full',
-    },
-];
+import { AppRouteGuard } from '@shared/auth/auth-route-guard';
 
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule],
+    imports: [
+        RouterModule.forChild([
+            {
+                path: '',
+                component: NodeComponent,
+                pathMatch: 'full',
+                children: [
+                    {
+                        path: 'nodeData',
+                        loadChildren: () => import('./view-node-data/view-node-data.module').then((m) => m.ViewNodeDataModule),
+                        data: { permission: 'Pages.Nodes' },
+                        canActivate: [AppRouteGuard]
+                    }
+                ]
+            }
+        ])
+    ],
+    exports: [RouterModule]
 })
-export class NodeRoutingModule {}
+export class NodeRoutingModule { }

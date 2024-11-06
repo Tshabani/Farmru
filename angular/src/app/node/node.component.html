@@ -69,6 +69,12 @@
                     <td>{{ node.serialNumber }}</td>
                     <td>
                       <button type="button"
+                      class="btn btn-sm bg-secondary"
+                      (click)="onRowClick(node.id)">
+                      <i class="fas fa-pencil-alt"></i>
+                      {{ "View" | localize }}
+                    </button>
+                      <button type="button"
                         class="btn btn-sm bg-secondary"
                         (click)="editNode(node)">
                         <i class="fas fa-pencil-alt"></i>
