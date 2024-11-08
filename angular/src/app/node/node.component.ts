@@ -7,7 +7,7 @@ import { NodeDto, NodeDtoPagedResultDto, NodeServiceProxy } from '@shared/servic
 import { finalize } from 'rxjs/operators';
 import { EditNodeComponent } from './edit-node/edit-node.component';
 import { CreateNodeComponent } from './create-node/create-node.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 class PagedNodesRequestDto extends PagedRequestDto {
   keyword: string;
@@ -27,9 +27,14 @@ export class NodeComponent extends PagedListingComponentBase<NodeDto> {
     private _nodesService: NodeServiceProxy,
     private _modalService: BsModalService,
     private router: Router,
+    private route: ActivatedRoute,
     cd: ChangeDetectorRef
   ) {
     super(injector, cd);
+  }
+  onRowClick(rowId: string): void {
+    // this.router.navigate(['/nodeData', rowId]);
+    this.router.navigate(['nodeData', rowId], { relativeTo: this.route });
   }
 
   list(
@@ -40,7 +45,7 @@ export class NodeComponent extends PagedListingComponentBase<NodeDto> {
     request.keyword = this.keyword;
 
     this._nodesService
-      .getAll(request.keyword, true,request.skipCount, request.maxResultCount)
+      .getAll(request.keyword, true, request.skipCount, request.maxResultCount)
       .pipe(
         finalize(() => {
           finishedCallback();
@@ -67,15 +72,12 @@ export class NodeComponent extends PagedListingComponentBase<NodeDto> {
                 this.refresh();
               })
             )
-            .subscribe(() => {});
+            .subscribe(() => { });
         }
       }
     );
   }
 
-  onRowClick(rowId: string): void {
-    this.router.navigate(['/path/to/node', rowId] );
-}
 
   createNode(): void {
     this.showCreateOrEditNodeDialog();

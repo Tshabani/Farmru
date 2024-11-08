@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NodeComponent } from './node.component';
 import { AppRouteGuard } from '@shared/auth/auth-route-guard';
+import { ViewNodeDataComponent } from './view-node-data/view-node-data.component'
 
 @NgModule({
     imports: [
@@ -9,15 +10,11 @@ import { AppRouteGuard } from '@shared/auth/auth-route-guard';
             {
                 path: '',
                 component: NodeComponent,
-                pathMatch: 'full',
-                children: [
-                    {
-                        path: 'nodeData',
-                        loadChildren: () => import('./view-node-data/view-node-data.module').then((m) => m.ViewNodeDataModule),
-                        data: { permission: 'Pages.Nodes' },
-                        canActivate: [AppRouteGuard]
-                    }
-                ]
+
+            },
+            {
+                path: 'nodeData/:id',
+                component: ViewNodeDataComponent
             }
         ])
     ],
