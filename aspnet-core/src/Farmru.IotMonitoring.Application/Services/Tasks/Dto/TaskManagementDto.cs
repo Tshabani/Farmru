@@ -1,27 +1,31 @@
-﻿using Abp.Domain.Entities.Auditing;
+﻿using Abp.Application.Services.Dto;
+using Abp.AutoMapper;
 using Farmru.IotMonitoring.Authorization.Users;
-using Farmru.IotMonitoring.Domains.Persons;
+using Farmru.IotMonitoring.Domains.Organisations;
+using Farmru.IotMonitoring.Domains.Tasks;
+using Farmru.IotMonitoring.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Farmru.IotMonitoring.Domains.Tasks
+namespace Farmru.IotMonitoring.Services.Tasks.Dto
 {
     /// <summary>
     /// 
     /// </summary>
-    public class TaskManagement : FullAuditedEntity<Guid>
+    [AutoMap(typeof(TaskManagement))]
+    public class TaskManagementDto : EntityDto<Guid>
     {
         /// <summary>
         /// 
         /// </summary>
-        public virtual Person AssignedTo { get; set; }
+        public virtual EntityWithDisplayNameDto<Guid?> AssignedTo { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        public virtual Person AssignedBy { get; set; }
+        public virtual EntityWithDisplayNameDto<Guid?> AssignedBy { get; set; }
         /// <summary>
         /// 
         /// </summary>

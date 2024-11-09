@@ -4,6 +4,7 @@ using Farmru.IotMonitoring.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Farmru.IotMonitoring.Migrations
 {
     [DbContext(typeof(IotMonitoringDbContext))]
-    partial class IotMonitoringDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241109222041_Added Person Entity")]
+    partial class AddedPersonEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1637,14 +1640,9 @@ namespace Farmru.IotMonitoring.Migrations
                     b.Property<Guid?>("OwnerOrganisationId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("PrimaryContactId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("OwnerOrganisationId");
-
-                    b.HasIndex("PrimaryContactId");
 
                     b.ToTable("Facilities");
                 });
@@ -1655,8 +1653,8 @@ namespace Farmru.IotMonitoring.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AppointedUserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<long?>("AppointedUserId")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -1695,12 +1693,6 @@ namespace Farmru.IotMonitoring.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("AssignedToId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedById")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
@@ -1743,10 +1735,6 @@ namespace Farmru.IotMonitoring.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AssignedToId");
-
-                    b.HasIndex("CreatedById");
 
                     b.ToTable("Incidents");
                 });
@@ -2032,12 +2020,6 @@ namespace Farmru.IotMonitoring.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AssignedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("AssignedToId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
@@ -2069,10 +2051,6 @@ namespace Farmru.IotMonitoring.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AssignedById");
-
-                    b.HasIndex("AssignedToId");
 
                     b.ToTable("Tasks");
                 });
@@ -2365,18 +2343,12 @@ namespace Farmru.IotMonitoring.Migrations
                         .WithMany()
                         .HasForeignKey("OwnerOrganisationId");
 
-                    b.HasOne("Farmru.IotMonitoring.Domains.Persons.Person", "PrimaryContact")
-                        .WithMany()
-                        .HasForeignKey("PrimaryContactId");
-
                     b.Navigation("OwnerOrganisation");
-
-                    b.Navigation("PrimaryContact");
                 });
 
             modelBuilder.Entity("Farmru.IotMonitoring.Domains.Facilities.FacilityAppointment", b =>
                 {
-                    b.HasOne("Farmru.IotMonitoring.Domains.Persons.Person", "AppointedUser")
+                    b.HasOne("Farmru.IotMonitoring.Authorization.Users.User", "AppointedUser")
                         .WithMany()
                         .HasForeignKey("AppointedUserId");
 
@@ -2387,21 +2359,6 @@ namespace Farmru.IotMonitoring.Migrations
                     b.Navigation("AppointedUser");
 
                     b.Navigation("Facility");
-                });
-
-            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Incidents.Incident", b =>
-                {
-                    b.HasOne("Farmru.IotMonitoring.Domains.Persons.Person", "AssignedTo")
-                        .WithMany()
-                        .HasForeignKey("AssignedToId");
-
-                    b.HasOne("Farmru.IotMonitoring.Domains.Persons.Person", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.Navigation("AssignedTo");
-
-                    b.Navigation("CreatedBy");
                 });
 
             modelBuilder.Entity("Farmru.IotMonitoring.Domains.Nodes.Node", b =>
@@ -2429,21 +2386,6 @@ namespace Farmru.IotMonitoring.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Tasks.TaskManagement", b =>
-                {
-                    b.HasOne("Farmru.IotMonitoring.Domains.Persons.Person", "AssignedBy")
-                        .WithMany()
-                        .HasForeignKey("AssignedById");
-
-                    b.HasOne("Farmru.IotMonitoring.Domains.Persons.Person", "AssignedTo")
-                        .WithMany()
-                        .HasForeignKey("AssignedToId");
-
-                    b.Navigation("AssignedBy");
-
-                    b.Navigation("AssignedTo");
                 });
 
             modelBuilder.Entity("Farmru.IotMonitoring.MultiTenancy.Tenant", b =>

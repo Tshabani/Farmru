@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities.Auditing;
 using Farmru.IotMonitoring.Authorization.Users;
+using Farmru.IotMonitoring.Domains.Persons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +17,8 @@ namespace Farmru.IotMonitoring.Domains.Incidents
         public virtual IncidentPriority? Priority { get; set; }
         public virtual DateTime CreatedDate { get; set; }
         public virtual DateTime? ResolvedDate { get; set; }
-        public virtual User? CreatedBy { get; set; }
-        public virtual User? AssignedTo { get; set; }
+        public virtual Person? CreatedBy { get; set; }
+        public virtual Person? AssignedTo { get; set; }
     }
 
     public enum IncidentStatus

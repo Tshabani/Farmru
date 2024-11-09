@@ -4,6 +4,7 @@ using Farmru.IotMonitoring.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Farmru.IotMonitoring.Migrations
 {
     [DbContext(typeof(IotMonitoringDbContext))]
-    partial class IotMonitoringDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241109222916_Removed User from Fac app")]
+    partial class RemovedUserfromFacapp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1655,9 +1658,6 @@ namespace Farmru.IotMonitoring.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AppointedUserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
@@ -1683,8 +1683,6 @@ namespace Farmru.IotMonitoring.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppointedUserId");
 
                     b.HasIndex("FacilityId");
 
@@ -2376,15 +2374,9 @@ namespace Farmru.IotMonitoring.Migrations
 
             modelBuilder.Entity("Farmru.IotMonitoring.Domains.Facilities.FacilityAppointment", b =>
                 {
-                    b.HasOne("Farmru.IotMonitoring.Domains.Persons.Person", "AppointedUser")
-                        .WithMany()
-                        .HasForeignKey("AppointedUserId");
-
                     b.HasOne("Farmru.IotMonitoring.Domains.Facilities.Facility", "Facility")
                         .WithMany()
                         .HasForeignKey("FacilityId");
-
-                    b.Navigation("AppointedUser");
 
                     b.Navigation("Facility");
                 });

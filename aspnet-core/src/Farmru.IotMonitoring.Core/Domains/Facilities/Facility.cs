@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Entities.Auditing;
 using Farmru.IotMonitoring.Authorization.Users;
 using Farmru.IotMonitoring.Domains.Organisations;
+using Farmru.IotMonitoring.Domains.Persons;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -19,7 +20,7 @@ namespace Farmru.IotMonitoring.Domains.Facilities
         [StringLength(300)]
         public virtual string Description { get; set; }
         public virtual string Address { get; set; }
-        public virtual User? PrimaryContact { get; set; }
+        public virtual Person? PrimaryContact { get; set; }
         public virtual Organisation? OwnerOrganisation { get; set; }
         public virtual decimal? Latitude { get; set; }
         public virtual decimal? Longitude { get; set; }
