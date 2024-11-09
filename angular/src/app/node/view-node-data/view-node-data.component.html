@@ -1,1 +1,110 @@
-<p>view-node-data works!</p>
+<div [@routerTransition]>
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <h1>{{ "NodeData" | localize }}</h1>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="content px-2">
+      <div class="container-fluid">
+        <div class="card">
+          <div class="card-header">
+            <div class="row">
+              <div class="col-md-6">&emsp;</div>
+              <div class="col-md-6">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <button type="button"
+                      class="btn bg-blue"
+                      (click)="getDataPage(1)">
+                      <i class="fas fa-search"></i>
+                    </button>
+                  </div>
+                  <input type="text"
+                    class="form-control"
+                    name="keyword"
+                    [placeholder]="'SearchWithThreeDot' | localize"
+                    [(ngModel)]="keyword"
+                    (keyup.enter)="getDataPage(1)" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-striped table-bordered"
+                  [busy]="isTableLoading">
+                  <thead class="bg-light">
+                    <tr>
+                      <th>{{ "NodeDataId" | localize }}</th>
+                      <th>{{ "latitude" | localize }}</th>
+                      <th>{{ "longitude" | localize }}</th>
+                      <th>{{ "loggingTime" | localize }}</th>
+                      <th>{{ "moisture" | localize }}</th>
+                      <th>{{ "nitrogen" | localize }}</th>
+                      <th>{{ "phosphorus" | localize }}</th>
+                      <th>{{ "potassium" | localize }}</th>
+                      <th>{{ "soilPH" | localize }}</th>
+                      <th>{{ "soilTemperature" | localize }}</th>
+                      <th>{{ "SolarPanelVoltage" | localize }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (
+                      nodeDataItem of nodeData
+                      | paginate
+                      : {
+                      id: 'server',
+                      itemsPerPage: pageSize,
+                      currentPage: pageNumber,
+                      totalItems: totalItems
+                    }
+                    ; track
+                    nodeDataItem.id) {
+                    <tr>
+                      <td>{{ nodeDataItem.id }}</td>
+                      <td>{{ nodeDataItem.latitude }}</td>
+                      <td>{{ nodeDataItem.longitude}}</td>
+                      <td>{{ nodeDataItem.loggingTime }}</td>
+                      <td>{{ nodeDataItem.moisture }}</td>
+                      <td>{{ nodeDataItem.nitrogen }}</td>
+                      <td>{{ nodeDataItem.phosphorus }}</td>
+                      <td>{{ nodeDataItem.potassium }}</td>
+                      <td>{{ nodeDataItem.soilPH }}</td>
+                      <td>{{ nodeDataItem.soilTemperature }}</td>
+                      <td>{{ nodeDataItem.solarPanelVoltage }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card-footer table-card-footer bg-light border-top">
+            <div class="row">
+              <div class="col-sm-4 col-12 text-sm-left text-center">
+                <button class="btn btn-secondary"
+                  (click)="refresh()">
+                  <i class="fas fa-redo-alt"></i>
+                </button>
+              </div>
+              <div class="col-sm-4 col-12 text-center">
+                <p class="mb-0 my-2">
+                  {{ "TotalRecordsCount" | localize: totalItems }}
+                </p>
+              </div>
+              <div class="col-sm-4 col-12">
+                <div class="float-sm-right m-auto">
+                  <abp-pagination-controls id="server"
+                    (pageChange)="getDataPage($event)">
+                  </abp-pagination-controls>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>

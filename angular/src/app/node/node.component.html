@@ -40,7 +40,7 @@
                 <tr>
                   <th>{{ "NodeId" | localize }}</th>
                   <th>{{ "SerialNumber" | localize }}</th>
-                  <th style="width: 200px;">{{ "Actions" | localize }}</th>
+                  <th style="width: 250px;">{{ "Actions" | localize }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -59,9 +59,12 @@
                   <td>{{ node.id }}</td>
                   <td>{{ node.serialNumber }}</td>
                   <td>
-                    <button type="button" class="btn btn-sm bg-secondary" (click)="onRowClick(node.id)">
-                      <i class="fas fa-pencil-alt"></i>
-                      {{ "View" | localize }}
+                    <button
+                      type="button"
+                      class="btn btn-sm bg-blue btn-group-radius mx-2"
+                      (click)="onRowClick(node.id)">
+                        <i class="fas fa-eye"></i>
+                        {{ "View" | localize }}
                     </button>
                     <button type="button" class="btn btn-sm bg-secondary" (click)="editNode(node)">
                       <i class="fas fa-pencil-alt"></i>

@@ -6,7 +6,7 @@ import * as ApiServiceProxies from './service-proxies';
 
 @NgModule({
     providers: [
-        //ApiServiceProxies.HomeServiceProxy,
+        ApiServiceProxies.HomeServiceProxy,
         ApiServiceProxies.RoleServiceProxy,
         ApiServiceProxies.SessionServiceProxy,
         ApiServiceProxies.TenantServiceProxy,
@@ -14,6 +14,7 @@ import * as ApiServiceProxies from './service-proxies';
         ApiServiceProxies.TokenAuthServiceProxy,
         ApiServiceProxies.AccountServiceProxy,
         ApiServiceProxies.NodeServiceProxy,
+        ApiServiceProxies.NodeDataServiceProxy,
         ApiServiceProxies.ConfigurationServiceProxy,
         { provide: HTTP_INTERCEPTORS, useClass: AbpHttpInterceptor, multi: true }
     ]
