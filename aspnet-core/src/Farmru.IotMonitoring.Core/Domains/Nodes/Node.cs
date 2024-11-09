@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Farmru.IotMonitoring.Domains.Facilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace Farmru.IotMonitoring.Domains.Nodes
     {
         public virtual int TenantId { get; set; }
         public virtual string SerialNumber { get; set; }
+        public virtual Facility? Facility { get; set; }
     }
 }
