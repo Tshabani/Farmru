@@ -206,6 +206,69 @@ export class ConfigurationServiceProxy {
 }
 
 @Injectable()
+export class HomeServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    /**
+     * @return OK
+     */
+    getAppStats(): Observable<AppStatisticsDto> {
+        let url_ = this.baseUrl + "/api/services/app/Home/GetAppStats";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAppStats(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAppStats(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<AppStatisticsDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<AppStatisticsDto>;
+        }));
+    }
+
+    protected processGetAppStats(response: HttpResponseBase): Observable<AppStatisticsDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AppStatisticsDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+@Injectable()
 export class NodeServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -2328,6 +2391,61 @@ export class UserServiceProxy {
         }
         return _observableOf(null as any);
     }
+}
+
+export class AppStatisticsDto implements IAppStatisticsDto {
+    totalNumberOfUsers: number;
+    totalNumberOfRoles: number;
+    totalNumberOfNodes: number;
+    totalNumberOfActiveNodes: number;
+
+    constructor(data?: IAppStatisticsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.totalNumberOfUsers = _data["totalNumberOfUsers"];
+            this.totalNumberOfRoles = _data["totalNumberOfRoles"];
+            this.totalNumberOfNodes = _data["totalNumberOfNodes"];
+            this.totalNumberOfActiveNodes = _data["totalNumberOfActiveNodes"];
+        }
+    }
+
+    static fromJS(data: any): AppStatisticsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AppStatisticsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["totalNumberOfUsers"] = this.totalNumberOfUsers;
+        data["totalNumberOfRoles"] = this.totalNumberOfRoles;
+        data["totalNumberOfNodes"] = this.totalNumberOfNodes;
+        data["totalNumberOfActiveNodes"] = this.totalNumberOfActiveNodes;
+        return data;
+    }
+
+    clone(): AppStatisticsDto {
+        const json = this.toJSON();
+        let result = new AppStatisticsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAppStatisticsDto {
+    totalNumberOfUsers: number;
+    totalNumberOfRoles: number;
+    totalNumberOfNodes: number;
+    totalNumberOfActiveNodes: number;
 }
 
 export class ApplicationInfoDto implements IApplicationInfoDto {

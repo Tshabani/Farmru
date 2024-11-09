@@ -32,8 +32,8 @@ export class NodeComponent extends PagedListingComponentBase<NodeDto> {
   ) {
     super(injector, cd);
   }
+
   onRowClick(rowId: string): void {
-    // this.router.navigate(['/nodeData', rowId]);
     this.router.navigate(['nodeData', rowId], { relativeTo: this.route });
   }
 
@@ -77,7 +77,6 @@ export class NodeComponent extends PagedListingComponentBase<NodeDto> {
       }
     );
   }
-
 
   createNode(): void {
     this.showCreateOrEditNodeDialog();
