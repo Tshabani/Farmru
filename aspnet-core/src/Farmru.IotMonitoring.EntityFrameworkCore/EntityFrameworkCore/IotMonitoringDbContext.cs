@@ -20,6 +20,7 @@ namespace Farmru.IotMonitoring.EntityFrameworkCore
         public DbSet<Organisation> Organisations { get; set; }
         public DbSet<Incident> Incidents { get; set; }
         public DbSet<Facility> Facilities { get; set; }
+        public DbSet<FacilityAppointment> FacilityAppointments { get; set; }
          
         public IotMonitoringDbContext(DbContextOptions<IotMonitoringDbContext> options)
             : base(options)
