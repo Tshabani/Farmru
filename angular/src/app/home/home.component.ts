@@ -12,15 +12,15 @@ import { finalize } from 'rxjs';
 })
 export class HomeComponent extends AppComponentBase {
   stats: AppStatisticsDto = new AppStatisticsDto;
-
+  protected cd: ChangeDetectorRef;
   public pieChart: GoogleChartInterface = {
     chartType: GoogleChartType.PieChart,
     dataTable: [
       ['System Stats', ''],
-      ['Roles', 0],
-      ['Users', 0],
-      ['Nodes', 0],
-      ['ActiveNodes', 0]
+      ['Roles', 1],
+      ['Users', 2],
+      ['Nodes', 3],
+      ['ActiveNodes', 4]
     ],
     //firstRowIsData: true,
     options: {'title': 'System stats'},
@@ -30,7 +30,7 @@ export class HomeComponent extends AppComponentBase {
     chartType: GoogleChartType.BarChart,
     dataTable: [
       ['System Stats', 'Roles', 'Users', 'Nodes', 'ActiveNodes'],
-      ['total', 0, 0, 0, 0]
+      ['total', 1, 2, 3, 4]
     ],
     options: {
       chart: {
@@ -46,37 +46,52 @@ export class HomeComponent extends AppComponentBase {
     private _homeService: HomeServiceProxy   
     ) {
     super(injector);
+    this.cd = cd;
+    this.list(() => {
+      console.log('Finished callback executed in derived class');
+    });
   }
 
 ngOnInit(): void {
-  this.list();
+
+}
+
+refreshCharts() {
+  // Call detectChanges after a brief delay to allow data tables to update
+  setTimeout(() => this.cd.detectChanges(), 50);
 }
 
 protected list(
-    //finishedCallback: Function
+    finishedCallback: Function
 ): void {
     this._homeService
     .getAppStats(
     )
     .pipe(
         finalize(() => {
-          //finishedCallback();
+          finishedCallback();
         })
     )
     .subscribe((result) => {
+      debugger;
         this.stats = result;
         this.pieChart.dataTable = [
           ['System Stats', ''],
-          ['Roles', result.totalNumberOfRoles],
-          ['Users', result.totalNumberOfUsers],
-          ['Nodes', result.totalNumberOfNodes],
-          ['ActiveNodes', result.totalNumberOfActiveNodes]
+          ['Roles', this.stats.totalNumberOfRoles],
+          ['Users', this.stats.totalNumberOfUsers],
+          ['Nodes', this.stats.totalNumberOfNodes],
+          ['ActiveNodes', this.stats.totalNumberOfActiveNodes]
         ];
 
         this.barChart.dataTable = [
           ['System Stats', 'Roles', 'Users', 'Nodes', 'ActiveNodes'],
-          ['total', result.totalNumberOfRoles, result.totalNumberOfUsers, result.totalNumberOfNodes, result.totalNumberOfActiveNodes]
-        ];
+          ['total', this.stats.totalNumberOfRoles, this.stats.totalNumberOfUsers, this.stats.totalNumberOfNodes, this.stats.totalNumberOfActiveNodes]
+        ];     
+        
+       // Trigger change detection after updating chart data tables
+      //this.cd.detectChanges();
+            // Refresh charts after data is updated
+            this.refreshCharts();
     });
   }
 }
