@@ -71,6 +71,24 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
         "fa-solid fa-circle-down",   
         "Pages.Nodes"
       ),
+      new MenuItem(
+        this.l("People"),
+        "/app/person",
+        "fa-solid fa-circle-down",   
+        "Pages.People"
+      ),
+      new MenuItem(
+        this.l("Facilities"),
+        "/app/facility",
+        "fa-solid fa-building-wheat",   
+        "Pages.Facilities"
+      ),
+      new MenuItem(
+        this.l("FacilityAppointments"),
+        "/app/facility-appointment",
+        "fa-regular fa-calendar-check",   
+        "Pages.Facility.Appointments"
+      ),
     ];
   }
 

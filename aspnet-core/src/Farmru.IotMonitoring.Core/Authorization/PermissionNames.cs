@@ -13,5 +13,11 @@
         public const string Pages_Roles = "Pages.Roles";
 
         public const string Pages_Nodes = "Pages.Nodes";
+
+        public const string Pages_People = "Pages.People";
+
+        public const string Pages_Facilities = "Pages.Facilities";
+
+        public const string Pages_Facility_Appointments = "Pages.Facility.Appointments";
     }
 }

@@ -50,6 +50,24 @@ import { AppComponent } from './app.component';
                         data: { permission: 'Pages.Nodes' },
                         canActivate: [AppRouteGuard]
                     },
+                    {
+                        path: 'person',
+                        loadChildren: () => import('./person/person.module').then((m) => m.PersonModule),
+                        data: { permission: 'Pages.People' },
+                        canActivate: [AppRouteGuard]
+                    },
+                    {
+                        path: 'facility',
+                        loadChildren: () => import('./facility/facility.module').then((m) => m.FacilityModule),
+                        data: { permission: 'Pages.Facilities' },
+                        canActivate: [AppRouteGuard]
+                    },
+                    {
+                        path: 'facility-appointment',
+                        loadChildren: () => import('./facility-appointment/facility-appointment.module').then((m) => m.FacilityAppointmentModule),
+                        data: { permission: 'Pages.Facility.Appointments' },
+                        canActivate: [AppRouteGuard]
+                    },
                 ]
             }
         ])
