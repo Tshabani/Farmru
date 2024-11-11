@@ -63,10 +63,10 @@ namespace Farmru.IotMonitoring
             CreateMap<Organisation, OrganisationDto>();
             CreateMap<OrganisationDto, Organisation>();
 
-            CreateMap<Person, PersonDto>()
-                .ForMember(u => u.IsActive, opt => opt.MapFrom(r => r.User.IsActive))
-               ;
-
+            CreateMap<Person, PersonDto>();
+            CreateMap<Person, CreatePersonDto>();
+            CreateMap<PersonDto, Person>();
+            CreateMap<CreatePersonDto, Person>();
         }
     }
 }

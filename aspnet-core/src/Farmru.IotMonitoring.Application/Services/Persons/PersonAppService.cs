@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 namespace Farmru.IotMonitoring.Services.Persons
 {
     [AbpAuthorize]
-    public class PersonAppService : AsyncCrudAppService<Person, PersonDto, Guid, PagedUserResultRequestDto, CreatePersonAccountDto, PersonDto>
+    public class PersonAppService : AsyncCrudAppService<Person, PersonDto, Guid, PagedUserResultRequestDto, CreatePersonDto, PersonDto>
     {
         private readonly UserManager _userManager;
         private readonly IRepository<User, long> _userRepository;
@@ -30,41 +30,42 @@ namespace Farmru.IotMonitoring.Services.Persons
             _userRepository = userRepository;
         }
          
-        public override async Task<PersonDto> CreateAsync(CreatePersonAccountDto input)
+        public override async Task<PersonDto> CreateAsync(CreatePersonDto input)
         {
             // Performing additional validations
-            var validationResults = new List<ValidationResult>();
+            /* var validationResults = new List<ValidationResult>();
 
-            if (string.IsNullOrWhiteSpace(input.FirstName))
-                validationResults.Add(new ValidationResult("First Name is mandatory"));
-            if (string.IsNullOrWhiteSpace(input.LastName))
-                validationResults.Add(new ValidationResult("Last Name is mandatory"));
+             if (string.IsNullOrWhiteSpace(input.FirstName))
+                 validationResults.Add(new ValidationResult("First Name is mandatory"));
+             if (string.IsNullOrWhiteSpace(input.LastName))
+                 validationResults.Add(new ValidationResult("Last Name is mandatory"));
 
-            if (validationResults.Any())
-                throw new AbpValidationException("Please correct the errors and try again", validationResults);
+             if (validationResults.Any())
+                 throw new AbpValidationException("Please correct the errors and try again", validationResults);
 
-            //// Creating User Account to enable login into the application
-            User user = await _userManager.CreateUser(
-              input.UserName,
-              true,
-              input.Password,
-              input.PasswordConfirmation,
-              input.FirstName,
-              input.LastName,
-              input.MobileNumber,
-              input.EmailAddress);
+             //// Creating User Account to enable login into the application
+             User user = await _userManager.CreateUser(
+               input.UserName,
+               true,
+               input.Password,
+               input.PasswordConfirmation,
+               input.FirstName,
+               input.LastName,
+               input.MobileNumber,
+               input.EmailAddress);
 
-            // Creating Person entity
-            var person = ObjectMapper.Map<Person>(input);
-            // manual map for now
-            person.EmailAddress1 = input.EmailAddress;
-            person.MobileNumber1 = input.MobileNumber;
-            person.User = user;
+             // Creating Person entity
+             var person = ObjectMapper.Map<Person>(input);
+             // manual map for now
+             person.EmailAddress1 = input.EmailAddress;
+             person.MobileNumber1 = input.MobileNumber;
+             person.User = user;
 
-            await Repository.InsertAsync(person);
+             await Repository.InsertAsync(person);
 
-            CurrentUnitOfWork.SaveChanges();
-            return ObjectMapper.Map<PersonDto>(person);
+             CurrentUnitOfWork.SaveChanges();
+             return ObjectMapper.Map<PersonDto>(person); */
+            return null;
         }
 
         public async Task<PersonDto> GetCurrentPerson()

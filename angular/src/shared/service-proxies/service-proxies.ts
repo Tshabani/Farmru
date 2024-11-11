@@ -1798,7 +1798,7 @@ export class PersonServiceProxy {
      * @param body (optional) 
      * @return OK
      */
-    create(body: CreatePersonAccountDto | undefined): Observable<PersonDto> {
+    create(body: CreatePersonDto | undefined): Observable<PersonDto> {
         let url_ = this.baseUrl + "/api/services/app/Person/Create";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -4564,23 +4564,20 @@ export interface ICreateNodeData {
     loggingTime: moment.Moment | undefined;
 }
 
-export class CreatePersonAccountDto implements ICreatePersonAccountDto {
-    userName: string;
+export class CreatePersonDto implements ICreatePersonDto {
     firstName: string;
     lastName: string;
     identityNumber: string | undefined;
     title: RefListPersonTitle;
     homeNumber: string | undefined;
     mobileNumber: string | undefined;
-    mobileNumber2: string | undefined;
-    emailAddress: string | undefined;
-    password: string | undefined;
-    passwordConfirmation: string | undefined;
+    altMobileNumber: string | undefined;
+    altEmailAddress: string | undefined;
     biography: string | undefined;
     dateOfBirth: moment.Moment | undefined;
     gender: RefListGender;
 
-    constructor(data?: ICreatePersonAccountDto) {
+    constructor(data?: ICreatePersonDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -4591,69 +4588,60 @@ export class CreatePersonAccountDto implements ICreatePersonAccountDto {
 
     init(_data?: any) {
         if (_data) {
-            this.userName = _data["userName"];
             this.firstName = _data["firstName"];
             this.lastName = _data["lastName"];
             this.identityNumber = _data["identityNumber"];
             this.title = _data["title"];
             this.homeNumber = _data["homeNumber"];
             this.mobileNumber = _data["mobileNumber"];
-            this.mobileNumber2 = _data["mobileNumber2"];
-            this.emailAddress = _data["emailAddress"];
-            this.password = _data["password"];
-            this.passwordConfirmation = _data["passwordConfirmation"];
+            this.altMobileNumber = _data["altMobileNumber"];
+            this.altEmailAddress = _data["altEmailAddress"];
             this.biography = _data["biography"];
             this.dateOfBirth = _data["dateOfBirth"] ? moment(_data["dateOfBirth"].toString()) : <any>undefined;
             this.gender = _data["gender"];
         }
     }
 
-    static fromJS(data: any): CreatePersonAccountDto {
+    static fromJS(data: any): CreatePersonDto {
         data = typeof data === 'object' ? data : {};
-        let result = new CreatePersonAccountDto();
+        let result = new CreatePersonDto();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["userName"] = this.userName;
         data["firstName"] = this.firstName;
         data["lastName"] = this.lastName;
         data["identityNumber"] = this.identityNumber;
         data["title"] = this.title;
         data["homeNumber"] = this.homeNumber;
         data["mobileNumber"] = this.mobileNumber;
-        data["mobileNumber2"] = this.mobileNumber2;
-        data["emailAddress"] = this.emailAddress;
-        data["password"] = this.password;
-        data["passwordConfirmation"] = this.passwordConfirmation;
+        data["altMobileNumber"] = this.altMobileNumber;
+        data["altEmailAddress"] = this.altEmailAddress;
         data["biography"] = this.biography;
         data["dateOfBirth"] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
         data["gender"] = this.gender;
         return data;
     }
 
-    clone(): CreatePersonAccountDto {
+    clone(): CreatePersonDto {
         const json = this.toJSON();
-        let result = new CreatePersonAccountDto();
+        let result = new CreatePersonDto();
         result.init(json);
         return result;
     }
 }
 
-export interface ICreatePersonAccountDto {
-    userName: string;
+export interface ICreatePersonDto {
     firstName: string;
     lastName: string;
     identityNumber: string | undefined;
     title: RefListPersonTitle;
     homeNumber: string | undefined;
     mobileNumber: string | undefined;
-    mobileNumber2: string | undefined;
-    emailAddress: string | undefined;
-    password: string | undefined;
-    passwordConfirmation: string | undefined;
+    altMobileNumber: string | undefined;
+    altEmailAddress: string | undefined;
     biography: string | undefined;
     dateOfBirth: moment.Moment | undefined;
     gender: RefListGender;
@@ -4787,12 +4775,12 @@ export interface ICreateTenantDto {
 
 export class CreateUserDto implements ICreateUserDto {
     userName: string;
-    name: string;
-    surname: string;
     emailAddress: string;
+    password: string | undefined;
+    passwordConfirmation: string | undefined;
     isActive: boolean;
     roleNames: string[] | undefined;
-    password: string;
+    person: PersonDto;
 
     constructor(data?: ICreateUserDto) {
         if (data) {
@@ -4806,16 +4794,16 @@ export class CreateUserDto implements ICreateUserDto {
     init(_data?: any) {
         if (_data) {
             this.userName = _data["userName"];
-            this.name = _data["name"];
-            this.surname = _data["surname"];
             this.emailAddress = _data["emailAddress"];
+            this.password = _data["password"];
+            this.passwordConfirmation = _data["passwordConfirmation"];
             this.isActive = _data["isActive"];
             if (Array.isArray(_data["roleNames"])) {
                 this.roleNames = [] as any;
                 for (let item of _data["roleNames"])
                     this.roleNames.push(item);
             }
-            this.password = _data["password"];
+            this.person = _data["person"] ? PersonDto.fromJS(_data["person"]) : <any>undefined;
         }
     }
 
@@ -4829,16 +4817,16 @@ export class CreateUserDto implements ICreateUserDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["userName"] = this.userName;
-        data["name"] = this.name;
-        data["surname"] = this.surname;
         data["emailAddress"] = this.emailAddress;
+        data["password"] = this.password;
+        data["passwordConfirmation"] = this.passwordConfirmation;
         data["isActive"] = this.isActive;
         if (Array.isArray(this.roleNames)) {
             data["roleNames"] = [];
             for (let item of this.roleNames)
                 data["roleNames"].push(item);
         }
-        data["password"] = this.password;
+        data["person"] = this.person ? this.person.toJSON() : <any>undefined;
         return data;
     }
 
@@ -4852,12 +4840,12 @@ export class CreateUserDto implements ICreateUserDto {
 
 export interface ICreateUserDto {
     userName: string;
-    name: string;
-    surname: string;
     emailAddress: string;
+    password: string | undefined;
+    passwordConfirmation: string | undefined;
     isActive: boolean;
     roleNames: string[] | undefined;
-    password: string;
+    person: PersonDto;
 }
 
 export class FacilityAppointmentDto implements IFacilityAppointmentDto {
@@ -5939,23 +5927,17 @@ export interface IPermissionDtoListResultDto {
 
 export class PersonDto implements IPersonDto {
     id: string;
+    firstName: string;
+    lastName: string;
     identityNumber: string | undefined;
     title: RefListPersonTitle;
-    firstName: string | undefined;
-    lastName: string | undefined;
-    middleName: string | undefined;
-    initials: string | undefined;
-    customShortName: string | undefined;
     homeNumber: string | undefined;
-    mobileNumber1: string | undefined;
-    mobileNumber2: string | undefined;
-    emailAddress1: string | undefined;
-    emailAddress2: string | undefined;
+    mobileNumber: string | undefined;
+    altMobileNumber: string | undefined;
+    altEmailAddress: string | undefined;
     biography: string | undefined;
     dateOfBirth: moment.Moment | undefined;
     gender: RefListGender;
-    isActive: boolean;
-    readonly fullName: string | undefined;
 
     constructor(data?: IPersonDto) {
         if (data) {
@@ -5969,23 +5951,17 @@ export class PersonDto implements IPersonDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.identityNumber = _data["identityNumber"];
-            this.title = _data["title"];
             this.firstName = _data["firstName"];
             this.lastName = _data["lastName"];
-            this.middleName = _data["middleName"];
-            this.initials = _data["initials"];
-            this.customShortName = _data["customShortName"];
+            this.identityNumber = _data["identityNumber"];
+            this.title = _data["title"];
             this.homeNumber = _data["homeNumber"];
-            this.mobileNumber1 = _data["mobileNumber1"];
-            this.mobileNumber2 = _data["mobileNumber2"];
-            this.emailAddress1 = _data["emailAddress1"];
-            this.emailAddress2 = _data["emailAddress2"];
+            this.mobileNumber = _data["mobileNumber"];
+            this.altMobileNumber = _data["altMobileNumber"];
+            this.altEmailAddress = _data["altEmailAddress"];
             this.biography = _data["biography"];
             this.dateOfBirth = _data["dateOfBirth"] ? moment(_data["dateOfBirth"].toString()) : <any>undefined;
             this.gender = _data["gender"];
-            this.isActive = _data["isActive"];
-            (<any>this).fullName = _data["fullName"];
         }
     }
 
@@ -5999,23 +5975,17 @@ export class PersonDto implements IPersonDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["identityNumber"] = this.identityNumber;
-        data["title"] = this.title;
         data["firstName"] = this.firstName;
         data["lastName"] = this.lastName;
-        data["middleName"] = this.middleName;
-        data["initials"] = this.initials;
-        data["customShortName"] = this.customShortName;
+        data["identityNumber"] = this.identityNumber;
+        data["title"] = this.title;
         data["homeNumber"] = this.homeNumber;
-        data["mobileNumber1"] = this.mobileNumber1;
-        data["mobileNumber2"] = this.mobileNumber2;
-        data["emailAddress1"] = this.emailAddress1;
-        data["emailAddress2"] = this.emailAddress2;
+        data["mobileNumber"] = this.mobileNumber;
+        data["altMobileNumber"] = this.altMobileNumber;
+        data["altEmailAddress"] = this.altEmailAddress;
         data["biography"] = this.biography;
         data["dateOfBirth"] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
         data["gender"] = this.gender;
-        data["isActive"] = this.isActive;
-        data["fullName"] = this.fullName;
         return data;
     }
 
@@ -6029,23 +5999,17 @@ export class PersonDto implements IPersonDto {
 
 export interface IPersonDto {
     id: string;
+    firstName: string;
+    lastName: string;
     identityNumber: string | undefined;
     title: RefListPersonTitle;
-    firstName: string | undefined;
-    lastName: string | undefined;
-    middleName: string | undefined;
-    initials: string | undefined;
-    customShortName: string | undefined;
     homeNumber: string | undefined;
-    mobileNumber1: string | undefined;
-    mobileNumber2: string | undefined;
-    emailAddress1: string | undefined;
-    emailAddress2: string | undefined;
+    mobileNumber: string | undefined;
+    altMobileNumber: string | undefined;
+    altEmailAddress: string | undefined;
     biography: string | undefined;
     dateOfBirth: moment.Moment | undefined;
     gender: RefListGender;
-    isActive: boolean;
-    fullName: string | undefined;
 }
 
 export class PersonDtoPagedResultDto implements IPersonDtoPagedResultDto {
@@ -6918,14 +6882,14 @@ export interface ITenantLoginInfoDto {
 export class UserDto implements IUserDto {
     id: number;
     userName: string;
-    name: string;
-    surname: string;
     emailAddress: string;
+    password: string | undefined;
+    passwordConfirmation: string | undefined;
     isActive: boolean;
-    fullName: string | undefined;
     lastLoginTime: moment.Moment | undefined;
     creationTime: moment.Moment;
     roleNames: string[] | undefined;
+    person: PersonDto;
 
     constructor(data?: IUserDto) {
         if (data) {
@@ -6940,11 +6904,10 @@ export class UserDto implements IUserDto {
         if (_data) {
             this.id = _data["id"];
             this.userName = _data["userName"];
-            this.name = _data["name"];
-            this.surname = _data["surname"];
             this.emailAddress = _data["emailAddress"];
+            this.password = _data["password"];
+            this.passwordConfirmation = _data["passwordConfirmation"];
             this.isActive = _data["isActive"];
-            this.fullName = _data["fullName"];
             this.lastLoginTime = _data["lastLoginTime"] ? moment(_data["lastLoginTime"].toString()) : <any>undefined;
             this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
             if (Array.isArray(_data["roleNames"])) {
@@ -6952,6 +6915,7 @@ export class UserDto implements IUserDto {
                 for (let item of _data["roleNames"])
                     this.roleNames.push(item);
             }
+            this.person = _data["person"] ? PersonDto.fromJS(_data["person"]) : <any>undefined;
         }
     }
 
@@ -6966,11 +6930,10 @@ export class UserDto implements IUserDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["userName"] = this.userName;
-        data["name"] = this.name;
-        data["surname"] = this.surname;
         data["emailAddress"] = this.emailAddress;
+        data["password"] = this.password;
+        data["passwordConfirmation"] = this.passwordConfirmation;
         data["isActive"] = this.isActive;
-        data["fullName"] = this.fullName;
         data["lastLoginTime"] = this.lastLoginTime ? this.lastLoginTime.toISOString() : <any>undefined;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
         if (Array.isArray(this.roleNames)) {
@@ -6978,6 +6941,7 @@ export class UserDto implements IUserDto {
             for (let item of this.roleNames)
                 data["roleNames"].push(item);
         }
+        data["person"] = this.person ? this.person.toJSON() : <any>undefined;
         return data;
     }
 
@@ -6992,14 +6956,14 @@ export class UserDto implements IUserDto {
 export interface IUserDto {
     id: number;
     userName: string;
-    name: string;
-    surname: string;
     emailAddress: string;
+    password: string | undefined;
+    passwordConfirmation: string | undefined;
     isActive: boolean;
-    fullName: string | undefined;
     lastLoginTime: moment.Moment | undefined;
     creationTime: moment.Moment;
     roleNames: string[] | undefined;
+    person: PersonDto;
 }
 
 export class UserDtoPagedResultDto implements IUserDtoPagedResultDto {

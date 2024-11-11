@@ -1,9 +1,12 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using Abp.Auditing;
 using Abp.Authorization.Users;
 using Abp.AutoMapper;
 using Abp.Runtime.Validation;
 using Farmru.IotMonitoring.Authorization.Users;
+using Farmru.IotMonitoring.Domains.Persons;
+using Farmru.IotMonitoring.Services.Persons.Dtos;
 
 namespace Farmru.IotMonitoring.Users.Dto
 {
@@ -11,30 +14,24 @@ namespace Farmru.IotMonitoring.Users.Dto
     public class CreateUserDto : IShouldNormalize
     {
         [Required]
+        [MinLength(5)]
         [StringLength(AbpUserBase.MaxUserNameLength)]
         public string UserName { get; set; }
-
-        [Required]
-        [StringLength(AbpUserBase.MaxNameLength)]
-        public string Name { get; set; }
-
-        [Required]
-        [StringLength(AbpUserBase.MaxSurnameLength)]
-        public string Surname { get; set; }
 
         [Required]
         [EmailAddress]
         [StringLength(AbpUserBase.MaxEmailAddressLength)]
         public string EmailAddress { get; set; }
 
+        public string Password { get; set; }
+
+        public string PasswordConfirmation { get; set; }
+
         public bool IsActive { get; set; }
 
         public string[] RoleNames { get; set; }
 
-        [Required]
-        [StringLength(AbpUserBase.MaxPlainPasswordLength)]
-        [DisableAuditing]
-        public string Password { get; set; }
+        public PersonDto Person { get; set; }
 
         public void Normalize()
         {
@@ -42,6 +39,10 @@ namespace Farmru.IotMonitoring.Users.Dto
             {
                 RoleNames = new string[0];
             }
+        }
+        public CreateUserDto()
+        {
+            Person = new PersonDto();
         }
     }
 }
