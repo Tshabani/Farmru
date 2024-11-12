@@ -18,7 +18,7 @@ namespace Farmru.IotMonitoring.Services.Facilities
     /// 
     /// </summary>
     [AbpAuthorize()]
-    public class FacilityAppService : AsyncCrudAppService<Facility, FacilityDto, Guid, PagedUserResultRequestDto, FacilityDto, FacilityDto>
+    public class FacilityAppService : AsyncCrudAppService<Facility, FacilityDto, Guid, PagedUserResultRequestDto, CreateFacilityDto, FacilityDto>
     {
         /// <summary>
         /// 

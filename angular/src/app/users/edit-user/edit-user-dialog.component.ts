@@ -12,14 +12,21 @@ import { AppComponentBase } from '@shared/app-component-base';
 import {
   UserServiceProxy,
   UserDto,
-  RoleDto
+  RoleDto,
+  PersonDto
 } from '@shared/service-proxies/service-proxies';
+import { getGenderOptions, getPersonTitles } from '@shared/helpers/userHealper';
+import moment from 'moment';
 
 @Component({
   templateUrl: './edit-user-dialog.component.html'
 })
 export class EditUserDialogComponent extends AppComponentBase
   implements OnInit {
+
+  personTitles = getPersonTitles();
+  genderOptions = getGenderOptions();
+
   saving = false;
   user = new UserDto();
   roles: RoleDto[] = [];
@@ -35,6 +42,7 @@ export class EditUserDialogComponent extends AppComponentBase
     private cd: ChangeDetectorRef
   ) {
     super(injector);
+    this.user.person = new PersonDto(); 
   }
 
   ngOnInit(): void {
@@ -47,6 +55,10 @@ export class EditUserDialogComponent extends AppComponentBase
         this.cd.detectChanges();
       });
     });
+  }
+
+  onDateOfBirthChange(event: any) {
+    this.user.person.dateOfBirth = event ? moment(event) : null;
   }
 
   setInitialRolesStatus(): void {

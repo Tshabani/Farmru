@@ -13,6 +13,8 @@ using Farmru.IotMonitoring.Services.Organisations.Dto;
 using Farmru.IotMonitoring.Services.Persons.Dtos;
 using Farmru.IotMonitoring.Services.Tasks.Dto;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Farmru.IotMonitoring
 {
@@ -67,6 +69,34 @@ namespace Farmru.IotMonitoring
             CreateMap<Person, CreatePersonDto>();
             CreateMap<PersonDto, Person>();
             CreateMap<CreatePersonDto, Person>();
+
+            CreateMap<Person, EntityWithDisplayNameDto<Guid?>>()
+           .ForMember(
+               dest => dest.Id,
+               opt => opt.MapFrom(src => src.Id)
+           )
+           .ForMember(
+               dest => dest.DisplayText,
+               opt => opt.MapFrom(src => src.FullName != null ? src.FullName : string.Empty) 
+           );
+
+            CreateMap<List<Person>, PeopleDto>()
+                .ForMember(
+                    dest => dest.List,
+                    opt => opt.MapFrom(src => src.Select(person =>
+                        person != null
+                            ? new EntityWithDisplayNameDto<Guid?>
+                            {
+                                Id = person.Id,
+                                DisplayText = person.FullName 
+                            }
+                            : null
+                    ).ToList())
+                );
+
+            CreateMap<Facility, CreateFacilityDto>();
+
+
         }
     }
 }

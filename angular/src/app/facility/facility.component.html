@@ -41,6 +41,8 @@
                     <th>{{ "Name" | localize }}</th>
                     <th>{{ "Description" | localize }}</th>
                     <th>{{ "Address" | localize }}</th>
+                    <th>{{ "Primary Contact" | localize }}</th>
+                    <th>{{ "Owner Organisation" | localize }}</th>
                     <th>{{ "Latitude" | localize }}</th>
                     <th>{{ "Longitude" | localize }}</th>
                     <th>{{ "Altitude" | localize }}</th>
@@ -63,6 +65,8 @@
                     <td>{{ facility.name }}</td>
                     <td>{{ facility.description }}</td>
                     <td>{{ facility.address }}</td>
+                    <td>{{ facility.primaryContact.displayText  }}</td>
+                    <td>{{ facility.ownerOrganisation.displayText  }}</td>
                     <td>{{ facility.latitude }}</td>
                     <td>{{ facility.longitude }}</td>
                     <td>{{ facility.altitude }}</td>
