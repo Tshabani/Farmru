@@ -13,6 +13,9 @@ namespace Farmru.IotMonitoring.Authorization
             context.CreatePermission(PermissionNames.Pages_Users_Activation, L("UsersActivation"));
             context.CreatePermission(PermissionNames.Pages_Roles, L("Roles"));
             context.CreatePermission(PermissionNames.Pages_Nodes, L("Nodes"));
+            context.CreatePermission(PermissionNames.Pages_People, L("People"));
+            context.CreatePermission(PermissionNames.Pages_Facilities, L("Facilities"));
+            context.CreatePermission(PermissionNames.Pages_Facility_Appointments, L("FacilityAppointments"));
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
         }
 

@@ -9,3 +9,4 @@ import { Ng2GoogleChartsModule } from 'ng2-google-charts';
     imports: [SharedModule, HomeRoutingModule, Ng2GoogleChartsModule ],
 })
 export class HomeModule {}
+

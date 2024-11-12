@@ -85,7 +85,7 @@ export class UsersComponent extends PagedListingComponentBase<UserDto> {
 
   protected delete(user: UserDto): void {
     abp.message.confirm(
-      this.l('UserDeleteWarningMessage', user.fullName),
+      this.l('UserDeleteWarningMessage', user.person.firstName),
       undefined,
       (result: boolean) => {
         if (result) {

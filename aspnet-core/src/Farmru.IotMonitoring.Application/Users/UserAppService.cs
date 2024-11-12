@@ -18,7 +18,9 @@ using Farmru.IotMonitoring.Authorization;
 using Farmru.IotMonitoring.Authorization.Accounts;
 using Farmru.IotMonitoring.Authorization.Roles;
 using Farmru.IotMonitoring.Authorization.Users;
+using Farmru.IotMonitoring.Domains.Persons;
 using Farmru.IotMonitoring.Roles.Dto;
+using Farmru.IotMonitoring.Services.Persons.Dtos;
 using Farmru.IotMonitoring.Users.Dto;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +33,7 @@ namespace Farmru.IotMonitoring.Users
         private readonly UserManager _userManager;
         private readonly RoleManager _roleManager;
         private readonly IRepository<Role> _roleRepository;
+        private readonly IRepository<Person, Guid> _personRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IAbpSession _abpSession;
         private readonly LogInManager _logInManager;
@@ -40,6 +43,7 @@ namespace Farmru.IotMonitoring.Users
             UserManager userManager,
             RoleManager roleManager,
             IRepository<Role> roleRepository,
+            IRepository<Person,Guid> personRepository,
             IPasswordHasher<User> passwordHasher,
             IAbpSession abpSession,
             LogInManager logInManager)
@@ -48,6 +52,7 @@ namespace Farmru.IotMonitoring.Users
             _userManager = userManager;
             _roleManager = roleManager;
             _roleRepository = roleRepository;
+            _personRepository = personRepository;
             _passwordHasher = passwordHasher;
             _abpSession = abpSession;
             _logInManager = logInManager;
@@ -58,22 +63,35 @@ namespace Farmru.IotMonitoring.Users
             CheckCreatePermission();
 
             var user = ObjectMapper.Map<User>(input);
+            var person = ObjectMapper.Map<Person>(input.Person);
 
             user.TenantId = AbpSession.TenantId;
             user.IsEmailConfirmed = true;
 
             await _userManager.InitializeOptionsAsync(AbpSession.TenantId);
 
-            CheckErrors(await _userManager.CreateAsync(user, input.Password));
+            var results = await _userManager.CreateAsync(user, input.Password);
+            CheckErrors(results);
 
-            if (input.RoleNames != null)
-            {
-                CheckErrors(await _userManager.SetRolesAsync(user, input.RoleNames));
+            if (results.Succeeded)
+            { 
+                person.User = user; 
+                await _personRepository.InsertAsync(person);
+
+                if (input.RoleNames != null)
+                {
+                    CheckErrors(await _userManager.SetRolesAsync(user, input.RoleNames));
+                }
+
+                CurrentUnitOfWork.SaveChanges();
+                var returnUser = MapToEntityDto(user);
+                returnUser.Person = ObjectMapper.Map<PersonDto>(person);
+                return returnUser;
             }
-
-            CurrentUnitOfWork.SaveChanges();
-
-            return MapToEntityDto(user);
+            else
+            {
+                throw new UserFriendlyException("User creation failed.");
+            }
         }
 
         public override async Task<UserDto> UpdateAsync(UserDto input)
@@ -81,24 +99,47 @@ namespace Farmru.IotMonitoring.Users
             CheckUpdatePermission();
 
             var user = await _userManager.GetUserByIdAsync(input.Id);
+            if (user == null)
+            {
+                throw new UserFriendlyException("User not found.");
+            }
 
             MapToEntity(input, user);
+            var updateUserResult = await _userManager.UpdateAsync(user);
+            CheckErrors(updateUserResult);
 
-            CheckErrors(await _userManager.UpdateAsync(user));
+            var person = ObjectMapper.Map<Person>(input.Person);
+            person.User = user;  
+            await _personRepository.UpdateAsync(person);
 
             if (input.RoleNames != null)
             {
-                CheckErrors(await _userManager.SetRolesAsync(user, input.RoleNames));
+                var roleResult = await _userManager.SetRolesAsync(user, input.RoleNames);
+                CheckErrors(roleResult);  
             }
 
             return await GetAsync(input);
         }
 
+
         public override async Task DeleteAsync(EntityDto<long> input)
         {
             var user = await _userManager.GetUserByIdAsync(input.Id);
-            await _userManager.DeleteAsync(user);
+            if (user == null)
+            {
+                throw new UserFriendlyException("User not found.");
+            }
+
+            var person = await _personRepository.FirstOrDefaultAsync(p => p.User.Id == user.Id);
+            if (person != null)
+            {
+                await _personRepository.DeleteAsync(person);
+            }
+
+            var deleteUserResult = await _userManager.DeleteAsync(user);
+            CheckErrors(deleteUserResult);
         }
+
 
         [AbpAuthorize(PermissionNames.Pages_Users_Activation)]
         public async Task Activate(EntityDto<long> user)
@@ -154,6 +195,12 @@ namespace Farmru.IotMonitoring.Users
 
             var userDto = base.MapToEntityDto(user);
             userDto.RoleNames = roles.ToArray();
+
+            var person = _personRepository.FirstOrDefault(p => p.User.Id == user.Id);
+            if (person != null)
+            {
+                userDto.Person = ObjectMapper.Map<PersonDto>(person); 
+            }
 
             return userDto;
         }

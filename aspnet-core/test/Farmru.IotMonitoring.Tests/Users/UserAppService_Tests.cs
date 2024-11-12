@@ -36,8 +36,6 @@ namespace Farmru.IotMonitoring.Tests.Users
                 {
                     EmailAddress = "john@volosoft.com",
                     IsActive = true,
-                    Name = "John",
-                    Surname = "Nash",
                     Password = "123qwe",
                     UserName = "john.nash"
                 });

@@ -33,11 +33,6 @@ namespace Farmru.IotMonitoring.Domains.Persons
         [Audited]
         public virtual string LastName { get; set; }
 
-        [Display(Name = "Middle Name")]
-        [StringLength(50)]
-        [Audited]
-        public virtual string MiddleName { get; set; }
-
         [Display(Name = "Biography")]
         [StringLength(50000)]
         public virtual string Biography { get; set; }
@@ -61,20 +56,20 @@ namespace Farmru.IotMonitoring.Domains.Persons
         [StringLength(20)]
         [Display(Name = "Mobile Number")]
         [Audited]
-        public virtual string MobileNumber1 { get; set; }
+        public virtual string MobileNumber { get; set; }
 
         [StringLength(20)]
         [Display(Name = "Alternate Mobile Number")]
-        public virtual string MobileNumber2 { get; set; }
+        public virtual string AltMobileNumber { get; set; }
 
         [StringLength(100), EmailAddress]
         [Display(Name = "Email Address")]
         [Audited]
-        public virtual string EmailAddress1 { get; set; }
+        public virtual string EmailAddress { get; set; }
 
         [StringLength(100), EmailAddress]
         [Display(Name = "Alternative Email Address")]
-        public virtual string EmailAddress2 { get; set; }
+        public virtual string AltEmailAddress { get; set; }
 
         [Audited]
         [DisableDateTimeNormalization]
