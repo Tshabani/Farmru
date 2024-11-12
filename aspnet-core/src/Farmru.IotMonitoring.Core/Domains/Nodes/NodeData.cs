@@ -21,6 +21,7 @@ namespace Farmru.IotMonitoring.Domains.Nodes
         public virtual long? Longitude { get; set; }
         public virtual long? SolarPanelVoltage { get; set; }
         public virtual long? BatteryVoltage { get; set; }
+        public virtual long? Conductivity { get; set; }
         /// <summary>
         /// The node that this data belongs to
         /// </summary>
