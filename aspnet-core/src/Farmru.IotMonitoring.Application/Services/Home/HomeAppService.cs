@@ -9,6 +9,8 @@ using Farmru.IotMonitoring.Authorization.Roles;
 using Farmru.IotMonitoring.Domains.Nodes;
 using System;
 using Farmru.IotMonitoring.Authorization;
+using Farmru.IotMonitoring.Domains.Stats;
+using Farmru.IotMonitoring.Repository;
 
 namespace Farmru.IotMonitoring.Services.Home
 {
@@ -18,15 +20,17 @@ namespace Farmru.IotMonitoring.Services.Home
         private readonly IRepository<User,long> _users;
         private readonly IRepository<Node, Guid> _nodes;
         private readonly IRepository<Role> _roles;
+        private readonly INodeDataRepository _nodeDataRepository;
 
         public HomeAppService(IRepository<User,long> users,
             IRepository<Node, Guid> nodes,
-            IRepository<Role> roles
+            IRepository<Role> roles, INodeDataRepository nodeDataRepository
             )
         {
             _users = users;
             _roles = roles;
             _nodes = nodes;
+            _nodeDataRepository = nodeDataRepository;
         }
 
         public async Task<AppStatisticsDto> GetAppStats()
@@ -38,6 +42,11 @@ namespace Farmru.IotMonitoring.Services.Home
             AppStatistics.TotalNumberOfActiveNodes = _nodes.GetAllList().Count() - 1;
 
             return AppStatistics;
+        }
+
+        public async Task<AverageNodeData> GetSensorData()
+        { 
+            return await _nodeDataRepository.GetAverageNodeDataAsync();
         }
     }
 }
