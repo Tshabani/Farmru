@@ -13,5 +13,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Farmru.IotMonitoring.Core\Farmru.IotMonitoring.Core.csproj" />
+    <ProjectReference Include="..\Farmru.IotMonitoring.EntityFrameworkCore\Farmru.IotMonitoring.EntityFrameworkCore.csproj" />
   </ItemGroup>
 </Project>

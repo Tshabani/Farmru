@@ -4,6 +4,7 @@ using Farmru.IotMonitoring.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Farmru.IotMonitoring.Migrations
 {
     [DbContext(typeof(IotMonitoringDbContext))]
-    partial class IotMonitoringDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241110181407_Added conductivity")]
+    partial class Addedconductivity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1526,6 +1529,11 @@ namespace Farmru.IotMonitoring.Migrations
                     b.Property<DateTime?>("LockoutEndDateUtc")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
                     b.Property<string>("NormalizedEmailAddress")
                         .IsRequired()
                         .HasMaxLength(256)
@@ -1552,6 +1560,11 @@ namespace Farmru.IotMonitoring.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
 
                     b.Property<int?>("TenantId")
                         .HasColumnType("int");
@@ -1928,14 +1941,6 @@ namespace Farmru.IotMonitoring.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AltEmailAddress")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("AltMobileNumber")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
                     b.Property<string>("Biography")
                         .HasMaxLength(50000)
                         .HasColumnType("nvarchar(max)");
@@ -1959,7 +1964,11 @@ namespace Farmru.IotMonitoring.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EmailAddress")
+                    b.Property<string>("EmailAddress1")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("EmailAddress2")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -1998,7 +2007,15 @@ namespace Farmru.IotMonitoring.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("MobileNumber")
+                    b.Property<string>("MiddleName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("MobileNumber1")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("MobileNumber2")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
@@ -2012,42 +2029,7 @@ namespace Farmru.IotMonitoring.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("People");
-                });
-
-            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Stats.AverageNodeData", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<float?>("AvgBatteryVoltage")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("AvgMoisture")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("AvgNitrogen")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("AvgPhosphorus")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("AvgPotassium")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("AvgSoilPH")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("AvgSoilTemperature")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("AvgSolarPanelVoltage")
-                        .HasColumnType("real");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AverageNodeData");
+                    b.ToTable("Peaople");
                 });
 
             modelBuilder.Entity("Farmru.IotMonitoring.Domains.Tasks.TaskManagement", b =>

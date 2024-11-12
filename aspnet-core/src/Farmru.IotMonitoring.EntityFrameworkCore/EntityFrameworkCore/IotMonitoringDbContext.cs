@@ -9,6 +9,7 @@ using Farmru.IotMonitoring.Domains.Organisations;
 using Farmru.IotMonitoring.Domains.Incidents;
 using Farmru.IotMonitoring.Domains.Facilities;
 using Farmru.IotMonitoring.Domains.Persons;
+using Farmru.IotMonitoring.Domains.Stats;
 
 namespace Farmru.IotMonitoring.EntityFrameworkCore
 {
@@ -23,6 +24,8 @@ namespace Farmru.IotMonitoring.EntityFrameworkCore
         public DbSet<Facility> Facilities { get; set; }
         public DbSet<FacilityAppointment> FacilityAppointments { get; set; }
         public DbSet<Person> People { get; set; }         
+        public DbSet<AverageNodeData> AverageNodeData { get; set; }         
+
         public IotMonitoringDbContext(DbContextOptions<IotMonitoringDbContext> options)
             : base(options)
         {
