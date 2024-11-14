@@ -4,6 +4,7 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Farmru.IotMonitoring.Domains.Facilities;
 using Farmru.IotMonitoring.Domains.Organisations;
+using Farmru.IotMonitoring.Services.Facilities.Dto;
 using Farmru.IotMonitoring.Services.NodeData.Dto;
 using Farmru.IotMonitoring.Services.Organisations.Dto;
 using Farmru.IotMonitoring.Users.Dto;
@@ -28,6 +29,12 @@ namespace Farmru.IotMonitoring.Services.Organisations
         public OrganisationAppService(IRepository<Organisation, Guid> repository) : base(repository)
         {
                 
+        }
+
+        public async Task<List<OrganisationsDto>> GetListOfOrganisations()
+        {
+            var people = await Repository.GetAllListAsync();
+            return ObjectMapper.Map<List<OrganisationsDto>>(people);
         }
     }
 }

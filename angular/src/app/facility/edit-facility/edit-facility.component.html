@@ -95,9 +95,9 @@
             #ownerOrganisationModel="ngModel"
             #ownerOrganisationEl
           >
-            @for (person of people; track trackById; let i = $index) {
-              <option [value]="person.id">
-                {{ person.fullName }}
+            @for (organisation of organisations; track trackById; let i = $index) {
+              <option [value]="organisation.id">
+                {{ organisation.name }}
               </option>
             }
           </select>

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { FacilityDto, FacilityServiceProxy, GuidNullableEntityWithDisplayNameDto, PeopleDto, PersonDto, PersonServiceProxy } from '@shared/service-proxies/service-proxies';
+import { FacilityDto, FacilityServiceProxy, GuidNullableEntityWithDisplayNameDto, OrganisationsDto, OrganisationServiceProxy, PeopleDto, PersonDto, PersonServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { SafeDisplayPipe } from '@shared/pipes/safe-display.pipe'
 
@@ -13,6 +13,7 @@ implements OnInit {
   saving = false;
   facility = new FacilityDto();  
   people: PeopleDto[] = []; 
+  organisations: OrganisationsDto[] = []; 
   selectedOwnerOrganisationId: string | null = null;
   selectedprimaryContactId: string | null = null;
 
@@ -22,6 +23,7 @@ implements OnInit {
     injector: Injector,
     private _facilityService: FacilityServiceProxy,    
     private _personService: PersonServiceProxy,
+    private _organisationsService: OrganisationServiceProxy,
     public bsModalRef: BsModalRef,
     private cd: ChangeDetectorRef
   ) {
@@ -35,14 +37,16 @@ implements OnInit {
       this.selectedprimaryContactId = result.primaryContact ? result.primaryContact.id : null;      
       this._personService.getListOfPeople().subscribe((result) => {
         this.people = result;
-        debugger; 
-        this.cd.detectChanges();  
+        this._organisationsService.getListOfOrganisations().subscribe((result) => {
+          this.organisations = result;           
+          this.cd.detectChanges();  
+        });   
       });  
     });
   }
 
   onOwnerOrganisationChange(selectedId: string): void {
-    const selectedPerson = this.people.find(person => person.id === selectedId);
+    const selectedPerson = this.organisations.find(org => org.id === selectedId);
   
     if (!this.facility.ownerOrganisation) {
       this.facility.ownerOrganisation = new GuidNullableEntityWithDisplayNameDto;
@@ -50,7 +54,7 @@ implements OnInit {
   
     if (selectedPerson) {
       this.facility.ownerOrganisation.id = selectedPerson.id;
-      this.facility.ownerOrganisation.displayText = selectedPerson.fullName;
+      this.facility.ownerOrganisation.displayText = selectedPerson.name;
     } else {
       this.facility.ownerOrganisation.id = null;
       this.facility.ownerOrganisation.displayText = null;

@@ -9,6 +9,8 @@ import { AppAuthService } from './auth/app-auth.service';
 import { AppRouteGuard } from './auth/auth-route-guard';
 import { LocalizePipe } from '@shared/pipes/localize.pipe';
 import { SafeDisplayPipe } from '@shared/pipes/safe-display.pipe';
+import { GenderPipe } from '@shared/pipes/gender.pipe';
+import { TitlePipe } from '@shared/pipes/title.pipe';
 
 import { AbpPaginationControlsComponent } from './components/pagination/abp-pagination-controls.component';
 import { AbpValidationSummaryComponent } from './components/validation/abp-validation.summary.component';
@@ -40,6 +42,8 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
         AbpValidationSummaryComponent,
         AbpModalHeaderComponent,
         AbpModalFooterComponent,
+        GenderPipe,
+        TitlePipe,
         SafeDisplayPipe,
         LocalizePipe,
         BusyDirective,
@@ -50,6 +54,8 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
         AbpValidationSummaryComponent,
         AbpModalHeaderComponent,
         AbpModalFooterComponent,
+        GenderPipe,
+        TitlePipe,
         SafeDisplayPipe,
         LocalizePipe,
         BusyDirective,

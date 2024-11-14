@@ -5,6 +5,7 @@ using Farmru.IotMonitoring.Authorization;
 using Farmru.IotMonitoring.Domains.Facilities;
 using Farmru.IotMonitoring.Services.Facilities.Dto;
 using Farmru.IotMonitoring.Services.NodeData.Dto;
+using Farmru.IotMonitoring.Services.Persons.Dtos;
 using Farmru.IotMonitoring.Users.Dto;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,12 @@ namespace Farmru.IotMonitoring.Services.Facilities
         public FacilityAppService(IRepository<Facility, Guid> repository) : base(repository)
         { 
             
+        }
+
+        public async Task<List<FacilitiesDto>> GetListOfFacilities()
+        {
+            var people = await Repository.GetAllListAsync();
+            return ObjectMapper.Map<List<FacilitiesDto>>(people);
         }
     }
 }

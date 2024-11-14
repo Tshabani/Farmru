@@ -67,13 +67,13 @@
                     <td>{{ person.firstName }}</td>
                     <td>{{ person.lastName }}</td>
                     <td>{{ person.identityNumber }}</td>
-                    <td>{{ person.title }}</td>
+                    <td>{{ person.title | title }}</td>
                     <td>{{ person.homeNumber }}</td>
                     <td>{{ person.altMobileNumber }}</td>
                     <td>{{ person.altEmailAddress }}</td>               
                     <td>{{ person.biography}}</td>
                     <td>{{ person.dateOfBirth}}</td>
-                    <td>{{ person.gender}}</td>
+                    <td>{{ person.gender | gender }}</td>
                     <td>
                       <button type="button" class="btn btn-sm bg-secondary" (click)="editPerson(person)">
                         <i class="fas fa-pencil-alt"></i>

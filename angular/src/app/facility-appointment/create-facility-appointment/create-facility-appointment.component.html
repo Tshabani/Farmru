@@ -1,1 +1,71 @@
-<p>create-facility-appointment works!</p>
+<form
+  class="form-horizontal"
+  autocomplete="off"
+  #createNodeForm="ngForm"
+  (ngSubmit)="save()"
+  >
+  <abp-modal-header
+    [title]="'Create Appointment' | localize"
+    (onCloseClick)="bsModalRef.hide()"
+  ></abp-modal-header>
+  <div class="modal-body">
+    <div class="form-group row required">
+        <label class="col-md-3 col-form-label" for="appointedUser">
+          {{ "Appointed User" | localize }}
+        </label>
+        <div class="col-md-9">
+          <select
+            class="form-control"
+            name="appointedUser"
+            id="appointedUser"
+            [(ngModel)]="selectedAppointedUserId"
+            (ngModelChange)="onAppointedUserChange($event)"
+            #appointedUserModel="ngModel"
+            #appointedUserEl
+          >
+          @for (person of people; track trackById; let i = $index) {
+            <option [value]="person.id">
+              {{ person.fullName }}
+            </option>
+          }
+          </select>
+          <abp-validation-summary
+            [control]="appointedUserModel"
+            [controlEl]="appointedUserEl"
+          ></abp-validation-summary>
+        </div>
+      </div>
+
+      <div class="form-group row required">
+        <label class="col-md-3 col-form-label" for="facility">
+          {{ "Facility" | localize }}
+        </label>
+        <div class="col-md-9">
+          <select
+            class="form-control"
+            name="facility"
+            id="facility"
+            [(ngModel)]="selectedFacilityId"
+            (ngModelChange)="onFacilityChange($event)"
+            #facilityModel="ngModel"
+            #facilityEl
+          >
+          @for (facility of facilities; track trackById; let i = $index) {
+            <option [value]="facility.id">
+              {{ facility.name }}
+            </option>
+          }
+          </select>
+          <abp-validation-summary
+            [control]="facilityModel"
+            [controlEl]="facilityEl"
+          ></abp-validation-summary>
+        </div>
+      </div>
+  </div>
+  <abp-modal-footer
+    [cancelDisabled]="saving"
+    [saveDisabled]="!createNodeForm.form.valid || saving"
+    (onCancelClick)="bsModalRef.hide()"
+  ></abp-modal-footer>
+</form>

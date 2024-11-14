@@ -17,7 +17,8 @@ namespace Farmru.IotMonitoring.Services.Facilities.Dto
     [AutoMap(typeof(FacilityAppointment))]
     public class CreateFacilityAppointmentDto : EntityDto<Guid>
     {
-        public Guid? AppointedUser { get; set; }
-        public Guid? Facility { get; set; }
+        public EntityWithDisplayNameDto<Guid?> AppointedUser { get; set; }
+
+        public EntityWithDisplayNameDto<Guid?> Facility { get; set; }
     }
 }

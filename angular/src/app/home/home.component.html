@@ -80,19 +80,81 @@
       <div class="row">
         @if(pieChart) {
           <div class="col-md-6 col-sm-6 col-12 text-center">
-            <div style="display: block;">
+            <div class="bg-white border mb-3 text-center" style="display: block;">
               <google-chart [data]="pieChart"></google-chart> 
             </div>
           </div>
         }
         @if(barChart) {
           <div class="col-md-6 col-sm-6 col-12 text-center">
-            <div style="display: block;">
+            <div class="bg-white border mb-3 text-center" style="display: block;">
               <google-chart [data]="barChart"></google-chart>
             </div>
           </div> 
         }
-        </div>      
+        </div>    
+
+        <div class="row">
+          @if(soilTemperatureGauge) {
+            <div class="col-md-3 col-sm-6 col-12 text-center">
+              <div class="bg-white border mb-3 text-center" style="display: block;">
+                <google-chart [data]="soilTemperatureGauge"></google-chart> 
+              </div>
+            </div>
+          }
+          @if(soilPHGauge) {
+            <div class="col-md-3 col-sm-6 col-12 text-center">
+              <div class="bg-white border mb-3 text-center" style="display: block;">
+                <google-chart [data]="soilPHGauge"></google-chart> 
+              </div>
+            </div>
+          }
+          @if(moistureGauge) {
+            <div class="col-md-3 col-sm-6 col-12 text-center">
+              <div class="bg-white border mb-3 text-center" style="display: block;">
+                <google-chart [data]="moistureGauge"></google-chart> 
+              </div>
+            </div>
+          }
+          @if(phosphorusGauge) {
+            <div class="col-md-3 col-sm-6 col-12 text-center">
+              <div class="bg-white border mb-3 text-center" style="display: block;">
+                <google-chart [data]="phosphorusGauge"></google-chart> 
+              </div>
+            </div>
+          }
+          </div>
+          
+          <div class="row">
+            @if(potassiumGauge) {
+              <div class="col-md-3 col-sm-6 col-12 text-center">
+                <div class="bg-white border mb-3 text-center" style="display: block;">
+                  <google-chart [data]="potassiumGauge"></google-chart> 
+                </div>
+              </div>
+            }
+            @if(nitrogenGauge) {
+              <div class="col-md-3 col-sm-6 col-12 text-center">
+                <div class="bg-white border mb-3 text-center" style="display: block;">
+                  <google-chart [data]="nitrogenGauge"></google-chart> 
+                </div>
+              </div>
+            }
+            @if(solarPanelVoltageGauge) {
+              <div class="col-md-3 col-sm-6 col-12 text-center">
+                <div class="bg-white border mb-3 text-center" style="display: block;">
+                  <google-chart [data]="solarPanelVoltageGauge"></google-chart> 
+                </div>
+              </div>
+            }
+            @if(batteryVoltageGauge) {
+              <div class="col-md-3 col-sm-6 col-12 text-center">
+                <div class="bg-white border mb-3 text-center" style="display: block;">
+                  <google-chart [data]="batteryVoltageGauge"></google-chart> 
+                </div>
+              </div>
+            }
+            </div>  
     </div>
   </section>
 </div>

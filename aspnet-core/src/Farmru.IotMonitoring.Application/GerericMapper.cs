@@ -85,9 +85,24 @@ namespace Farmru.IotMonitoring
                 .ForMember(r => r.Id, opt => opt.MapFrom(e => e.Id))
                 ;
 
+            CreateMap<Facility, FacilitiesDto>()
+                .ForMember(r => r.Name, opt => opt.MapFrom(e => e.Name))
+                .ForMember(r => r.Id, opt => opt.MapFrom(e => e.Id))
+                ;
+
+            CreateMap<Organisation, OrganisationsDto>()
+                .ForMember(r => r.Name, opt => opt.MapFrom(e => e.Name))
+                .ForMember(r => r.Id, opt => opt.MapFrom(e => e.Id))
+                ;
+
             CreateMap<CreateFacilityDto, Facility>()
                 .ForMember(u => u.PrimaryContact, options => options.MapFrom(e => GetEntity<Person>(e.PrimaryContact)))
-                .ForMember(u => u.OwnerOrganisation, options => options.MapFrom(e => GetEntity<Person>(e.OwnerOrganisation)))                
+                .ForMember(u => u.OwnerOrganisation, options => options.MapFrom(e => GetEntity<Organisation>(e.OwnerOrganisation)))                
+                ;
+
+            CreateMap<CreateFacilityAppointmentDto, FacilityAppointment>()
+                .ForMember(u => u.AppointedUser, options => options.MapFrom(e => GetEntity<Person>(e.AppointedUser)))
+                .ForMember(u => u.Facility, options => options.MapFrom(e => GetEntity<Facility>(e.Facility)))
                 ;
         }
     }
