@@ -13,8 +13,8 @@ using System.Threading.Tasks;
 namespace Farmru.IotMonitoring.Services.Persons.Dtos
 {
     [AutoMap(typeof(Person))]
-    public class PeopleDto
+    public class PeopleDto : EntityDto<Guid>
     {  
-        public List<EntityWithDisplayNameDto<Guid?>?> List { get; set; }
+        public string FullName { get; set; }
     }
 }

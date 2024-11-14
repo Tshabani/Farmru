@@ -20,9 +20,10 @@ namespace Farmru.IotMonitoring.Services.Persons
         {
         }
 
-        public async Task<PeopleDto> GetListOfPeople()
+        public async Task<List<PeopleDto>> GetListOfPeople()
         { 
-            return ObjectMapper.Map<PeopleDto>(await Repository.GetAllListAsync());
+            var people = await Repository.GetAllListAsync();
+            return ObjectMapper.Map<List<PeopleDto>>(people);
         }
     }
 }

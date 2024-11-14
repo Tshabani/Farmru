@@ -80,19 +80,10 @@ namespace Farmru.IotMonitoring
                opt => opt.MapFrom(src => src.FullName != null ? src.FullName : string.Empty) 
            );
 
-            CreateMap<List<Person>, PeopleDto>()
-                .ForMember(
-                    dest => dest.List,
-                    opt => opt.MapFrom(src => src.Select(person =>
-                        person != null
-                            ? new EntityWithDisplayNameDto<Guid?>
-                            {
-                                Id = person.Id,
-                                DisplayText = person.FullName 
-                            }
-                            : null
-                    ).ToList())
-                );
+            CreateMap<Person, PeopleDto>()
+                .ForMember(r => r.FullName, opt => opt.MapFrom(e => e.FullName))
+                .ForMember(r => r.Id, opt => opt.MapFrom(e => e.Id))
+                ;
 
             CreateMap<CreateFacilityDto, Facility>()
                 .ForMember(u => u.PrimaryContact, options => options.MapFrom(e => GetEntity<Person>(e.PrimaryContact)))
