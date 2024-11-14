@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Injector, OnInit, Output } 
 import { AppComponentBase } from '@shared/app-component-base';
 import { FacilityDto, FacilityServiceProxy, GuidNullableEntityWithDisplayNameDto, PeopleDto, PersonDto, PersonServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { SafeDisplayPipe } from '@shared/pipes/safe-display.pipe'
 
 @Component({
   templateUrl: './edit-facility.component.html',
@@ -11,7 +12,7 @@ implements OnInit {
   id: string;
   saving = false;
   facility = new FacilityDto();  
-  people: GuidNullableEntityWithDisplayNameDto[] = []; 
+  people: PeopleDto[] = []; 
   selectedOwnerOrganisationId: string | null = null;
   selectedprimaryContactId: string | null = null;
 
@@ -29,9 +30,11 @@ implements OnInit {
 
   ngOnInit(): void {
     this._facilityService.get(this.id).subscribe((result) => {
-      this.facility = result; 
-      this._personService.getAll().subscribe((result) => {
-        this.people = result.list;
+      this.facility = result;
+      this.selectedOwnerOrganisationId = result.ownerOrganisation ? result.ownerOrganisation.id : null;
+      this.selectedprimaryContactId = result.primaryContact ? result.primaryContact.id : null;      
+      this._personService.getListOfPeople().subscribe((result) => {
+        this.people = result;
         debugger; 
         this.cd.detectChanges();  
       });  
@@ -40,22 +43,30 @@ implements OnInit {
 
   onOwnerOrganisationChange(selectedId: string): void {
     const selectedPerson = this.people.find(person => person.id === selectedId);
-
+  
+    if (!this.facility.ownerOrganisation) {
+      this.facility.ownerOrganisation = new GuidNullableEntityWithDisplayNameDto;
+    }
+  
     if (selectedPerson) {
       this.facility.ownerOrganisation.id = selectedPerson.id;
-      this.facility.ownerOrganisation.displayText = selectedPerson.displayText;
+      this.facility.ownerOrganisation.displayText = selectedPerson.fullName;
     } else {
       this.facility.ownerOrganisation.id = null;
       this.facility.ownerOrganisation.displayText = null;
     }
   }
-
-  onprimaryContactChange(selectedId: string): void {
+  
+  onPrimaryContactChange(selectedId: string): void {
     const selectedPerson = this.people.find(person => person.id === selectedId);
-
+  
+    if (!this.facility.primaryContact) {
+      this.facility.primaryContact = new GuidNullableEntityWithDisplayNameDto;
+    }
+  
     if (selectedPerson) {
       this.facility.primaryContact.id = selectedPerson.id;
-      this.facility.primaryContact.displayText = selectedPerson.displayText;
+      this.facility.primaryContact.displayText = selectedPerson.fullName;
     } else {
       this.facility.primaryContact.id = null;
       this.facility.primaryContact.displayText = null;

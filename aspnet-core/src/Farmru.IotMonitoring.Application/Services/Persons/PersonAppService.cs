@@ -9,12 +9,12 @@ using Farmru.IotMonitoring.Users.Dto;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using Abp.Application.Services.Dto;
 
 namespace Farmru.IotMonitoring.Services.Persons
 {
     [AbpAuthorize]
-    public class PersonAppService : AsyncCrudAppService<Person, PersonDto, Guid, PagedUserResultRequestDto, CreatePersonDto, PersonDto>
+    public class PersonAppService : AsyncCrudAppService<Person, PersonDto, Guid, PagedResultRequestDto, CreatePersonDto, PersonDto>
     {
         public PersonAppService(IRepository<Person, Guid> repository) : base(repository)
         {

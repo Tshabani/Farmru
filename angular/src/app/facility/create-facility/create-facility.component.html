@@ -91,14 +91,14 @@
               class="form-control"
               name="ownerOrganisation"
               id="ownerOrganisation"
-              required
-              [(ngModel)]="facility.ownerOrganisation"
+              [(ngModel)]="selectedOwnerOrganisationId"
+              (ngModelChange)="onOwnerOrganisationChange($event)"
               #ownerOrganisationModel="ngModel"
               #ownerOrganisationEl
             >
               @for (person of people; track trackById; let i = $index) {
                 <option [value]="person.id">
-                  {{ person.displayText }}
+                  {{ person.fullName }}
                 </option>
               }
             </select>
@@ -118,14 +118,14 @@
               class="form-control"
               name="primaryContact"
               id="primaryContact"
-              required
-              [(ngModel)]="facility.primaryContact"
+              [(ngModel)]="selectedprimaryContactId"
+              (ngModelChange)="onPrimaryContactChange($event)"
               #primaryContactModel="ngModel"
               #primaryContactEl
             >
-            @for (person of people; track person; let i = $index) {
+            @for (person of people; track trackById; let i = $index) {
               <option [value]="person.id">
-                {{ person.displayText }}
+                {{ person.fullName }}
               </option>
             }
             </select>
@@ -142,10 +142,11 @@
         </label>
         <div class="col-md-9">
           <input
-            type="text"
+            type="number"
             class="form-control"
             name="latitude"
             id="latitude"
+            step="0.000001"
             required
             minlength="2"
             maxlength="32"
@@ -166,10 +167,11 @@
         </label>
         <div class="col-md-9">
           <input
-            type="text"
+            type="number"
             class="form-control"
             name="longitude"
             id="longitude"
+            step="0.000001"
             required
             minlength="2"
             maxlength="32"
@@ -190,10 +192,11 @@
         </label>
         <div class="col-md-9">
           <input
-            type="text"
+            type="number"
             class="form-control"
             name="altitude"
             id="altitude"
+            step="0.000001"
             required
             minlength="2"
             maxlength="32"

@@ -5,6 +5,7 @@ using Farmru.IotMonitoring.Authorization.Users;
 using Farmru.IotMonitoring.Domains.Facilities;
 using Farmru.IotMonitoring.Domains.Organisations;
 using Farmru.IotMonitoring.Helpers;
+using Farmru.IotMonitoring.Users.Dto;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -28,5 +29,6 @@ namespace Farmru.IotMonitoring.Services.Facilities.Dto
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
         public decimal? Altitude { get; set; }
+
     }
 }

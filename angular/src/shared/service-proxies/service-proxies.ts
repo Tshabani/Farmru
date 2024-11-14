@@ -872,6 +872,57 @@ export class HomeServiceProxy {
         }
         return _observableOf(null as any);
     }
+
+    /**
+     * @return OK
+     */
+    getSensorData(): Observable<AverageNodeData> {
+        let url_ = this.baseUrl + "/api/services/app/Home/GetSensorData";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetSensorData(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetSensorData(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<AverageNodeData>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<AverageNodeData>;
+        }));
+    }
+
+    protected processGetSensorData(response: HttpResponseBase): Observable<AverageNodeData> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AverageNodeData.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
 }
 
 @Injectable()
@@ -942,22 +993,12 @@ export class NodeServiceProxy {
     }
 
     /**
-     * @param keyword (optional) 
-     * @param isActive (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return OK
      */
-    getAll(keyword: string | undefined, isActive: boolean | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<NodeDtoPagedResultDto> {
+    getAll(skipCount: number | undefined, maxResultCount: number | undefined): Observable<NodeDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Node/GetAll?";
-        if (keyword === null)
-            throw new Error("The parameter 'keyword' cannot be null.");
-        else if (keyword !== undefined)
-            url_ += "Keyword=" + encodeURIComponent("" + keyword) + "&";
-        if (isActive === null)
-            throw new Error("The parameter 'isActive' cannot be null.");
-        else if (isActive !== undefined)
-            url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -1548,22 +1589,12 @@ export class OrganisationServiceProxy {
     }
 
     /**
-     * @param keyword (optional) 
-     * @param isActive (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return OK
      */
-    getAll(keyword: string | undefined, isActive: boolean | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<OrganisationDtoPagedResultDto> {
+    getAll(skipCount: number | undefined, maxResultCount: number | undefined): Observable<OrganisationDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Organisation/GetAll?";
-        if (keyword === null)
-            throw new Error("The parameter 'keyword' cannot be null.");
-        else if (keyword !== undefined)
-            url_ += "Keyword=" + encodeURIComponent("" + keyword) + "&";
-        if (isActive === null)
-            throw new Error("The parameter 'isActive' cannot be null.");
-        else if (isActive !== undefined)
-            url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
         if (skipCount === null)
             throw new Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -1797,8 +1828,132 @@ export class PersonServiceProxy {
     /**
      * @return OK
      */
-    getAll(): Observable<PeopleDto> {
-        let url_ = this.baseUrl + "/api/services/app/Person/GetAll";
+    getListOfPeople(): Observable<PeopleDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Person/GetListOfPeople";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetListOfPeople(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetListOfPeople(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PeopleDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PeopleDto[]>;
+        }));
+    }
+
+    protected processGetListOfPeople(response: HttpResponseBase): Observable<PeopleDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(PeopleDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return OK
+     */
+    get(id: string | undefined): Observable<PersonDto> {
+        let url_ = this.baseUrl + "/api/services/app/Person/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PersonDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PersonDto>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<PersonDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PersonDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return OK
+     */
+    getAll(skipCount: number | undefined, maxResultCount: number | undefined): Observable<PersonDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Person/GetAll?";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1816,14 +1971,14 @@ export class PersonServiceProxy {
                 try {
                     return this.processGetAll(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<PeopleDto>;
+                    return _observableThrow(e) as any as Observable<PersonDtoPagedResultDto>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<PeopleDto>;
+                return _observableThrow(response_) as any as Observable<PersonDtoPagedResultDto>;
         }));
     }
 
-    protected processGetAll(response: HttpResponseBase): Observable<PeopleDto> {
+    protected processGetAll(response: HttpResponseBase): Observable<PersonDtoPagedResultDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1834,8 +1989,172 @@ export class PersonServiceProxy {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PeopleDto.fromJS(resultData200);
+            result200 = PersonDtoPagedResultDto.fromJS(resultData200);
             return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    create(body: CreatePersonDto | undefined): Observable<PersonDto> {
+        let url_ = this.baseUrl + "/api/services/app/Person/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PersonDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PersonDto>;
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<PersonDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PersonDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    update(body: PersonDto | undefined): Observable<PersonDto> {
+        let url_ = this.baseUrl + "/api/services/app/Person/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PersonDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PersonDto>;
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<PersonDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PersonDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return OK
+     */
+    delete(id: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Person/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -3892,6 +4211,81 @@ export interface IAuthenticateResultModel {
     userId: number;
 }
 
+export class AverageNodeData implements IAverageNodeData {
+    id: string;
+    avgSoilTemperature: number | undefined;
+    avgSoilPH: number | undefined;
+    avgMoisture: number | undefined;
+    avgPhosphorus: number | undefined;
+    avgPotassium: number | undefined;
+    avgNitrogen: number | undefined;
+    avgSolarPanelVoltage: number | undefined;
+    avgBatteryVoltage: number | undefined;
+
+    constructor(data?: IAverageNodeData) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.avgSoilTemperature = _data["avgSoilTemperature"];
+            this.avgSoilPH = _data["avgSoilPH"];
+            this.avgMoisture = _data["avgMoisture"];
+            this.avgPhosphorus = _data["avgPhosphorus"];
+            this.avgPotassium = _data["avgPotassium"];
+            this.avgNitrogen = _data["avgNitrogen"];
+            this.avgSolarPanelVoltage = _data["avgSolarPanelVoltage"];
+            this.avgBatteryVoltage = _data["avgBatteryVoltage"];
+        }
+    }
+
+    static fromJS(data: any): AverageNodeData {
+        data = typeof data === 'object' ? data : {};
+        let result = new AverageNodeData();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["avgSoilTemperature"] = this.avgSoilTemperature;
+        data["avgSoilPH"] = this.avgSoilPH;
+        data["avgMoisture"] = this.avgMoisture;
+        data["avgPhosphorus"] = this.avgPhosphorus;
+        data["avgPotassium"] = this.avgPotassium;
+        data["avgNitrogen"] = this.avgNitrogen;
+        data["avgSolarPanelVoltage"] = this.avgSolarPanelVoltage;
+        data["avgBatteryVoltage"] = this.avgBatteryVoltage;
+        return data;
+    }
+
+    clone(): AverageNodeData {
+        const json = this.toJSON();
+        let result = new AverageNodeData();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAverageNodeData {
+    id: string;
+    avgSoilTemperature: number | undefined;
+    avgSoilPH: number | undefined;
+    avgMoisture: number | undefined;
+    avgPhosphorus: number | undefined;
+    avgPotassium: number | undefined;
+    avgNitrogen: number | undefined;
+    avgSolarPanelVoltage: number | undefined;
+    avgBatteryVoltage: number | undefined;
+}
+
 export class ChangePasswordDto implements IChangePasswordDto {
     currentPassword: string;
     newPassword: string;
@@ -4030,8 +4424,8 @@ export class CreateFacilityDto implements ICreateFacilityDto {
     name: string | undefined;
     description: string | undefined;
     address: string | undefined;
-    primaryContact: string | undefined;
-    ownerOrganisation: string | undefined;
+    primaryContact: GuidNullableEntityWithDisplayNameDto;
+    ownerOrganisation: GuidNullableEntityWithDisplayNameDto;
     latitude: number | undefined;
     longitude: number | undefined;
     altitude: number | undefined;
@@ -4051,8 +4445,8 @@ export class CreateFacilityDto implements ICreateFacilityDto {
             this.name = _data["name"];
             this.description = _data["description"];
             this.address = _data["address"];
-            this.primaryContact = _data["primaryContact"];
-            this.ownerOrganisation = _data["ownerOrganisation"];
+            this.primaryContact = _data["primaryContact"] ? GuidNullableEntityWithDisplayNameDto.fromJS(_data["primaryContact"]) : <any>undefined;
+            this.ownerOrganisation = _data["ownerOrganisation"] ? GuidNullableEntityWithDisplayNameDto.fromJS(_data["ownerOrganisation"]) : <any>undefined;
             this.latitude = _data["latitude"];
             this.longitude = _data["longitude"];
             this.altitude = _data["altitude"];
@@ -4072,8 +4466,8 @@ export class CreateFacilityDto implements ICreateFacilityDto {
         data["name"] = this.name;
         data["description"] = this.description;
         data["address"] = this.address;
-        data["primaryContact"] = this.primaryContact;
-        data["ownerOrganisation"] = this.ownerOrganisation;
+        data["primaryContact"] = this.primaryContact ? this.primaryContact.toJSON() : <any>undefined;
+        data["ownerOrganisation"] = this.ownerOrganisation ? this.ownerOrganisation.toJSON() : <any>undefined;
         data["latitude"] = this.latitude;
         data["longitude"] = this.longitude;
         data["altitude"] = this.altitude;
@@ -4093,8 +4487,8 @@ export interface ICreateFacilityDto {
     name: string | undefined;
     description: string | undefined;
     address: string | undefined;
-    primaryContact: string | undefined;
-    ownerOrganisation: string | undefined;
+    primaryContact: GuidNullableEntityWithDisplayNameDto;
+    ownerOrganisation: GuidNullableEntityWithDisplayNameDto;
     latitude: number | undefined;
     longitude: number | undefined;
     altitude: number | undefined;
@@ -4232,6 +4626,89 @@ export interface ICreateNodeData {
     solarPanelVoltage: number | undefined;
     batteryVoltage: number | undefined;
     loggingTime: moment.Moment | undefined;
+}
+
+export class CreatePersonDto implements ICreatePersonDto {
+    firstName: string;
+    lastName: string;
+    identityNumber: string | undefined;
+    title: RefListPersonTitle;
+    homeNumber: string | undefined;
+    mobileNumber: string | undefined;
+    altMobileNumber: string | undefined;
+    altEmailAddress: string | undefined;
+    biography: string | undefined;
+    dateOfBirth: moment.Moment | undefined;
+    gender: RefListGender;
+
+    constructor(data?: ICreatePersonDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
+            this.identityNumber = _data["identityNumber"];
+            this.title = _data["title"];
+            this.homeNumber = _data["homeNumber"];
+            this.mobileNumber = _data["mobileNumber"];
+            this.altMobileNumber = _data["altMobileNumber"];
+            this.altEmailAddress = _data["altEmailAddress"];
+            this.biography = _data["biography"];
+            this.dateOfBirth = _data["dateOfBirth"] ? moment(_data["dateOfBirth"].toString()) : <any>undefined;
+            this.gender = _data["gender"];
+        }
+    }
+
+    static fromJS(data: any): CreatePersonDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreatePersonDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
+        data["identityNumber"] = this.identityNumber;
+        data["title"] = this.title;
+        data["homeNumber"] = this.homeNumber;
+        data["mobileNumber"] = this.mobileNumber;
+        data["altMobileNumber"] = this.altMobileNumber;
+        data["altEmailAddress"] = this.altEmailAddress;
+        data["biography"] = this.biography;
+        data["dateOfBirth"] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
+        data["gender"] = this.gender;
+        return data;
+    }
+
+    clone(): CreatePersonDto {
+        const json = this.toJSON();
+        let result = new CreatePersonDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreatePersonDto {
+    firstName: string;
+    lastName: string;
+    identityNumber: string | undefined;
+    title: RefListPersonTitle;
+    homeNumber: string | undefined;
+    mobileNumber: string | undefined;
+    altMobileNumber: string | undefined;
+    altEmailAddress: string | undefined;
+    biography: string | undefined;
+    dateOfBirth: moment.Moment | undefined;
+    gender: RefListGender;
 }
 
 export class CreateRoleDto implements ICreateRoleDto {
@@ -5032,6 +5509,7 @@ export class NodeDataDto implements INodeDataDto {
     longitude: number | undefined;
     solarPanelVoltage: number | undefined;
     batteryVoltage: number | undefined;
+    conductivity: number | undefined;
     loggingTime: moment.Moment | undefined;
     node: GuidNullableEntityWithDisplayNameDto;
 
@@ -5057,6 +5535,7 @@ export class NodeDataDto implements INodeDataDto {
             this.longitude = _data["longitude"];
             this.solarPanelVoltage = _data["solarPanelVoltage"];
             this.batteryVoltage = _data["batteryVoltage"];
+            this.conductivity = _data["conductivity"];
             this.loggingTime = _data["loggingTime"] ? moment(_data["loggingTime"].toString()) : <any>undefined;
             this.node = _data["node"] ? GuidNullableEntityWithDisplayNameDto.fromJS(_data["node"]) : <any>undefined;
         }
@@ -5082,6 +5561,7 @@ export class NodeDataDto implements INodeDataDto {
         data["longitude"] = this.longitude;
         data["solarPanelVoltage"] = this.solarPanelVoltage;
         data["batteryVoltage"] = this.batteryVoltage;
+        data["conductivity"] = this.conductivity;
         data["loggingTime"] = this.loggingTime ? this.loggingTime.toISOString() : <any>undefined;
         data["node"] = this.node ? this.node.toJSON() : <any>undefined;
         return data;
@@ -5107,6 +5587,7 @@ export interface INodeDataDto {
     longitude: number | undefined;
     solarPanelVoltage: number | undefined;
     batteryVoltage: number | undefined;
+    conductivity: number | undefined;
     loggingTime: moment.Moment | undefined;
     node: GuidNullableEntityWithDisplayNameDto;
 }
@@ -5407,7 +5888,8 @@ export interface IOrganisationDtoPagedResultDto {
 }
 
 export class PeopleDto implements IPeopleDto {
-    list: GuidNullableEntityWithDisplayNameDto[] | undefined;
+    id: string;
+    fullName: string | undefined;
 
     constructor(data?: IPeopleDto) {
         if (data) {
@@ -5420,11 +5902,8 @@ export class PeopleDto implements IPeopleDto {
 
     init(_data?: any) {
         if (_data) {
-            if (Array.isArray(_data["list"])) {
-                this.list = [] as any;
-                for (let item of _data["list"])
-                    this.list.push(GuidNullableEntityWithDisplayNameDto.fromJS(item));
-            }
+            this.id = _data["id"];
+            this.fullName = _data["fullName"];
         }
     }
 
@@ -5437,11 +5916,8 @@ export class PeopleDto implements IPeopleDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.list)) {
-            data["list"] = [];
-            for (let item of this.list)
-                data["list"].push(item.toJSON());
-        }
+        data["id"] = this.id;
+        data["fullName"] = this.fullName;
         return data;
     }
 
@@ -5454,7 +5930,8 @@ export class PeopleDto implements IPeopleDto {
 }
 
 export interface IPeopleDto {
-    list: GuidNullableEntityWithDisplayNameDto[] | undefined;
+    id: string;
+    fullName: string | undefined;
 }
 
 export class PermissionDto implements IPermissionDto {
@@ -5652,6 +6129,61 @@ export interface IPersonDto {
     biography: string | undefined;
     dateOfBirth: moment.Moment | undefined;
     gender: RefListGender;
+}
+
+export class PersonDtoPagedResultDto implements IPersonDtoPagedResultDto {
+    items: PersonDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IPersonDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(PersonDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): PersonDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PersonDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data;
+    }
+
+    clone(): PersonDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new PersonDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPersonDtoPagedResultDto {
+    items: PersonDto[] | undefined;
+    totalCount: number;
 }
 
 export enum RefListGender {

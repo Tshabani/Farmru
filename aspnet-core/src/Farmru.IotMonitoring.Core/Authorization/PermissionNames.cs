@@ -19,5 +19,7 @@
         public const string Pages_Facilities = "Pages.Facilities";
 
         public const string Pages_Facility_Appointments = "Pages.Facility.Appointments";
+
+        public const string Pages_Organisations = "Pages.Organisations";
     }
 }

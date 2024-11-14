@@ -45,7 +45,7 @@ export class NodeComponent extends PagedListingComponentBase<NodeDto> {
     request.keyword = this.keyword;
 
     this._nodesService
-      .getAll(request.keyword, true, request.skipCount, request.maxResultCount)
+      .getAll(request.skipCount, request.maxResultCount)
       .pipe(
         finalize(() => {
           finishedCallback();

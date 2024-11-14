@@ -123,6 +123,7 @@
     <text name="403PageButton">Go back to Dashboard</text>
 	<text name="Nodes" value="Nodes" />
 	<text name="People" value="People" />
+    <text name="Organisations" value="Organisations" />
 	<text name="Facilities" value="Facilities" />
 	<text name="FacilityAppointments" value="Facility Appointments" />
   </texts>

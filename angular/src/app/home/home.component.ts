@@ -11,88 +11,54 @@ import { finalize } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent extends AppComponentBase {
-  stats: AppStatisticsDto = new AppStatisticsDto;
-  protected cd: ChangeDetectorRef;
-  public pieChart: GoogleChartInterface = {
-    chartType: GoogleChartType.PieChart,
-    dataTable: [
-      ['System Stats', ''],
-      ['Roles', 1],
-      ['Users', 2],
-      ['Nodes', 3],
-      ['ActiveNodes', 4]
-    ],
-    //firstRowIsData: true,
-    options: {'title': 'System stats'},
-  };
-
-  public barChart: GoogleChartInterface = {
-    chartType: GoogleChartType.BarChart,
-    dataTable: [
-      ['System Stats', 'Roles', 'Users', 'Nodes', 'ActiveNodes'],
-      ['total', 1, 2, 3, 4]
-    ],
-    options: {
-      chart: {
-        title: 'System stats',
-        subtitle: 'Total system stats'
-      }
-    }
-  };
-
-  constructor(
+  stats: AppStatisticsDto = new AppStatisticsDto();
+  public pieChart: GoogleChartInterface;
+  public barChart: GoogleChartInterface;
+  
+   constructor(   
     injector: Injector,
-    cd: ChangeDetectorRef,
+    private cd: ChangeDetectorRef,
     private _homeService: HomeServiceProxy   
-    ) {
-    super(injector);
-    this.cd = cd;
-    this.list(() => {
-      console.log('Finished callback executed in derived class');
-    });
+  ) {
+    super(injector);   
   }
 
-ngOnInit(): void {
+  ngOnInit(): void {
+    this.fetchChartData();
+  }
 
-}
-
-refreshCharts() {
-  // Call detectChanges after a brief delay to allow data tables to update
-  setTimeout(() => this.cd.detectChanges(), 50);
-}
-
-protected list(
-    finishedCallback: Function
-): void {
-    this._homeService
-    .getAppStats(
-    )
-    .pipe(
-        finalize(() => {
-          finishedCallback();
-        })
-    )
-    .subscribe((result) => {
-      debugger;
-        this.stats = result;
-        this.pieChart.dataTable = [
+  fetchChartData(): void {
+    this. _homeService.getAppStats().pipe(
+      finalize(() => {
+        this.cd.detectChanges();
+      })
+    ).subscribe(data => {
+      this.stats = data;
+      this.pieChart = {
+        chartType: GoogleChartType.PieChart,
+        dataTable: [
           ['System Stats', ''],
-          ['Roles', this.stats.totalNumberOfRoles],
-          ['Users', this.stats.totalNumberOfUsers],
-          ['Nodes', this.stats.totalNumberOfNodes],
-          ['ActiveNodes', this.stats.totalNumberOfActiveNodes]
-        ];
+          ['Roles', data.totalNumberOfRoles],
+          ['Users', data.totalNumberOfUsers],
+          ['Nodes', data.totalNumberOfNodes],
+          ['ActiveNodes', data.totalNumberOfActiveNodes]
+        ],
+        options: { 'title': 'System stats' }
+      };
 
-        this.barChart.dataTable = [
+      this.barChart = {
+        chartType: GoogleChartType.BarChart,
+        dataTable: [
           ['System Stats', 'Roles', 'Users', 'Nodes', 'ActiveNodes'],
-          ['total', this.stats.totalNumberOfRoles, this.stats.totalNumberOfUsers, this.stats.totalNumberOfNodes, this.stats.totalNumberOfActiveNodes]
-        ];     
-        
-       // Trigger change detection after updating chart data tables
-      //this.cd.detectChanges();
-            // Refresh charts after data is updated
-            this.refreshCharts();
+          ['total', data.totalNumberOfRoles, data.totalNumberOfUsers, data.totalNumberOfNodes, data.totalNumberOfActiveNodes]
+        ],
+        options: {
+          chart: {
+            title: 'System stats',
+            subtitle: 'Total system stats'
+          }
+        }
+      };    
     });
   }
 }
-

@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Farmru.IotMonitoring.Domains.Facilities;
@@ -18,7 +19,7 @@ namespace Farmru.IotMonitoring.Services.Organisations
     /// 
     /// </summary>
     [AbpAuthorize()]
-    public class OrganisationAppService : AsyncCrudAppService<Organisation, OrganisationDto, Guid, PagedUserResultRequestDto, OrganisationDto, OrganisationDto>
+    public class OrganisationAppService : AsyncCrudAppService<Organisation, OrganisationDto, Guid, PagedResultRequestDto, OrganisationDto, OrganisationDto>
     {
         /// <summary>
         /// 

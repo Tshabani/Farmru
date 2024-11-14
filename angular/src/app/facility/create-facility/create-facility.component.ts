@@ -11,7 +11,9 @@ implements OnInit {
 
   saving = false;
   facility = new CreateFacilityDto(); 
-  people: GuidNullableEntityWithDisplayNameDto[] = []; 
+  people: PeopleDto[] = []; 
+  selectedOwnerOrganisationId: string | null = null;
+  selectedprimaryContactId: string | null = null;
 
   onSave = output<EventEmitter<any>>()
 
@@ -26,10 +28,42 @@ implements OnInit {
   }
 
   ngOnInit(): void {
-    this._personService.getAll().subscribe((result) => {
-      this.people = result.list; 
+    this._personService.getListOfPeople().subscribe((result) => {
+      this.people = result; 
       this.cd.detectChanges();  
     });
+  }
+
+  onOwnerOrganisationChange(selectedId: string): void {
+    const selectedPerson = this.people.find(person => person.id === selectedId);
+  
+    if (!this.facility.ownerOrganisation) {
+      this.facility.ownerOrganisation = new GuidNullableEntityWithDisplayNameDto;
+    }
+  
+    if (selectedPerson) {
+      this.facility.ownerOrganisation.id = selectedPerson.id;
+      this.facility.ownerOrganisation.displayText = selectedPerson.fullName;
+    } else {
+      this.facility.ownerOrganisation.id = null;
+      this.facility.ownerOrganisation.displayText = null;
+    }
+  }
+  
+  onPrimaryContactChange(selectedId: string): void {
+    const selectedPerson = this.people.find(person => person.id === selectedId);
+  
+    if (!this.facility.primaryContact) {
+      this.facility.primaryContact = new GuidNullableEntityWithDisplayNameDto;
+    }
+  
+    if (selectedPerson) {
+      this.facility.primaryContact.id = selectedPerson.id;
+      this.facility.primaryContact.displayText = selectedPerson.fullName;
+    } else {
+      this.facility.primaryContact.id = null;
+      this.facility.primaryContact.displayText = null;
+    }
   }
 
   trackById(index: number, item: any): any {

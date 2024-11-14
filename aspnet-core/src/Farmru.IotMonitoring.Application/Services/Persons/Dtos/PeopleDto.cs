@@ -14,7 +14,7 @@ namespace Farmru.IotMonitoring.Services.Persons.Dtos
 {
     [AutoMap(typeof(Person))]
     public class PeopleDto : EntityDto<Guid>
-    {  
+    {
         public string FullName { get; set; }
     }
 }
