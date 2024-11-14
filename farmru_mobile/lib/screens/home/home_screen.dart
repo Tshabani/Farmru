@@ -2,6 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 import '../Incidents/IncidentsList.dart';
+import '../Nodes/AverageReadings.dart';
 import '../Nodes/NodeDetails.dart';
 import '../Nodes/NodeList.dart';
 import '../Task/TaskList.dart';
@@ -16,6 +17,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final screens = [
+    const AverageReadingsPage(),
     const NodeDetailsPage(),
     const IncidentListPage(),
     const TasksListPage(),
@@ -39,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
         color: const Color(0xFFB7873B),
         height: 60,
         items: const <Widget>[
+          Icon(Icons.data_thresholding_outlined, size: 20),
           Icon(Icons.data_thresholding_outlined, size: 20),
           Icon(Icons.receipt_long_outlined, size: 20),
           Icon(Icons.task_alt_outlined, size: 20),
