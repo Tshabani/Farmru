@@ -25,7 +25,8 @@ namespace Farmru.IotMonitoring.Services.Facilities
         /// </summary>
         /// <param name="repository"></param>
         public FacilityAppService(IRepository<Facility, Guid> repository) : base(repository)
-        {                
+        { 
+            
         }
     }
 }

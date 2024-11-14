@@ -11,6 +11,8 @@ using System;
 using Farmru.IotMonitoring.Authorization;
 using Farmru.IotMonitoring.Domains.Stats;
 using Farmru.IotMonitoring.Repository;
+using AutoMapper.Internal.Mappers;
+using Farmru.IotMonitoring.Services.Persons.Dtos;
 
 namespace Farmru.IotMonitoring.Services.Home
 {
