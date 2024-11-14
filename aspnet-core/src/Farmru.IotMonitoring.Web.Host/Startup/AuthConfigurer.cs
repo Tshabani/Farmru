@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Abp.Runtime.Security;
+using System.Security.Cryptography;
 
 namespace Farmru.IotMonitoring.Web.Host.Startup
 {
@@ -71,7 +72,21 @@ namespace Farmru.IotMonitoring.Web.Host.Startup
             }
 
             // Set auth token from cookie
-            context.Token = SimpleStringCipher.Instance.Decrypt(qsAuthToken);
+
+            // Log qsAuthToken for debugging
+            Console.WriteLine($"Encrypted token: {qsAuthToken}");
+
+            // Set auth token from cookie
+            try
+            {
+                context.Token = SimpleStringCipher.Instance.Decrypt(qsAuthToken);
+            }
+            catch (CryptographicException ex)
+            {
+                Console.WriteLine($"Decryption failed: {ex.Message}");
+                // Handle exception or return an error message
+                return Task.CompletedTask;
+            }
             return Task.CompletedTask;
         }
     }

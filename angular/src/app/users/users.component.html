@@ -164,7 +164,7 @@
                         <tr
                           >
                           <td>{{ user.userName }}</td>
-                          <td>{{ user.person.firstName }}</td>
+                          <td>{{ user.person.fullName }}</td>
                           <td>{{ user.emailAddress }}</td>
                           <td>
                             <div class="custom-control custom-checkbox">
@@ -176,7 +176,7 @@
                                 />
                                 <label class="custom-control-label"></label>
                               </div>
-                            </td>
+                          </td>
                             <td>
                               <button
                                 type="button"
@@ -203,7 +203,7 @@
                                 {{ "ResetPassword" | localize }}
                               </button>
                             </td>
-                          </tr>
+                        </tr>
                         }
                       </tbody>
                     </table>

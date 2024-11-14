@@ -40,10 +40,6 @@ export class AppRouteGuard  {
             return '/account/login';
         }
 
-        if (this._permissionChecker.isGranted('Pages.Users')) {
-            return '/app/users';
-        }
-
         return '/app/home';
     }
 }

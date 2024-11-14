@@ -9,19 +9,25 @@ import {
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { forEach as _forEach, map as _map } from 'lodash-es';
 import { AppComponentBase } from '@shared/app-component-base';
+import { getGenderOptions, getPersonTitles } from '@shared/helpers/userHealper';
 import {
   UserServiceProxy,
   CreateUserDto,
   RoleDto,
-  PersonDto
+  PersonDto,
 } from '@shared/service-proxies/service-proxies';
 import { AbpValidationError } from '@shared/components/validation/abp-validation.api';
+import * as moment from 'moment';
 
 @Component({
   templateUrl: './create-user-dialog.component.html'
 })
 export class CreateUserDialogComponent extends AppComponentBase
   implements OnInit {
+
+  personTitles = getPersonTitles();
+  genderOptions = getGenderOptions();
+
   saving = false;
   user = new CreateUserDto();
   roles: RoleDto[] = [];
@@ -61,6 +67,10 @@ export class CreateUserDialogComponent extends AppComponentBase
       this.setInitialRolesStatus();
       this.cd.detectChanges();
     });
+  }
+
+  onDateOfBirthChange(event: any) {
+    this.user.person.dateOfBirth = event ? moment(event) : null;
   }
 
   setInitialRolesStatus(): void {

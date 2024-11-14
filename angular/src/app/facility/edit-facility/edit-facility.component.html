@@ -1,1 +1,218 @@
-<p>edit-facility works!</p>
+<form
+  class="form-horizontal"
+  autocomplete="off"
+  #createNodeForm="ngForm"
+  (ngSubmit)="save()"
+  >
+  <abp-modal-header
+    [title]="'Edit Facility' | localize"
+    (onCloseClick)="bsModalRef.hide()"
+  ></abp-modal-header>
+  <div class="modal-body">
+
+    <div class="form-group row required">
+        <label class="col-md-3 col-form-label" for="name">
+          {{ "Name" | localize }}
+        </label>
+        <div class="col-md-9">
+          <input
+            type="text"
+            class="form-control"
+            name="name"
+            id="name"
+            required
+            minlength="2"
+            maxlength="32"
+            [(ngModel)]="facility.name"
+            #nameModel="ngModel"
+            #nameEl
+            />
+            <abp-validation-summary
+              [control]="nameModel"
+              [controlEl]="nameEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+		
+	<div class="form-group row required">
+        <label class="col-md-3 col-form-label" for="description">
+          {{ "Description" | localize }}
+        </label>
+        <div class="col-md-9">
+          <input
+            type="text"
+            class="form-control"
+            name="description"
+            id="description"
+            required
+            minlength="2"
+            maxlength="32"
+            [(ngModel)]="facility.description"
+            #descriptionModel="ngModel"
+            #descriptionEl
+            />
+            <abp-validation-summary
+              [control]="descriptionModel"
+              [controlEl]="descriptionEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+		
+		    <div class="form-group row required">
+        <label class="col-md-3 col-form-label" for="address">
+          {{ "Address" | localize }}
+        </label>
+        <div class="col-md-9">
+          <input
+            type="text"
+            class="form-control"
+            name="address"
+            id="address"
+            required
+            minlength="2"
+            maxlength="32"
+            [(ngModel)]="facility.address"
+            #addressModel="ngModel"
+            #addressEl
+            />
+            <abp-validation-summary
+              [control]="addressModel"
+              [controlEl]="addressEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+
+        <div class="form-group row required">
+            <label class="col-md-3 col-form-label" for="ownerOrganisation">
+              {{ "Organisation owner" | localize }}
+            </label>
+            <div class="col-md-9">
+              <select
+                class="form-control"
+                name="ownerOrganisation"
+                id="ownerOrganisation"
+                required
+                [(ngModel)]="selectedOwnerOrganisationId"
+                (ngModelChange)="onOwnerOrganisationChange($event)"
+                #ownerOrganisationModel="ngModel"
+                #ownerOrganisationEl
+              >
+                @for (person of people; track trackById; let i = $index) {
+                  <option [value]="person">
+                    {{ person.displayText }}
+                  </option>
+                }
+              </select>
+              <abp-validation-summary
+                [control]="ownerOrganisationModel"
+                [controlEl]="ownerOrganisationEl"
+              ></abp-validation-summary>
+            </div>
+          </div>
+          
+          <div class="form-group row required">
+            <label class="col-md-3 col-form-label" for="primaryContact">
+              {{ "Primary Contact" | localize }}
+            </label>
+            <div class="col-md-9">
+              <select
+                class="form-control"
+                name="primaryContact"
+                id="primaryContact"
+                required
+                [(ngModel)]="selectedprimaryContactId"
+                (ngModelChange)="onprimaryContactChange($event)"
+                #primaryContactModel="ngModel"
+                #primaryContactEl
+              >
+              @for (person of people; track person; let i = $index) {
+                <option [value]="person">
+                  {{ person.displayText }}
+                </option>
+              }
+              </select>
+              <abp-validation-summary
+                [control]="primaryContactModel"
+                [controlEl]="primaryContactEl"
+              ></abp-validation-summary>
+            </div>
+          </div>
+		
+	    <div class="form-group row required">
+        <label class="col-md-3 col-form-label" for="latitude">
+          {{ "Latitude" | localize }}
+        </label>
+        <div class="col-md-9">
+          <input
+            type="text"
+            class="form-control"
+            name="latitude"
+            id="latitude"
+            required
+            minlength="2"
+            maxlength="32"
+            [(ngModel)]="facility.latitude"
+            #latitudeModel="ngModel"
+            #latitudeEl
+            />
+            <abp-validation-summary
+              [control]="latitudeModel"
+              [controlEl]="latitudeEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+		
+	  <div class="form-group row required">
+        <label class="col-md-3 col-form-label" for="longitude">
+          {{ "Longitude" | localize }}
+        </label>
+        <div class="col-md-9">
+          <input
+            type="text"
+            class="form-control"
+            name="longitude"
+            id="longitude"
+            required
+            minlength="2"
+            maxlength="32"
+            [(ngModel)]="facility.longitude"
+            #longitudeModel="ngModel"
+            #longitudeEl
+            />
+            <abp-validation-summary
+              [control]="longitudeModel"
+              [controlEl]="longitudeEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+		
+	 <div class="form-group row required">
+        <label class="col-md-3 col-form-label" for="altitude">
+          {{ "Altitude" | localize }}
+        </label>
+        <div class="col-md-9">
+          <input
+            type="text"
+            class="form-control"
+            name="altitude"
+            id="altitude"
+            required
+            minlength="2"
+            maxlength="32"
+            [(ngModel)]="facility.altitude"
+            #altitudeModel="ngModel"
+            #altitudeEl
+            />
+            <abp-validation-summary
+              [control]="altitudeModel"
+              [controlEl]="altitudeEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+  </div>
+  <abp-modal-footer
+    [cancelDisabled]="saving"
+    [saveDisabled]="!createNodeForm.form.valid || saving"
+    (onCancelClick)="bsModalRef.hide()"
+  ></abp-modal-footer>
+</form>

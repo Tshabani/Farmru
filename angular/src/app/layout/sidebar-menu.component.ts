@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, Injector, OnInit } from "@angular/core";
 import { AppComponentBase } from "@shared/app-component-base";
 import {
   Router,
@@ -21,7 +21,7 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
   routerEvents: BehaviorSubject<RouterEvent> = new BehaviorSubject(undefined);
   homeRoute = "/app/home";
 
-  constructor(injector: Injector, private router: Router) {
+  constructor(injector: Injector, private router: Router,private cdr: ChangeDetectorRef) {
     super(injector);
   }
 
@@ -35,6 +35,7 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
         this.router.parseUrl(currentUrl).root.children[PRIMARY_OUTLET];
       if (primaryUrlSegmentGroup) {
         this.activateMenuItems("/" + primaryUrlSegmentGroup.toString());
+        this.cdr.detectChanges();
       }
     });
   }

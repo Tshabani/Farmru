@@ -14,6 +14,8 @@ namespace Farmru.IotMonitoring.Services.Persons.Dtos
     [AutoMap(typeof(Person))]
     public class PersonDto : EntityDto<Guid>
     {
+        public string FullName { get; set; }
+
         [Required]
         [StringLength(AbpUserBase.MaxNameLength)]
         public string FirstName { get; set; }

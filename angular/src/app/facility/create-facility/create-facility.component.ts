@@ -1,22 +1,24 @@
-import { ChangeDetectorRef, Component, EventEmitter, Injector, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Injector, OnInit, output, Output } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
-import { FacilityDto, FacilityServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CreateFacilityDto, FacilityServiceProxy, GuidNullableEntityWithDisplayNameDto, PeopleDto, PersonDto, PersonServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   templateUrl: './create-facility.component.html',
 })
-export class CreateFacilityComponent  extends AppComponentBase
+export class CreateFacilityComponent extends AppComponentBase
 implements OnInit {
-  id: string;
-  saving = false;
-  facility = new FacilityDto();  
 
-  @Output() onSave = new EventEmitter<any>();
+  saving = false;
+  facility = new CreateFacilityDto(); 
+  people: GuidNullableEntityWithDisplayNameDto[] = []; 
+
+  onSave = output<EventEmitter<any>>()
 
   constructor(
     injector: Injector,
     private _facilityService: FacilityServiceProxy,
+    private _personService: PersonServiceProxy,
     public bsModalRef: BsModalRef,
     private cd: ChangeDetectorRef
   ) {
@@ -24,24 +26,29 @@ implements OnInit {
   }
 
   ngOnInit(): void {
-    this._facilityService.get(this.id).subscribe((result) => {
-      this.facility = result; 
+    this._personService.getAll().subscribe((result) => {
+      this.people = result.list; 
       this.cd.detectChanges();  
     });
   }
+
+  trackById(index: number, item: any): any {
+    return item.id;
+  }
     
   save(): void {
-    this.saving = true;  
-    const facility = new FacilityDto();
+    this.saving = true;     
+    debugger;  
+    const facility = new CreateFacilityDto();
     facility.init(this.facility);
 
     this._facilityService
-      .update(facility)
+      .create(this.facility)
       .subscribe(
         () => {
           this.notify.info(this.l('SavedSuccessfully'));
           this.bsModalRef.hide();   
-          this.onSave.emit();         
+          this.onSave.emit(null);         
         },
         () => {
           this.saving = false;
