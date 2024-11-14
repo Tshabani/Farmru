@@ -23,8 +23,8 @@ namespace Farmru.IotMonitoring.Services.Facilities.Dto
         public string Name { get; set; } 
         public string Description { get; set; }
         public string Address { get; set; }
-        public Guid? PrimaryContactId { get; set; }
-        public Guid? OwnerOrganisationId { get; set; }
+        public EntityWithDisplayNameDto<Guid?> PrimaryContact { get; set; }
+        public EntityWithDisplayNameDto<Guid?> OwnerOrganisation { get; set; }
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
         public decimal? Altitude { get; set; }

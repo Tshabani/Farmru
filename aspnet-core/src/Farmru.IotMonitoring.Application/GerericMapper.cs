@@ -94,9 +94,10 @@ namespace Farmru.IotMonitoring
                     ).ToList())
                 );
 
-            CreateMap<Facility, CreateFacilityDto>();
-
-
+            CreateMap<CreateFacilityDto, Facility>()
+                .ForMember(u => u.PrimaryContact, options => options.MapFrom(e => GetEntity<Person>(e.PrimaryContact)))
+                .ForMember(u => u.OwnerOrganisation, options => options.MapFrom(e => GetEntity<Person>(e.OwnerOrganisation)))                
+                ;
         }
     }
 }
