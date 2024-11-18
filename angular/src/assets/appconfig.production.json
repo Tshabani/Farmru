@@ -1,6 +1,6 @@
 {
-  "remoteServiceBaseUrl": "http://farmruapi.technobrainent.co.za",
-  "appBaseUrl": "http://localhost:4200",
+  "remoteServiceBaseUrl": "https://farmruapi.technobrainent.co.za",
+  "appBaseUrl": "https://farmruapi.technobrainent.co.za",
   "localeMappings": [
     {
       "from": "pt-BR",
