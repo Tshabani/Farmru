@@ -29,7 +29,9 @@ class _AverageReadingsPageState extends State<AverageReadingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const SizedBox(height: 10),
             SoilMoistureCard(),
+            const SizedBox(height: 35),
             CloudDatabaseCard(),
             const SizedBox(height: 10),
             SensorIndicators(),

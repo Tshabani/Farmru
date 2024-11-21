@@ -49,6 +49,8 @@ dependencies:
   fluttericon: ^2.0.0
   get: ^4.6.6
   fl_chart: ^0.69.0
+  percent_indicator: ^4.0.1
+  geekyants_flutter_gauges: 1.0.4
 
 dev_dependencies:
   flutter_test:

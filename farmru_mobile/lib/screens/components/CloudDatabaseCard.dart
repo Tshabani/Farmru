@@ -10,31 +10,44 @@ class CloudDatabaseCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
       child: Container(
+        padding: const EdgeInsets.all(10),
         decoration: const BoxDecoration(
           color: Color(0xFFB7873B),
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(90),
               bottomRight: Radius.circular(90)), // Rounded corners
         ),
-        padding: const EdgeInsets.all(10),
         margin: const EdgeInsets.symmetric(vertical: 10),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            Row(
-              children: [
-                Icon(Icons.cloud, color: Colors.black, size: 36),
-                SizedBox(width: 8),
-                Text(
-                  "Cloud Database",
-                  style: TextStyle(fontSize: 20, color: Colors.black),
-                ),
-              ],
+            const Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Cloud Database",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "Soil Moisture: 60%\nHumidity: 50%\nAmbient Temperature: 25°C\nLight Intensity: 20 Lux",
+                    style: TextStyle(color: Colors.black, fontSize: 10),
+                  ),
+                ],
+              ),
             ),
-            SizedBox(height: 5),
-            Text(
-              "Soil Moisture: 60%\nHumidity: 50%\nAmbient Temperature: 25°C\nLight Intensity: 20 Lux",
-              style: TextStyle(color: Colors.black),
+            Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.wifi, // This icon resembles the earth symbol
+                color: Colors.green[400],
+                size: 70,
+              ),
             ),
           ],
         ),
