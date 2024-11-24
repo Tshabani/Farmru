@@ -8,6 +8,7 @@ class SoilMoistureCard extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(30, 30, 0, 0),
       child: Container(
         padding: const EdgeInsets.all(10),
+        height: 100.0,
         decoration: const BoxDecoration(
           color: Color(0xFFB7873B),
           borderRadius: BorderRadius.only(
@@ -29,25 +30,25 @@ class SoilMoistureCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.bold,
-                    color: Colors.green,
+                    color: Colors.white,
                   ),
                 ),
-                progressColor: Colors.blue,
+                progressColor: Colors.green[400],
                 backgroundColor: Colors.grey[300]!,
               ),
             ),
-            const SizedBox(width: 12), // Space between icon and text
+            const SizedBox(width: 15), // Space between icon and text
             const Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     "Soil Moisture (0-100%)",
-                    style: TextStyle(color: Colors.black, fontSize: 15),
+                    style: TextStyle(color: Colors.white, fontSize: 15),
                   ),
                   Text(
                     "WET.",
-                    style: TextStyle(color: Colors.black, fontSize: 18),
+                    style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                 ],
               ),

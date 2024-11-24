@@ -49,22 +49,35 @@ class SensorIndicator extends StatelessWidget {
   });
 
   @override
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Icon(icon, size: 40, color: Colors.blue),
-        Text(value,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-        Text(label, style: const TextStyle(fontSize: 16)),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Text(
-            description,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 12, color: Colors.grey[700]),
-          ),
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20), // Optional for rounded edges
+      ),
+      margin: const EdgeInsets.all(5), // Optional for spacing
+      child: Padding(
+        padding: const EdgeInsets.all(8.0), // Optional for inner padding
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 40, color: Colors.blue),
+            Text(value,
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Text(label, style: const TextStyle(fontSize: 13)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2.0),
+              child: Text(
+                description,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 8, color: Colors.grey[700]),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

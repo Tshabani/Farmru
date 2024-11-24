@@ -40,13 +40,13 @@ class RealTimeDataCard extends StatelessWidget {
                   Text(
                     "Real time data",
                     style: TextStyle(
-                        color: Colors.black,
+                        color: Colors.white,
                         fontSize: 12,
                         fontWeight: FontWeight.bold),
                   ),
                   Text(
                     "The farm state function displays real time data of PH levels from NPK tester, relative humidity, soil moisture, environmental light intensity and humidity.",
-                    style: TextStyle(color: Colors.black, fontSize: 10),
+                    style: TextStyle(color: Colors.white, fontSize: 10),
                   ),
                 ],
               ),

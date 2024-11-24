@@ -27,13 +27,13 @@ class CloudDatabaseCard extends StatelessWidget {
                   Text(
                     "Cloud Database",
                     style: TextStyle(
-                        color: Colors.black,
+                        color: Colors.white,
                         fontSize: 12,
                         fontWeight: FontWeight.bold),
                   ),
                   Text(
                     "Soil Moisture: 60%\nHumidity: 50%\nAmbient Temperature: 25°C\nLight Intensity: 20 Lux",
-                    style: TextStyle(color: Colors.black, fontSize: 10),
+                    style: TextStyle(color: Colors.white, fontSize: 10),
                   ),
                 ],
               ),

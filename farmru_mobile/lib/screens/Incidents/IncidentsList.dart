@@ -19,7 +19,9 @@ class _IncidentListPageState extends State<IncidentListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Center(child: CircularProgressIndicator()),
+      appBar: AppBar(
+        title: const Text('Incident List'),
+      ),
     );
   }
 }

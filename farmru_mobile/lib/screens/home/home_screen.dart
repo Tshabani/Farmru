@@ -1,11 +1,8 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:farmru_mobile/screens/home/home_grid_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../Incidents/IncidentsList.dart';
 import '../Nodes/AverageReadings.dart';
-import '../Nodes/NodeDetails.dart';
-import '../Nodes/NodeList.dart';
-import '../Task/TaskList.dart';
 import 'side_menu.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -18,9 +15,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final screens = [
     const AverageReadingsPage(),
-    const NodeDetailsPage(),
-    const IncidentListPage(),
-    const TasksListPage(),
+    const HomeGridScreen(),
   ];
   int _page = 0;
 
@@ -32,7 +27,10 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: const Color(0xFFB7873B),
         title: const Text(
           'Dashboard',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.white),
+        ),
+        iconTheme: const IconThemeData(
+          color: Colors.white, // Set the color of the hamburger menu icon
         ),
       ),
       body: screens[_page],
@@ -41,10 +39,16 @@ class _HomeScreenState extends State<HomeScreen> {
         color: const Color(0xFFB7873B),
         height: 60,
         items: const <Widget>[
-          Icon(Icons.data_thresholding_outlined, size: 20),
-          Icon(Icons.data_thresholding_outlined, size: 20),
-          Icon(Icons.receipt_long_outlined, size: 20),
-          Icon(Icons.task_alt_outlined, size: 20),
+          Icon(
+            Icons.data_thresholding_outlined,
+            size: 20,
+            color: Colors.white,
+          ),
+          Icon(
+            Icons.data_thresholding_outlined,
+            size: 20,
+            color: Colors.white,
+          ),
         ],
         animationDuration: const Duration(milliseconds: 200),
         animationCurve: Curves.ease,

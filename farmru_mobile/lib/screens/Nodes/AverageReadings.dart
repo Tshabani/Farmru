@@ -32,11 +32,11 @@ class _AverageReadingsPageState extends State<AverageReadingsPage> {
             const SizedBox(height: 10),
             SoilMoistureCard(),
             const SizedBox(height: 35),
-            CloudDatabaseCard(),
+            const CloudDatabaseCard(),
             const SizedBox(height: 10),
-            SensorIndicators(),
+            const SensorIndicators(),
             const SizedBox(height: 10),
-            RealTimeDataCard()
+            const RealTimeDataCard()
           ],
         ),
       ),

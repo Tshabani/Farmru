@@ -27,6 +27,17 @@ class _NodeDetailsPageState extends State<NodeDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFB7873B),
+        title: const Text(
+          'Sensor data',
+          style: TextStyle(color: Colors.white),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : cardView(),
