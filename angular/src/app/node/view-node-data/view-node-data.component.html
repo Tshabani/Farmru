@@ -39,17 +39,18 @@
                   [busy]="isTableLoading">
                   <thead class="bg-light">
                     <tr>
-                      <th>{{ "NodeDataId" | localize }}</th>
-                      <th>{{ "latitude" | localize }}</th>
-                      <th>{{ "longitude" | localize }}</th>
-                      <th>{{ "loggingTime" | localize }}</th>
-                      <th>{{ "moisture" | localize }}</th>
-                      <th>{{ "nitrogen" | localize }}</th>
-                      <th>{{ "phosphorus" | localize }}</th>
-                      <th>{{ "potassium" | localize }}</th>
-                      <th>{{ "soilPH" | localize }}</th>
-                      <th>{{ "soilTemperature" | localize }}</th>
-                      <th>{{ "SolarPanelVoltage" | localize }}</th>
+                      <th>{{ "Latitude" | localize }}</th>
+                      <th>{{ "Longitude" | localize }}</th>
+                      <th>{{ "Logging Time" | localize }}</th>
+                      <th>{{ "Moisture" | localize }}</th>
+                      <th>{{ "Nitrogen" | localize }}</th>
+                      <th>{{ "Phosphorus" | localize }}</th>
+                      <th>{{ "Potassium" | localize }}</th>
+                      <th>{{ "Soil PH" | localize }}</th>
+                      <th>{{ "Soil Temperature" | localize }}</th>
+                      <th>{{ "Solar Panel Voltage" | localize }}</th>
+                      <th>{{ "Battery Voltage" | localize }}</th>
+                      <th>{{ "Conductivity" | localize }}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -65,10 +66,9 @@
                     ; track
                     nodeDataItem.id) {
                     <tr>
-                      <td>{{ nodeDataItem.id }}</td>
                       <td>{{ nodeDataItem.latitude }}</td>
                       <td>{{ nodeDataItem.longitude}}</td>
-                      <td>{{ nodeDataItem.loggingTime }}</td>
+                      <td>{{ nodeDataItem.loggingTime.toDate() | date: 'dd MMMM yyyy HH:mm:ss' }}</td>
                       <td>{{ nodeDataItem.moisture }}</td>
                       <td>{{ nodeDataItem.nitrogen }}</td>
                       <td>{{ nodeDataItem.phosphorus }}</td>
@@ -76,6 +76,8 @@
                       <td>{{ nodeDataItem.soilPH }}</td>
                       <td>{{ nodeDataItem.soilTemperature }}</td>
                       <td>{{ nodeDataItem.solarPanelVoltage }}</td>
+                      <td>{{ nodeDataItem.batteryVoltage }}</td>
+                      <td>{{ nodeDataItem.conductivity }}</td>
                     </tr>
                   }
                 </tbody>

@@ -230,7 +230,7 @@
           </label>
           <div class="col-md-9">
             <input
-              type="text"
+              type="email"
               class="form-control"
               name="altEmailAddress"
               id="altEmailAddress"
@@ -269,10 +269,10 @@
               ></abp-validation-summary>
             </div>
           </div>
-                  </div>
-                  <abp-modal-footer
-                    [cancelDisabled]="saving"
-                    [saveDisabled]="!createUserModal.form.valid || saving"
-                    (onCancelClick)="bsModalRef.hide()"
-                  ></abp-modal-footer>
-                </form>
+  </div>
+  <abp-modal-footer
+    [cancelDisabled]="saving"
+    [saveDisabled]="!createUserModal.form.valid || saving"
+    (onCancelClick)="bsModalRef.hide()"
+  ></abp-modal-footer>
+</form>

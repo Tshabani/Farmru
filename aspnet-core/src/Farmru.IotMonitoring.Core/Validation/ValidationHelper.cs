@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using Abp.Extensions;
 
 namespace Farmru.IotMonitoring.Validation
@@ -16,6 +17,11 @@ namespace Farmru.IotMonitoring.Validation
 
             var regex = new Regex(EmailRegex);
             return regex.IsMatch(value);
+        }
+
+        public static bool IsNotInFuture(DateTime? date)
+        {
+            return date <= DateTime.Now;
         }
     }
 }

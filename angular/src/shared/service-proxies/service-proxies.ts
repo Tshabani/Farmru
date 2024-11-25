@@ -4669,6 +4669,7 @@ export class CreateNodeData implements ICreateNodeData {
     longitude: number | undefined;
     solarPanelVoltage: number | undefined;
     batteryVoltage: number | undefined;
+    conductivity: number | undefined;
     loggingTime: moment.Moment | undefined;
 
     constructor(data?: ICreateNodeData) {
@@ -4693,6 +4694,7 @@ export class CreateNodeData implements ICreateNodeData {
             this.longitude = _data["longitude"];
             this.solarPanelVoltage = _data["solarPanelVoltage"];
             this.batteryVoltage = _data["batteryVoltage"];
+            this.conductivity = _data["conductivity"];
             this.loggingTime = _data["loggingTime"] ? moment(_data["loggingTime"].toString()) : <any>undefined;
         }
     }
@@ -4717,6 +4719,7 @@ export class CreateNodeData implements ICreateNodeData {
         data["longitude"] = this.longitude;
         data["solarPanelVoltage"] = this.solarPanelVoltage;
         data["batteryVoltage"] = this.batteryVoltage;
+        data["conductivity"] = this.conductivity;
         data["loggingTime"] = this.loggingTime ? this.loggingTime.toISOString() : <any>undefined;
         return data;
     }
@@ -4741,6 +4744,7 @@ export interface ICreateNodeData {
     longitude: number | undefined;
     solarPanelVoltage: number | undefined;
     batteryVoltage: number | undefined;
+    conductivity: number | undefined;
     loggingTime: moment.Moment | undefined;
 }
 

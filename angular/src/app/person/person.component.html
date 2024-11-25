@@ -38,17 +38,17 @@
               <table class="table table-striped table-bordered" [busy]="isTableLoading">
                 <thead class="bg-light">
                   <tr>
-                    <th>{{ "FirstName" | localize }}</th>
-                    <th>{{ "LastName" | localize }}</th>
-                    <th>{{ "IdentityNumber" | localize }}</th>
+                    <th>{{ "First Name" | localize }}</th>
+                    <th>{{ "Last Name" | localize }}</th>
+                    <th>{{ "Identity Number" | localize }}</th>
                     <th>{{ "Title" | localize }}</th>
-                    <th>{{ "HomeNumber" | localize }}</th>
-                    <th>{{ "AltMobileNumber" | localize }}</th>
-                    <th>{{ "AltEmailAddress" | localize }}</th>
+                    <th>{{ "Home Number" | localize }}</th>
+                    <th>{{ "Alt Mobile Number" | localize }}</th>
+                    <th>{{ "Alt Email Address" | localize }}</th>
                     <th>{{ "Biography" | localize }}</th>
-                    <th>{{ "DateOfBirth" | localize }}</th>
+                    <th>{{ "Date Of Birth" | localize }}</th>
                     <th>{{ "Gender" | localize }}</th>
-                    <th style="width: 250px;">{{ "Actions" | localize }}</th>
+                    <th style="width: 155px;">{{ "Actions" | localize }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -72,14 +72,14 @@
                     <td>{{ person.altMobileNumber }}</td>
                     <td>{{ person.altEmailAddress }}</td>               
                     <td>{{ person.biography}}</td>
-                    <td>{{ person.dateOfBirth}}</td>
+                    <td>{{ person.dateOfBirth.toDate() | date: 'dd MMMM yyyy'  }}</td>
                     <td>{{ person.gender | gender }}</td>
                     <td>
                       <button type="button" class="btn btn-sm bg-secondary" (click)="editPerson(person)">
                         <i class="fas fa-pencil-alt"></i>
                         {{ "Edit" | localize }}
                       </button>
-                      <button type="button" class="btn btn-sm bg-danger mx-2" (click)="delete(person)">
+                      <button type="button" class="btn btn-sm bg-danger ml-2" (click)="delete(person)">
                         <i class="fas fa-trash"></i>
                         {{ "Delete" | localize }}
                       </button>

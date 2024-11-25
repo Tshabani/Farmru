@@ -61,15 +61,15 @@ implements OnInit {
   }
   
   onFacilityChange(selectedId: string): void {
-    const selectedPerson = this.people.find(person => person.id === selectedId);
-  
+    const selectedFacility = this.facilities.find(facility => facility.id === selectedId);
+    
     if (!this.appointment.facility) {
       this.appointment.facility = new GuidNullableEntityWithDisplayNameDto;
     }
   
-    if (selectedPerson) {
-      this.appointment.facility.id = selectedPerson.id;
-      this.appointment.facility.displayText = selectedPerson.fullName;
+    if (selectedFacility) {
+      this.appointment.facility.id = selectedFacility.id;
+      this.appointment.facility.displayText = selectedFacility.name;
     } else {
       this.appointment.facility.id = null;
       this.appointment.facility.displayText = null;

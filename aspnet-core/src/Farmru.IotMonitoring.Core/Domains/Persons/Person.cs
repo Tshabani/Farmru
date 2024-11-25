@@ -2,6 +2,7 @@
 using Abp.Domain.Entities.Auditing;
 using Abp.Timing;
 using Farmru.IotMonitoring.Authorization.Users;
+using Farmru.IotMonitoring.Validation;
 using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
@@ -67,13 +68,14 @@ namespace Farmru.IotMonitoring.Domains.Persons
         [Audited]
         public virtual string EmailAddress { get; set; }
 
-        [StringLength(100), EmailAddress]
+        [StringLength(10), EmailAddress]
         [Display(Name = "Alternative Email Address")]
         public virtual string AltEmailAddress { get; set; }
 
         [Audited]
         [DisableDateTimeNormalization]
         [DataType(DataType.Date)]
+        [NotInFuture]
         public virtual DateTime? DateOfBirth { get; set; }
 
         [Audited]
