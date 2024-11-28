@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using Farmru.IotMonitoring.Domains.Nodes;
 using Abp.UI;
+using System.Collections.Generic;
 
 namespace Farmru.IotMonitoring.Services.NodeDatas
 {
@@ -37,6 +38,20 @@ namespace Farmru.IotMonitoring.Services.NodeDatas
 
             nodeData = await Repository.InsertAsync(nodeData);
             return ObjectMapper.Map<NodeDataDto>(nodeData);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <returns></returns>
+        public async Task<List<NodeDataDto>> GetNodeDataByNodeId(Guid nodeId)
+        {
+            var node = await _nodeRepository.FirstOrDefaultAsync(x => x.Id == nodeId) ?? throw new UserFriendlyException("Node not found");
+
+            var nodeData = await Repository.GetAllListAsync(r => r.Node == node);
+             
+            return ObjectMapper.Map<List<NodeDataDto>>(nodeData);
         }
     }
 }

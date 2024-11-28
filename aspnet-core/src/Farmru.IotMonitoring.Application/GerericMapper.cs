@@ -34,7 +34,8 @@ namespace Farmru.IotMonitoring
             CreateMap<NodeDataDto, NodeData>();
             
             CreateMap<CreateNode, Node>();
-            CreateMap<Node, NodeDto>();
+            CreateMap<Node, NodeDto>()
+                .ForMember(u => u.Facility, opt => opt.MapFrom(r => r.Facility != null ? new EntityWithDisplayNameDto<Guid?> { Id = r.Facility.Id, DisplayText = r.Facility.Name } : null));
             CreateMap<NodeDto, Node>();
 
             CreateMap<Facility, FacilityDto>()
