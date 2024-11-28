@@ -15,6 +15,8 @@ namespace Farmru.IotMonitoring.Models.TokenAuth
         [DisableAuditing]
         public string Password { get; set; }
 
+        public string TenancyName { get; set; }
+
         public bool RememberClient { get; set; }
     }
 }

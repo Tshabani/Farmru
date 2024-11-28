@@ -57,6 +57,26 @@ namespace Farmru.IotMonitoring.Controllers
             };
         }
 
+        [HttpPost]
+        public async Task<AuthenticateResultModel> AuthenticateWithTenant([FromBody] AuthenticateModel model)
+        {
+            var loginResult = await GetLoginResultAsync(
+                model.UserNameOrEmailAddress,
+                model.Password,
+                model.TenancyName
+            );
+
+            var accessToken = CreateAccessToken(CreateJwtClaims(loginResult.Identity));
+
+            return new AuthenticateResultModel
+            {
+                AccessToken = accessToken,
+                EncryptedAccessToken = GetEncryptedAccessToken(accessToken),
+                ExpireInSeconds = (int)_configuration.Expiration.TotalSeconds,
+                UserId = loginResult.User.Id
+            };
+        }
+
         private string GetTenancyNameOrNull()
         {
             if (!AbpSession.TenantId.HasValue)

@@ -91,6 +91,12 @@ namespace Farmru.IotMonitoring.MultiTenancy
             return MapToEntityDto(tenant);
         }
 
+        [AbpAllowAnonymous]
+        public override Task<PagedResultDto<TenantDto>> GetAllAsync(PagedTenantResultRequestDto input)
+        {
+            return base.GetAllAsync(input); 
+        }
+
         protected override IQueryable<Tenant> CreateFilteredQuery(PagedTenantResultRequestDto input)
         {
             return Repository.GetAll()
