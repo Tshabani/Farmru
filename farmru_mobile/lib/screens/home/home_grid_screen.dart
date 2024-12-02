@@ -1,10 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import '../../models/category_model.dart';
+import '../../models/nodeResponse.dart';
+import '../../services/node_service.dart';
 import '../Nodes/NodeDetails.dart';
 import '../components/CustomContainer.dart';
 import '../components/carousel_card.dart';
-import 'side_menu.dart';
 
 class HomeGridScreen extends StatefulWidget {
   const HomeGridScreen({super.key});
@@ -14,6 +15,25 @@ class HomeGridScreen extends StatefulWidget {
 }
 
 class _HomeGridScreenState extends State<HomeGridScreen> {
+  late List<NodeResult>? _node = [];
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getNodes();
+  }
+
+  Future<void> getNodes() async {
+    setState(() {
+      _isLoading = !false;
+    });
+    _node = (await NodeService.GetAll());
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,39 +53,29 @@ class _HomeGridScreenState extends State<HomeGridScreen> {
           ),
           Padding(
             padding: const EdgeInsets.all(10.0),
-            child: GridView(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4, mainAxisSpacing: 20, crossAxisSpacing: 20),
-              children: const [
-                CustomContainer(
-                  text: 'Facility 1',
-                  SubText: '91000001',
-                  page: NodeDetailsPage(),
-                ),
-                CustomContainer(
-                  text: 'Facility 1',
-                  SubText: '91000002',
-                  page: NodeDetailsPage(),
-                ),
-                CustomContainer(
-                  text: 'Facility 1',
-                  SubText: '91000003',
-                  page: NodeDetailsPage(),
-                ),
-                CustomContainer(
-                  text: 'Facility 1',
-                  SubText: '91000004',
-                  page: NodeDetailsPage(),
-                ),
-                CustomContainer(
-                  text: 'Facility 1',
-                  SubText: '91000005',
-                  page: NodeDetailsPage(),
-                ),
-              ],
-            ),
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : GridView(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                            mainAxisSpacing: 20,
+                            crossAxisSpacing: 20),
+                    children: _node?.map((node) {
+                          return CustomContainer(
+                            text: node.facility
+                                .displayText, // Use node property for text
+                            SubText: node
+                                .serialNumber, // Use node property for subtext
+                            page: NodeDetailsPage(
+                              node: node,
+                            ), // Pass the node to the details page
+                          );
+                        }).toList() ??
+                        [], // Ensure to handle null or empty list case
+                  ),
           ),
         ],
       ),

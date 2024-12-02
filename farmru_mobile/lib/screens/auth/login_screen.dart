@@ -3,9 +3,12 @@
 
 import 'package:flutter/material.dart';
 
+import '../../models/TenantResponse.dart';
+import '../../services/tenant_service.dart';
 import '../../services/user_services.dart';
 import '../../utils/UserSettings.dart';
 import '../components/CustomToast.dart';
+import '../components/DropdownComponent.dart';
 import '../home/home_screen.dart';
 
 var isLoggedIn = false;
@@ -18,6 +21,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  late List<String>? _tenants = [];
+  String? _selectedItem;
+
   // form key
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
@@ -25,6 +31,30 @@ class _LoginScreenState extends State<LoginScreen> {
   //editing controller
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    isLoggedIn = UserSettings.getIsLoggedIn();
+    UserSettings.setIsLoggedIn(isLoggedIn);
+    getTenants();
+  }
+
+  Future<void> getTenants() async {
+    setState(() {
+      _isLoading = !false;
+    });
+    _tenants = (await TenantService.GetAll());
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  void _handleItemSelected(String? selectedItem) {
+    setState(() {
+      _selectedItem = selectedItem;
+    });
+  }
 
   void login() async {
     var email = emailController.text;
@@ -37,7 +67,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (password.isEmpty || password.length < 6) {
       CustomToast.showCenterShortToast(
-          "Please password or make sure password has 6 characters");
+          "Please enter password or make sure password has 6 characters");
+      return;
+    }
+
+    if (_selectedItem == null) {
+      CustomToast.showCenterShortToast("Please select tenancy name");
       return;
     }
 
@@ -45,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = true;
     });
 
-    if (await UserService.login(email, password)) {
+    if (await UserService.login(email, password, _selectedItem!)) {
       setState(() {
         _isLoading = false;
         isLoggedIn = true;
@@ -61,13 +96,6 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = false;
       });
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    isLoggedIn = UserSettings.getIsLoggedIn();
-    UserSettings.setIsLoggedIn(isLoggedIn);
   }
 
   @override
@@ -128,6 +156,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                     Image.asset(
                                       'assets/FARMRU_no_bg.png', // replace with your image asset
                                       fit: BoxFit.cover,
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    DropdownComponent(
+                                      items: _tenants!,
+                                      onItemSelected: _handleItemSelected,
                                     ),
                                     const SizedBox(
                                       height: 15,

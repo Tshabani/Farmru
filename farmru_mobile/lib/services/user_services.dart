@@ -1,4 +1,3 @@
- 
 import '../models/GenericApiResponse.dart';
 import '../models/UserModel.dart';
 import '../models/authenticate_model.dart';
@@ -10,12 +9,15 @@ import '../utils/base_client.dart';
 class UserService {
   static String backendUrl = UserSettings.getBackendUrl();
 
-  static Future<bool> login(String email, String password) async {
+  static Future<bool> login(
+      String email, String password, String tenancyName) async {
     var body = {
       "userNameOrEmailAddress": email,
       "password": password,
+      "tenancyName": tenancyName
     };
-    var response = await BaseClient().post('api/TokenAuth/Authenticate', body);
+    var response =
+        await BaseClient().post('api/TokenAuth/AuthenticateWithTenant', body);
     var apiResponse = genericApiResponseFromJson(response);
 
     if (apiResponse.success) {

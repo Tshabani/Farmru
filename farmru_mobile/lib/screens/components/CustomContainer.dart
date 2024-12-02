@@ -33,11 +33,11 @@ class CustomContainer extends StatelessWidget {
           children: [
             Text(
               text,
-              style: const TextStyle(color: Colors.white, fontSize: 13),
+              style: const TextStyle(color: Colors.white, fontSize: 10),
             ),
             Text(
               SubText,
-              style: const TextStyle(color: Colors.white, fontSize: 10),
+              style: const TextStyle(color: Colors.white, fontSize: 8),
             )
           ],
         ),

@@ -25,6 +25,10 @@ namespace Farmru.IotMonitoring.Services.NodeData.Dto
         public long? BatteryVoltage { get; set; }
         public long? Conductivity { get; set; }
         public DateTime? LoggingTime { get; set; }
+        //
+        // Summary:
+        //     Creation time of this entity.
+        public virtual DateTime CreationTime { get; set; }
         public EntityWithDisplayNameDto<Guid?> Node { get; set; }
     }
 }

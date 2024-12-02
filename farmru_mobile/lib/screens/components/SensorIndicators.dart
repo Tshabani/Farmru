@@ -1,32 +1,44 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
 
+import '../../models/NodeAvgDataResponse.dart';
+
 class SensorIndicators extends StatelessWidget {
-  const SensorIndicators({super.key});
+  final NodeAvgData sensorData;
+
+  const SensorIndicators({super.key, required this.sensorData});
 
   @override
   Widget build(BuildContext context) {
+    // Extracting sensor data with null checks
+    final temperature =
+        sensorData.avgSoilTemperature?.toStringAsFixed(1) ?? "N/A";
+    final solarPanelVoltage =
+        sensorData.avgSolarPanelVoltage?.toStringAsFixed(1) ?? "N/A";
+    final batteryVoltage =
+        sensorData.avgBatteryVoltage?.toStringAsFixed(1) ?? "N/A";
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
           SensorIndicator(
-            icon: Icons.water_drop,
-            label: "HUMIDITY",
-            value: "86%",
-            description: "The amount of water vapor in the air.",
-          ),
-          SensorIndicator(
             icon: Icons.thermostat,
             label: "TEMPERATURE",
-            value: "25°C",
-            description: "Ambient air temperature.",
+            value: "$temperature°C",
+            description: "The soil's average temperature.",
           ),
           SensorIndicator(
             icon: Icons.light_mode,
-            label: "LIGHT INTENSITY",
-            value: "20 Lux",
-            description: "Environmental light level.",
+            label: "SOLAR PANEL VOLTAGE",
+            value: "$solarPanelVoltage V",
+            description: "The voltage produced by the solar panel.",
+          ),
+          SensorIndicator(
+            icon: Icons.battery_charging_full,
+            label: "BATTERY VOLTAGE",
+            value: "$batteryVoltage V",
+            description: "The voltage level of the battery.",
           ),
         ],
       ),
@@ -49,30 +61,40 @@ class SensorIndicator extends StatelessWidget {
   });
 
   @override
-  @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 3,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20), // Optional for rounded edges
+        borderRadius:
+            BorderRadius.circular(20), // Rounded edges for modern look
       ),
-      margin: const EdgeInsets.all(5), // Optional for spacing
+      margin: const EdgeInsets.all(8), // Spacing between cards
       child: Padding(
-        padding: const EdgeInsets.all(8.0), // Optional for inner padding
+        padding: const EdgeInsets.all(12.0), // Inner padding
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 40, color: Colors.blue),
-            Text(value,
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            Text(label, style: const TextStyle(fontSize: 13)),
+            Icon(icon, size: 45, color: Colors.blue),
+            const SizedBox(height: 5), // Spacing between icon and value
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 5), // Spacing between value and label
+            Text(
+              label,
+              style: const TextStyle(fontSize: 12, color: Colors.black87),
+            ),
+            const SizedBox(height: 5), // Spacing before description
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 2.0),
+              padding: const EdgeInsets.symmetric(horizontal: 5.0),
               child: Text(
                 description,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 8, color: Colors.grey[700]),
+                style: TextStyle(fontSize: 10, color: Colors.grey[700]),
               ),
             ),
           ],

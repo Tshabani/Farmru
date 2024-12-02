@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Farmru.IotMonitoring.Domains.Nodes;
 using Abp.UI;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Farmru.IotMonitoring.Services.NodeDatas
 {
@@ -50,7 +51,9 @@ namespace Farmru.IotMonitoring.Services.NodeDatas
             var node = await _nodeRepository.FirstOrDefaultAsync(x => x.Id == nodeId) ?? throw new UserFriendlyException("Node not found");
 
             var nodeData = await Repository.GetAllListAsync(r => r.Node == node);
-             
+            nodeData = [.. nodeData.OrderByDescending(c => c.CreationTime)];
+
+
             return ObjectMapper.Map<List<NodeDataDto>>(nodeData);
         }
     }
