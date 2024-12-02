@@ -9,7 +9,7 @@ class CreateIncidentPage extends StatefulWidget {
 
 class _CreateIncidentPageState extends State<CreateIncidentPage> {
   // late List<LogSheetItem>? _logSheets;
-  bool _isLoading = true;
+  // bool _isLoading = true;
 
   @override
   void initState() {
@@ -18,8 +18,8 @@ class _CreateIncidentPageState extends State<CreateIncidentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: const Center(child: CircularProgressIndicator()),
+    return const Scaffold(
+      body: Center(child: CircularProgressIndicator()),
     );
   }
 }

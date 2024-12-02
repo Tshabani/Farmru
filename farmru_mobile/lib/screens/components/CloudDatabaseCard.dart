@@ -43,9 +43,9 @@ class CloudDatabaseCard extends StatelessWidget {
                   const SizedBox(height: 0), // Spacing between title and data
                   Text(
                     "Soil pH: $soilPh\n"
-                    "Potassium: $potassium ppm\n"
-                    "Phosphorus: $phosphorus ppm\n"
-                    "Nitrogen: $nitrogen ppm",
+                    "Potassium: $potassium mg/kg\n"
+                    "Phosphorus: $phosphorus mg/kg\n"
+                    "Nitrogen: $nitrogen mg/kg",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 10,

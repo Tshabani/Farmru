@@ -26,7 +26,7 @@ class _AverageReadingsPageState extends State<AverageReadingsPage> {
 
   Future<void> getAvgNodes() async {
     setState(() {
-      _isLoading = !false;
+      _isLoading = true;
     });
     _sensorData = await NodeService.GetSensorData();
     setState(() {
@@ -42,21 +42,25 @@ class _AverageReadingsPageState extends State<AverageReadingsPage> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 10),
-                  SoilMoistureCard(
-                    sensorData: _sensorData!,
-                  ),
-                  const SizedBox(height: 20),
-                  CloudDatabaseCard(sensorData: _sensorData!),
-                  const SizedBox(height: 20),
-                  SensorIndicators(sensorData: _sensorData!),
-                  const SizedBox(height: 10),
-                  const RealTimeDataCard()
-                ],
+          : RefreshIndicator(
+              onRefresh: getAvgNodes,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 10),
+                    SoilMoistureCard(
+                      sensorData: _sensorData!,
+                    ),
+                    const SizedBox(height: 20),
+                    CloudDatabaseCard(sensorData: _sensorData!),
+                    const SizedBox(height: 20),
+                    SensorIndicators(sensorData: _sensorData!),
+                    const SizedBox(height: 10),
+                    const RealTimeDataCard(),
+                  ],
+                ),
               ),
             ),
     );

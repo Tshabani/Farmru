@@ -45,14 +45,14 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Colors.white,
           ),
           Icon(
-            Icons.data_thresholding_outlined,
+            Icons.data_exploration_outlined,
             size: 20,
             color: Colors.white,
           ),
         ],
         animationDuration: const Duration(milliseconds: 200),
         animationCurve: Curves.ease,
-        index: 0,
+        index: _page,
         onTap: (index) {
           //Handle button tap
           setState(() {

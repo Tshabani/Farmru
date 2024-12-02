@@ -3,7 +3,6 @@
 
 import 'package:flutter/material.dart';
 
-import '../../models/TenantResponse.dart';
 import '../../services/tenant_service.dart';
 import '../../services/user_services.dart';
 import '../../utils/UserSettings.dart';
