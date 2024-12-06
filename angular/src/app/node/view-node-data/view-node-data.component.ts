@@ -1,10 +1,11 @@
-import { ChangeDetectorRef, Component, Injector } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, Injector } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { PagedListingComponentBase, PagedRequestDto } from '@shared/paged-listing-component-base';
 import { NodeDataDto, NodeDataDtoPagedResultDto, NodeDataServiceProxy } from '@shared/service-proxies/service-proxies';
 import moment from 'moment';
 import { Moment } from 'moment';
+import { GoogleChartInterface, GoogleChartType } from 'ng2-google-charts';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs';
 
@@ -29,6 +30,10 @@ export class ViewNodeDataComponent extends PagedListingComponentBase<NodeDataDto
   _endDate:Moment | undefined = undefined;
   advancedFiltersVisible = false;
 
+  public pieChart: GoogleChartInterface;
+  public barChart: GoogleChartInterface;
+  public lineChart: GoogleChartInterface;
+
   constructor(
     injector: Injector,
     private _nodesService: NodeDataServiceProxy,
@@ -47,12 +52,38 @@ export class ViewNodeDataComponent extends PagedListingComponentBase<NodeDataDto
     this._endDate = value ? moment(value, 'YYYY-MM-DD') : undefined;
   }
 
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    this.refreshCharts();
+  }
+  
   clearFilters(): void {
     this.keyword = '';
     this.predefinedPeriod = '';
     this.startDate = undefined;
     this.endDate = undefined;
     this.getDataPage(1);
+  }
+
+  refreshCharts(): void {
+    // Temporarily set chart to null to force re-render
+    const pieChartData = this.pieChart;
+    const barChartData = this.barChart;
+    const lineChartData = this.lineChart;
+
+    this.pieChart = null;
+    this.barChart = null;
+    this.lineChart = null;
+
+    this.cd.detectChanges();
+
+    setTimeout(() => {
+      this.pieChart = pieChartData;
+      this.barChart = barChartData;
+      this.lineChart = lineChartData;
+      this.cd.detectChanges();
+    });
   }
 
   list(
@@ -74,6 +105,56 @@ export class ViewNodeDataComponent extends PagedListingComponentBase<NodeDataDto
       .subscribe((result: NodeDataDtoPagedResultDto) => {
         this.nodeData = result.items;
         this.showPaging(result, pageNumber);
+
+         // Example data processing: Prepare data for LineChart
+         const lineChartData: (Date | number | string)[][] = [
+          ['Logging Time', 'Moisture', 'Nitrogen', 'Phosphorus', 'Potassium', 'Soil PH', 'Soil Temperature', 'Solar Panel Voltage', 'Battery Voltage']
+        ];        
+
+        result.items.forEach(item => {
+          const loggingTime = item.loggingTime instanceof Date
+          ? item.loggingTime
+          : item.loggingTime.toDate(); // Convert Moment to Date
+
+          lineChartData.push([
+            loggingTime, // Format Logging Time
+            Number(item.moisture),
+            Number(item.nitrogen),
+            Number(item.phosphorus),
+            Number(item.potassium),
+            Number(item.soilPH),
+            Number(item.soilTemperature),
+            Number(item.solarPanelVoltage),
+            Number(item.batteryVoltage)
+          ]);
+        });
+
+        // Define the LineChart
+        this.lineChart = {
+          chartType: GoogleChartType.LineChart,
+          dataTable: lineChartData,
+          options: {
+            title: 'System Metrics Over Time',
+            hAxis: {
+              title: 'Time',
+              format: 'MMM dd, yyyy HH:mm'
+            },
+            vAxis: {
+              title: 'Values'
+            },
+            series: {
+              0: { color: 'blue' },
+              1: { color: 'green' },
+              2: { color: 'orange' },
+              3: { color: 'purple' },
+              4: { color: 'red' },
+              5: { color: 'pink' },
+              6: { color: 'brown' },
+              7: { color: 'black' }
+            }
+          }
+        };
+
         this.cd.detectChanges();
       });
   }

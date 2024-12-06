@@ -259,6 +259,31 @@
             </div>
           </div>
         </div>
+        <div class="graph-container">
+          <div class="row">
+            @if(pieChart) {
+              <div class="col-md-6 col-sm-6 col-12 text-center">
+                <div class="bg-white border mb-3 text-center" style="display: block;">
+                  <google-chart [data]="pieChart"></google-chart> 
+                </div>
+              </div>
+            }
+            @if(barChart) {
+              <div class="col-md-6 col-sm-6 col-12 text-center">
+                <div class="bg-white border mb-3 text-center" style="display: block;">
+                  <google-chart [data]="barChart"></google-chart>
+                </div>
+              </div> 
+            }
+            @if(lineChart) {
+              <div class="col-md-12 col-sm-12 col-12 text-center">
+                <div class="bg-white border mb-3 text-center" style="display: block;">
+                  <google-chart [data]="lineChart"></google-chart>
+                </div>
+              </div>
+            }
+            </div> 
+        </div>
       </div>
     </section>
   </div>

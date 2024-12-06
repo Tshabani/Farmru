@@ -5,8 +5,6 @@ import { GoogleChartInterface, GoogleChartType } from 'ng2-google-charts';
 import { AppStatisticsDto, HomeServiceProxy } from '@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs';
 
-
-
 @Component({
   templateUrl: './home.component.html',
   animations: [appModuleAnimation()],
