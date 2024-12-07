@@ -206,7 +206,7 @@
                     <tr>
                       <th>{{ "Latitude" | localize }}</th>
                       <th>{{ "Longitude" | localize }}</th>
-                      <th>{{ "Logging Time" | localize }}</th>
+                      <th>{{ "Creation Time" | localize }}</th>
                       <th>{{ "Moisture" | localize }}</th>
                       <th>{{ "Nitrogen" | localize }}</th>
                       <th>{{ "Phosphorus" | localize }}</th>
@@ -233,7 +233,7 @@
                     <tr>
                       <td>{{ nodeDataItem.latitude }}</td>
                       <td>{{ nodeDataItem.longitude}}</td>
-                      <td>{{ nodeDataItem.loggingTime.toDate() | date: 'dd MMMM yyyy HH:mm:ss' }}</td>
+                      <td>{{ nodeDataItem.creationTime.toDate() | date: 'dd MMMM yyyy HH:mm:ss' }}</td>
                       <td>{{ nodeDataItem.moisture }}</td>
                       <td>{{ nodeDataItem.nitrogen }}</td>
                       <td>{{ nodeDataItem.phosphorus }}</td>

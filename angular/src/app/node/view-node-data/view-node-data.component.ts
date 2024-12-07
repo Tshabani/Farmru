@@ -144,21 +144,21 @@ updateChart() {
   const selectedOptions = this.graphOptions.filter(option => option.selected);
 
   if (selectedOptions.length === 0) {
-    this.lineChart = null; // No data to display
+    this.lineChart = null; 
     this.cd.detectChanges();
     return;
   }
 
-  const headers = ['Logging Time', ...selectedOptions.map(option => option.label)];
+  const headers = ['Creation Time', ...selectedOptions.map(option => option.label)];
   const lineChartData: (Date | number | string)[][] = [headers];
 
   this.nodeData.forEach(item => {
-    const loggingTime = item.loggingTime instanceof Date
-      ? item.loggingTime
-      : item.loggingTime.toDate();
+    const creationTime = item.creationTime instanceof Date
+      ? item.creationTime
+      : item.creationTime.toDate();
 
     const row = [
-      loggingTime,
+      creationTime,
       ...selectedOptions.map(option => Number(item[option.key]))
     ];
     lineChartData.push(row);
