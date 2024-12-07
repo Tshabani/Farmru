@@ -61,6 +61,7 @@ class NodeData {
   int batteryVoltage;
   dynamic conductivity;
   DateTime loggingTime;
+  DateTime creationTime;
   Node node;
   String id;
 
@@ -77,6 +78,7 @@ class NodeData {
     required this.batteryVoltage,
     required this.conductivity,
     required this.loggingTime,
+    required this.creationTime,
     required this.node,
     required this.id,
   });
@@ -94,6 +96,7 @@ class NodeData {
         batteryVoltage: json["batteryVoltage"],
         conductivity: json["conductivity"],
         loggingTime: DateTime.parse(json["loggingTime"]),
+        creationTime: DateTime.parse(json["creationTime"]),
         node: Node.fromJson(json["node"]),
         id: json["id"],
       );
@@ -111,6 +114,7 @@ class NodeData {
         "batteryVoltage": batteryVoltage,
         "conductivity": conductivity,
         "loggingTime": loggingTime.toIso8601String(),
+        "creationTime": creationTime.toIso8601String(),
         "node": node.toJson(),
         "id": id,
       };
