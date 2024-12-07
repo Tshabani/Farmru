@@ -41,7 +41,6 @@ export class ViewNodeDataComponent extends PagedListingComponentBase<NodeDataDto
     cd: ChangeDetectorRef
   ) {
     super(injector, cd);
-    this.nodeId = this.route.snapshot.paramMap.get('id');
   }
 
   set startDate(value: string | null) {
@@ -67,7 +66,6 @@ export class ViewNodeDataComponent extends PagedListingComponentBase<NodeDataDto
   }
 
   refreshCharts(): void {
-    // Temporarily set chart to null to force re-render
     const pieChartData = this.pieChart;
     const barChartData = this.barChart;
     const lineChartData = this.lineChart;
@@ -95,6 +93,8 @@ export class ViewNodeDataComponent extends PagedListingComponentBase<NodeDataDto
     request.predefinedPeriod = this.predefinedPeriod;
     request.startDate = this._startDate;
     request.endDate = this._endDate;
+    
+    this.nodeId = this.route.snapshot.paramMap.get('id');
 
     this._nodesService.getNodeDataByNodeId(this.nodeId,request.startDate,request.endDate,request.predefinedPeriod, request.skipCount, request.maxResultCount)
       .pipe(
@@ -106,18 +106,25 @@ export class ViewNodeDataComponent extends PagedListingComponentBase<NodeDataDto
         this.nodeData = result.items;
         this.showPaging(result, pageNumber);
 
-         // Example data processing: Prepare data for LineChart
-         const lineChartData: (Date | number | string)[][] = [
+        this.lineChart = null;
+        this.cd.detectChanges();
+
+        if(result.items.length <= 0)
+        {          
+          return;
+        }     
+        
+        const lineChartData: (Date | number | string)[][] = [
           ['Logging Time', 'Moisture', 'Nitrogen', 'Phosphorus', 'Potassium', 'Soil PH', 'Soil Temperature', 'Solar Panel Voltage', 'Battery Voltage']
         ];        
 
         result.items.forEach(item => {
           const loggingTime = item.loggingTime instanceof Date
           ? item.loggingTime
-          : item.loggingTime.toDate(); // Convert Moment to Date
+          : item.loggingTime.toDate();
 
           lineChartData.push([
-            loggingTime, // Format Logging Time
+            loggingTime, 
             Number(item.moisture),
             Number(item.nitrogen),
             Number(item.phosphorus),
@@ -129,7 +136,6 @@ export class ViewNodeDataComponent extends PagedListingComponentBase<NodeDataDto
           ]);
         });
 
-        // Define the LineChart
         this.lineChart = {
           chartType: GoogleChartType.LineChart,
           dataTable: lineChartData,
@@ -142,6 +148,7 @@ export class ViewNodeDataComponent extends PagedListingComponentBase<NodeDataDto
             vAxis: {
               title: 'Values'
             },
+            height: 600, 
             series: {
               0: { color: 'blue' },
               1: { color: 'green' },
