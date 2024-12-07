@@ -73,8 +73,16 @@ export class ViewNodeDataComponent extends PagedListingComponentBase<NodeDataDto
     this.predefinedPeriod = '';
     this.startDate = undefined;
     this.endDate = undefined;
+  
+    this.graphOptions = this.graphOptions.map(option => ({
+      ...option,
+      selected: true
+    }));
+  
     this.getDataPage(1);
+    this.updateChart(); 
   }
+  
 
   refreshCharts(): void {
     const pieChartData = this.pieChart;
@@ -173,7 +181,6 @@ updateChart() {
       )
     }
   };
-
   this.cd.detectChanges();
 }
 
