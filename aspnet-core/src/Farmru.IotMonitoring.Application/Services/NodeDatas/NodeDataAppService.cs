@@ -8,6 +8,8 @@ using Farmru.IotMonitoring.Domains.Nodes;
 using Abp.UI;
 using System.Collections.Generic;
 using System.Linq;
+using Abp.Application.Services.Dto;
+using Microsoft.EntityFrameworkCore;
 
 namespace Farmru.IotMonitoring.Services.NodeDatas
 {
@@ -46,15 +48,67 @@ namespace Farmru.IotMonitoring.Services.NodeDatas
         /// </summary>
         /// <param name="nodeId"></param>
         /// <returns></returns>
-        public async Task<List<NodeDataDto>> GetNodeDataByNodeId(Guid nodeId)
+        public async Task<PagedResultDto<NodeDataDto>> GetNodeDataByNodeId(Guid nodeId, PagedNodeDataResultRequestDto input)
         {
-            var node = await _nodeRepository.FirstOrDefaultAsync(x => x.Id == nodeId) ?? throw new UserFriendlyException("Node not found");
+            // Ensure the node exists
+            var nodeExists = await _nodeRepository.FirstOrDefaultAsync(x => x.Id == nodeId);
+            if (nodeExists == null)
+            {
+                throw new UserFriendlyException("Node not found");
+            }
 
-            var nodeData = await Repository.GetAllListAsync(r => r.Node == node);
-            nodeData = [.. nodeData.OrderByDescending(c => c.CreationTime)];
+            // Determine the date range based on predefined period or custom range
+            DateTime? startDate = input.StartDate;
+            DateTime? endDate = input.EndDate;
 
+            if (!string.IsNullOrEmpty(input.PredefinedPeriod))
+            {
+                switch (input.PredefinedPeriod.ToLower())
+                {
+                    case "today":
+                        startDate = DateTime.Today;
+                        endDate = DateTime.Today.AddDays(1).AddTicks(-1);
+                        break;
+                    case "week":
+                        startDate = DateTime.Today.AddDays(-7);
+                        endDate = DateTime.Today.AddDays(1).AddTicks(-1);
+                        break;
+                    case "month":
+                        startDate = DateTime.Today.AddMonths(-1);
+                        endDate = DateTime.Today.AddDays(1).AddTicks(-1);
+                        break;
+                    case "year":
+                        startDate = DateTime.Today.AddYears(-1);
+                        endDate = DateTime.Today.AddDays(1).AddTicks(-1);
+                        break;
+                }
+            }
 
-            return ObjectMapper.Map<List<NodeDataDto>>(nodeData);
+            // Query filtered data
+            var query = Repository.GetAll()
+                .Where(r => r.Node != null && r.Node.Id == nodeId); // Filter by navigation property
+
+            if (startDate.HasValue && endDate.HasValue)
+            {
+                query = query.Where(r => r.CreationTime >= startDate && r.CreationTime <= endDate);
+            }
+
+            // Get total count for pagination
+            var totalCount = await query.CountAsync();
+
+            // Apply pagination and fetch results
+            var nodeData = await query
+                .OrderByDescending(c => c.CreationTime)
+                .Skip(input.SkipCount)
+                .Take(input.MaxResultCount)
+                .ToListAsync();
+
+            // Map and return paginated results
+            return new PagedResultDto<NodeDataDto>(
+                totalCount,
+                ObjectMapper.Map<List<NodeDataDto>>(nodeData)
+            );
         }
+
     }
 }
