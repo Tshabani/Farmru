@@ -165,6 +165,19 @@
                       </div>
                     </div>
                     </form>
+                    <div class="row">
+                      <div class="col-12">
+                        <label for="startDate">
+                          {{ "Graph Options" | localize }}
+                        </label>
+                      </div>
+                      <div *ngFor="let option of graphOptions" class="col">
+                        <label>
+                          <input type="checkbox" [checked]="option.selected" (change)="toggleGraph(option.key, $event)" />
+                          {{ option.label }}
+                        </label>
+                      </div>
+                    </div>
                     </div>
                       <div class="card-footer">
                         <button

@@ -34,6 +34,17 @@ export class ViewNodeDataComponent extends PagedListingComponentBase<NodeDataDto
   public barChart: GoogleChartInterface;
   public lineChart: GoogleChartInterface;
 
+  graphOptions = [
+    { key: 'moisture', label: 'Moisture', selected: true },
+    { key: 'nitrogen', label: 'Nitrogen', selected: true },
+    { key: 'phosphorus', label: 'Phosphorus', selected: true },
+    { key: 'potassium', label: 'Potassium', selected: true },
+    { key: 'soilPH', label: 'Soil PH', selected: true },
+    { key: 'soilTemperature', label: 'Soil Temperature', selected: true },
+    { key: 'solarPanelVoltage', label: 'Solar Panel Voltage', selected: true },
+    { key: 'batteryVoltage', label: 'Battery Voltage', selected: true },
+  ];
+
   constructor(
     injector: Injector,
     private _nodesService: NodeDataServiceProxy,
@@ -93,78 +104,91 @@ export class ViewNodeDataComponent extends PagedListingComponentBase<NodeDataDto
     request.predefinedPeriod = this.predefinedPeriod;
     request.startDate = this._startDate;
     request.endDate = this._endDate;
-    
+  
     this.nodeId = this.route.snapshot.paramMap.get('id');
-
-    this._nodesService.getNodeDataByNodeId(this.nodeId,request.startDate,request.endDate,request.predefinedPeriod, request.skipCount, request.maxResultCount)
-      .pipe(
-        finalize(() => {
-          finishedCallback();
-        })
-      )
+  
+    this._nodesService.getNodeDataByNodeId(
+      this.nodeId,
+      request.startDate,
+      request.endDate,
+      request.predefinedPeriod,
+      request.skipCount,
+      request.maxResultCount
+    )
+      .pipe(finalize(() => finishedCallback()))
       .subscribe((result: NodeDataDtoPagedResultDto) => {
         this.nodeData = result.items;
         this.showPaging(result, pageNumber);
-
+  
         this.lineChart = null;
         this.cd.detectChanges();
-
-        if(result.items.length <= 0)
-        {          
+  
+        if (result.items.length <= 0) {
           return;
-        }     
-        
-        const lineChartData: (Date | number | string)[][] = [
-          ['Logging Time', 'Moisture', 'Nitrogen', 'Phosphorus', 'Potassium', 'Soil PH', 'Soil Temperature', 'Solar Panel Voltage', 'Battery Voltage']
-        ];        
-
-        result.items.forEach(item => {
-          const loggingTime = item.loggingTime instanceof Date
-          ? item.loggingTime
-          : item.loggingTime.toDate();
-
-          lineChartData.push([
-            loggingTime, 
-            Number(item.moisture),
-            Number(item.nitrogen),
-            Number(item.phosphorus),
-            Number(item.potassium),
-            Number(item.soilPH),
-            Number(item.soilTemperature),
-            Number(item.solarPanelVoltage),
-            Number(item.batteryVoltage)
-          ]);
-        });
-
-        this.lineChart = {
-          chartType: GoogleChartType.LineChart,
-          dataTable: lineChartData,
-          options: {
-            title: 'System Metrics Over Time',
-            hAxis: {
-              title: 'Time',
-              format: 'MMM dd, yyyy HH:mm'
-            },
-            vAxis: {
-              title: 'Values'
-            },
-            height: 600, 
-            series: {
-              0: { color: 'blue' },
-              1: { color: 'green' },
-              2: { color: 'orange' },
-              3: { color: 'purple' },
-              4: { color: 'red' },
-              5: { color: 'pink' },
-              6: { color: 'brown' },
-              7: { color: 'black' }
-            }
-          }
-        };
-
-        this.cd.detectChanges();
+        }
+  
+        this.updateChart();
       });
   }
+
+
+updateChart() {
+  const selectedOptions = this.graphOptions.filter(option => option.selected);
+
+  if (selectedOptions.length === 0) {
+    this.lineChart = null; // No data to display
+    this.cd.detectChanges();
+    return;
+  }
+
+  const headers = ['Logging Time', ...selectedOptions.map(option => option.label)];
+  const lineChartData: (Date | number | string)[][] = [headers];
+
+  this.nodeData.forEach(item => {
+    const loggingTime = item.loggingTime instanceof Date
+      ? item.loggingTime
+      : item.loggingTime.toDate();
+
+    const row = [
+      loggingTime,
+      ...selectedOptions.map(option => Number(item[option.key]))
+    ];
+    lineChartData.push(row);
+  });
+
+  this.lineChart = {
+    chartType: GoogleChartType.LineChart,
+    dataTable: lineChartData,
+    options: {
+      title: 'System Metrics Over Time',
+      hAxis: { title: 'Time', format: 'MMM dd, yyyy HH:mm' },
+      vAxis: { title: 'Values' },
+      height: 600,
+      series: selectedOptions.reduce(
+        (acc, option, index) => ({
+          ...acc,
+          [index]: { color: this.getColor(index) },
+        }),
+        {}
+      )
+    }
+  };
+
+  this.cd.detectChanges();
+}
+
+toggleGraph(key: string, event: any) {
+  const isSelected = event.target.checked;
+  this.graphOptions = this.graphOptions.map(option =>
+    option.key === key ? { ...option, selected: isSelected } : option
+  );
+  this.updateChart();
+}
+
+getColor(index: number): string {
+  const colors = ['blue', 'green', 'orange', 'purple', 'red', 'pink', 'brown', 'black'];
+  return colors[index % colors.length];
+}
 
   delete(node: NodeDataDto): void {
     abp.message.confirm(
