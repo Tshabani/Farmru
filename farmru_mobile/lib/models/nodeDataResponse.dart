@@ -11,7 +11,7 @@ String nodeDataResponseToJson(NodeDataResponse data) =>
     json.encode(data.toJson());
 
 class NodeDataResponse {
-  List<NodeData> result;
+  Result result;
   dynamic targetUrl;
   bool success;
   dynamic error;
@@ -29,8 +29,7 @@ class NodeDataResponse {
 
   factory NodeDataResponse.fromJson(Map<String, dynamic> json) =>
       NodeDataResponse(
-        result: List<NodeData>.from(
-            json["result"].map((x) => NodeData.fromJson(x))),
+        result: Result.fromJson(json["result"]),
         targetUrl: json["targetUrl"],
         success: json["success"],
         error: json["error"],
@@ -39,12 +38,33 @@ class NodeDataResponse {
       );
 
   Map<String, dynamic> toJson() => {
-        "result": List<dynamic>.from(result.map((x) => x.toJson())),
+        "result": result.toJson(),
         "targetUrl": targetUrl,
         "success": success,
         "error": error,
         "unAuthorizedRequest": unAuthorizedRequest,
         "__abp": abp,
+      };
+}
+
+class Result {
+  int totalCount;
+  List<NodeData> items;
+
+  Result({
+    required this.totalCount,
+    required this.items,
+  });
+
+  factory Result.fromJson(Map<String, dynamic> json) => Result(
+        totalCount: json["totalCount"],
+        items:
+            List<NodeData>.from(json["items"].map((x) => NodeData.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "totalCount": totalCount,
+        "items": List<dynamic>.from(items.map((x) => x.toJson())),
       };
 }
 

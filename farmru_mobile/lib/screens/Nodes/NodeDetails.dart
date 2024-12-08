@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../models/nodeDataResponse.dart';
 import '../../models/nodeResponse.dart';
 import '../../services/node_service.dart';
+import '../components/lineChart.dart';
 
 class NodeDetailsPage extends StatefulWidget {
   final NodeResult node;
@@ -74,126 +75,15 @@ class _NodeDetailsPageState extends State<NodeDetailsPage> {
       );
     }
 
-    // Mapping the sensor data to FlSpot values for charts
-    final charts = [
-      ChartData(
-        "Temperature",
-        sensorData
-            .asMap()
-            .entries
-            .map((entry) => FlSpot(entry.key.toDouble(),
-                double.parse(entry.value.soilTemperature ?? '0')))
-            .toList(),
-        Colors.blue,
-      ),
-      ChartData(
-        "Soil PH",
-        sensorData
-            .asMap()
-            .entries
-            .map((entry) => FlSpot(
-                entry.key.toDouble(), double.parse(entry.value.soilPh ?? '0')))
-            .toList(),
-        Colors.green,
-      ),
-      ChartData(
-        "Humidity",
-        sensorData
-            .asMap()
-            .entries
-            .map((entry) => FlSpot(entry.key.toDouble(),
-                double.parse(entry.value.moisture ?? '0')))
-            .toList(),
-        Colors.teal,
-      ),
-      ChartData(
-        "Phosphorus",
-        sensorData
-            .asMap()
-            .entries
-            .map((entry) => FlSpot(entry.key.toDouble(),
-                double.parse(entry.value.phosphorus ?? '0')))
-            .toList(),
-        Colors.purple,
-      ),
-      ChartData(
-        "Potassium",
-        sensorData
-            .asMap()
-            .entries
-            .map((entry) => FlSpot(entry.key.toDouble(),
-                double.parse(entry.value.potassium ?? '0')))
-            .toList(),
-        Colors.orange,
-      ),
-      ChartData(
-        "Nitrogen",
-        sensorData
-            .asMap()
-            .entries
-            .map((entry) => FlSpot(entry.key.toDouble(),
-                double.parse(entry.value.nitrogen ?? '0')))
-            .toList(),
-        Colors.red,
-      ),
-    ];
-
-    return SingleChildScrollView(
+    return Center(
       child: Card(
-        elevation: 3,
+        elevation: 5,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: Padding(
-          padding: const EdgeInsets.all(0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: charts
-                .map(
-                    (chart) => buildChart(chart.title, chart.data, chart.color))
-                .toList(),
-          ),
+        child: const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: CustomLineChart(),
         ),
       ),
-    );
-  }
-
-  Widget buildChart(String title, List<FlSpot> data, Color color) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-        ),
-        const SizedBox(height: 10),
-        SizedBox(
-          height: 200,
-          child: LineChart(
-            LineChartData(
-              lineBarsData: [
-                LineChartBarData(
-                  spots: data,
-                  color: color,
-                  dotData: const FlDotData(show: false),
-                ),
-              ],
-              titlesData: const FlTitlesData(
-                rightTitles:
-                    AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                topTitles:
-                    AxisTitles(sideTitles: SideTitles(showTitles: false)),
-              ),
-              gridData: const FlGridData(
-                show: !true,
-                horizontalInterval: 5,
-                verticalInterval: 2,
-              ),
-              minY: 0,
-              minX: 0,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

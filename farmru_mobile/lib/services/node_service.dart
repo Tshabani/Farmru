@@ -18,7 +18,7 @@ class NodeService {
     if (response == null) return null;
     var nodeData = nodeDataResponseFromJson(response);
 
-    return nodeData.result;
+    return nodeData.result.items;
   }
 
   static Future<NodeAvgData?> GetSensorData() async {
