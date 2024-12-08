@@ -3,7 +3,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
-            <h1>{{ "NodeData" | localize }}</h1>
+            <h1>{{ "Node Data View" | localize }}</h1>
           </div>
         </div>
       </div>
@@ -165,6 +165,19 @@
                       </div>
                     </div>
                     </form>
+                    <div class="row">
+                      <div class="col-12">
+                        <label for="startDate">
+                          {{ "Graph Options" | localize }}
+                        </label>
+                      </div>
+                      <div *ngFor="let option of graphOptions" class="col">
+                        <label>
+                          <input type="checkbox" [checked]="option.selected" (change)="toggleGraph(option.key, $event)" />
+                          {{ option.label }}
+                        </label>
+                      </div>
+                    </div>
                     </div>
                       <div class="card-footer">
                         <button
@@ -193,7 +206,7 @@
                     <tr>
                       <th>{{ "Latitude" | localize }}</th>
                       <th>{{ "Longitude" | localize }}</th>
-                      <th>{{ "Logging Time" | localize }}</th>
+                      <th>{{ "Creation Time" | localize }}</th>
                       <th>{{ "Moisture" | localize }}</th>
                       <th>{{ "Nitrogen" | localize }}</th>
                       <th>{{ "Phosphorus" | localize }}</th>
@@ -220,7 +233,7 @@
                     <tr>
                       <td>{{ nodeDataItem.latitude }}</td>
                       <td>{{ nodeDataItem.longitude}}</td>
-                      <td>{{ nodeDataItem.loggingTime.toDate() | date: 'dd MMMM yyyy HH:mm:ss' }}</td>
+                      <td>{{ nodeDataItem.creationTime.toDate() | date: 'dd MMMM yyyy HH:mm:ss' }}</td>
                       <td>{{ nodeDataItem.moisture }}</td>
                       <td>{{ nodeDataItem.nitrogen }}</td>
                       <td>{{ nodeDataItem.phosphorus }}</td>
@@ -259,7 +272,7 @@
             </div>
           </div>
         </div>
-        <div class="graph-container">
+        <div class="graph-container" [busy]="isTableLoading">
           <div class="row">
             @if(pieChart) {
               <div class="col-md-6 col-sm-6 col-12 text-center">
@@ -277,7 +290,7 @@
             }
             @if(lineChart) {
               <div class="col-md-12 col-sm-12 col-12 text-center">
-                <div class="bg-white border mb-3 text-center" style="display: block;">
+                <div class="bg-white border mb-3 text-center" style="display: block;height: 600px;">
                   <google-chart [data]="lineChart"></google-chart>
                 </div>
               </div>

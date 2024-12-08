@@ -25,6 +25,8 @@ export class HomeComponent extends AppComponentBase {
   public solarPanelVoltageGauge: GoogleChartInterface;
   public batteryVoltageGauge: GoogleChartInterface;
 
+  isLoading = true;
+
   constructor(   
     injector: Injector,
     private cd: ChangeDetectorRef,
@@ -40,11 +42,11 @@ export class HomeComponent extends AppComponentBase {
 
   ngOnInit(): void {
     this.fetchStatsData();
-    this.fetchAverageNodeData();
+    this.fetchAverageNodeData(); 
   }
   
-  refreshCharts(): void {
-    // Temporarily set chart to null to force re-render
+  refreshCharts(): void {    
+    this.isLoading = true;
     const pieChartData = this.pieChart;
     const barChartData = this.barChart;
 
@@ -55,8 +57,9 @@ export class HomeComponent extends AppComponentBase {
 
     setTimeout(() => {
       this.pieChart = pieChartData;
-      this.barChart = barChartData;
-      this.cd.detectChanges();
+      this.barChart = barChartData;           
+      this.isLoading = false;
+      this.cd.detectChanges(); 
     });
   }
 
@@ -96,11 +99,10 @@ export class HomeComponent extends AppComponentBase {
     });
   }
 
-
-
   fetchAverageNodeData(): void {
     this._homeService.getSensorData().pipe(
       finalize(() => {
+        this.isLoading = false;
         this.cd.detectChanges();
       })
     ).subscribe(data => {
@@ -254,7 +256,7 @@ export class HomeComponent extends AppComponentBase {
           max: 15,
           min: 0
         }
-      };
+      };    
     });
   }
 }
