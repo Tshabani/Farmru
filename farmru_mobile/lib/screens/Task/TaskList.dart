@@ -9,7 +9,7 @@ class TasksListPage extends StatefulWidget {
 
 class _TasksListPageState extends State<TasksListPage> {
   // late List<LogSheetItem>? _logSheets;
-  bool _isLoading = true;
+  final bool _isLoading = true;
 
   @override
   void initState() {
@@ -18,8 +18,8 @@ class _TasksListPageState extends State<TasksListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: const Center(child: CircularProgressIndicator()),
+    return const Scaffold(
+      body: Center(child: CircularProgressIndicator()),
     );
   }
 }

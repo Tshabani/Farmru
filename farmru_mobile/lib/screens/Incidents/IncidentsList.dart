@@ -9,7 +9,7 @@ class IncidentListPage extends StatefulWidget {
 
 class _IncidentListPageState extends State<IncidentListPage> {
   // late List<LogSheetItem>? _logSheets;
-  bool _isLoading = true;
+  final bool _isLoading = true;
 
   @override
   void initState() {

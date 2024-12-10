@@ -79,9 +79,11 @@ class _NodeDetailsPageState extends State<NodeDetailsPage> {
       child: Card(
         elevation: 5,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: CustomLineChart(),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: CustomLineChart(
+            sensorData: sensorData,
+          ),
         ),
       ),
     );

@@ -13,8 +13,8 @@ class NodeService {
   }
 
   static Future<List<NodeData>?> GetNodeDataByNode(NodeResult node) async {
-    var response = await BaseClient()
-        .get('api/services/app/NodeData/GetNodeDataByNodeId?nodeId=${node.id}');
+    var response = await BaseClient().get(
+        'api/services/app/NodeData/GetNodeDataByNodeId?nodeId=${node.id}&SkipCount=0&MaxResultCount=1000');
     if (response == null) return null;
     var nodeData = nodeDataResponseFromJson(response);
 

@@ -9,10 +9,10 @@ class CloudDatabaseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Safely extracting and formatting sensor data with units
-    final soilPh = sensorData.avgSoilPh?.toStringAsFixed(1) ?? "N/A";
-    final potassium = sensorData.avgPotassium?.toStringAsFixed(1) ?? "N/A";
-    final phosphorus = sensorData.avgPhosphorus?.toStringAsFixed(1) ?? "N/A";
-    final nitrogen = sensorData.avgNitrogen?.toStringAsFixed(1) ?? "N/A";
+    final soilPh = sensorData.avgSoilPh.toStringAsFixed(1) ?? "N/A";
+    final potassium = sensorData.avgPotassium.toStringAsFixed(1) ?? "N/A";
+    final phosphorus = sensorData.avgPhosphorus.toStringAsFixed(1) ?? "N/A";
+    final nitrogen = sensorData.avgNitrogen.toStringAsFixed(1) ?? "N/A";
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),

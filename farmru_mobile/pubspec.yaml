@@ -51,6 +51,7 @@ dependencies:
   fl_chart: ^0.69.0
   percent_indicator: ^4.0.1
   geekyants_flutter_gauges: 1.0.4
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

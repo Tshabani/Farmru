@@ -12,11 +12,11 @@ class SensorIndicators extends StatelessWidget {
   Widget build(BuildContext context) {
     // Extracting sensor data with null checks
     final temperature =
-        sensorData.avgSoilTemperature?.toStringAsFixed(1) ?? "N/A";
+        sensorData.avgSoilTemperature.toStringAsFixed(1) ?? "N/A";
     final solarPanelVoltage =
-        sensorData.avgSolarPanelVoltage?.toStringAsFixed(1) ?? "N/A";
+        sensorData.avgSolarPanelVoltage.toStringAsFixed(1) ?? "N/A";
     final batteryVoltage =
-        sensorData.avgBatteryVoltage?.toStringAsFixed(1) ?? "N/A";
+        sensorData.avgBatteryVoltage.toStringAsFixed(1) ?? "N/A";
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
