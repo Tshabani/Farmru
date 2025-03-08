@@ -23,6 +23,7 @@ import { SidebarComponent } from './layout/sidebar.component';
 import { SidebarLogoComponent } from './layout/sidebar-logo.component';
 import { SidebarMenuComponent } from './layout/sidebar-menu.component';
 import { Ng2GoogleChartsModule } from 'ng2-google-charts';
+import { GoogleChartsModule } from '@node_modules/angular-google-charts';
 
 @NgModule({
     declarations: [
@@ -52,7 +53,8 @@ import { Ng2GoogleChartsModule } from 'ng2-google-charts';
         TabsModule,
         ServiceProxyModule,
         NgxPaginationModule,
-        SharedModule
+        SharedModule,
+        GoogleChartsModule
     ],
     providers: []
 })

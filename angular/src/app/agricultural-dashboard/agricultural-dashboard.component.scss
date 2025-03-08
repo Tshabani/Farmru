@@ -1,0 +1,63 @@
+// agricultural-dashboard.component.scss
+
+// Card styling
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  
+  .card-header {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+}
+
+// Status indicators
+.badge {
+  font-weight: 500;
+  padding: 0.4rem 0.6rem;
+}
+
+// Chart containers
+google-chart {
+  width: 100%;
+  display: block;
+}
+
+// Alert styling
+.bg-danger-subtle {
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+.bg-warning-subtle {
+  background-color: rgba(255, 193, 7, 0.1);
+}
+
+.bg-info-subtle {
+  background-color: rgba(13, 202, 240, 0.1);
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .display-5 {
+    font-size: 2rem;
+  }
+}
+
+// Value containers
+.value-display {
+  text-align: center;
+  padding: 1rem;
+  
+  .label {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+  }
+  
+  .value {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+}

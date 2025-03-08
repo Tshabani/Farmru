@@ -1,0 +1,86 @@
+<div class="container-fluid p-4">
+  <!-- System Alerts -->
+  <div class="row mb-4" *ngIf="systemAlerts && systemAlerts.length > 0">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header" [ngClass]="{'bg-danger text-white': hasCriticalAlerts(), 
+                                            'bg-warning': hasWarningAlertsOnly()}">
+          <h5 class="mb-0">System Alerts</h5>
+        </div>
+        <div class="card-body p-0">
+          <ul class="list-group list-group-flush">
+            <li *ngFor="let alert of systemAlerts" 
+                class="list-group-item" 
+                [ngClass]="getAlertClass(alert.level)">
+              <div class="d-flex align-items-center">
+                <span class="badge rounded-pill me-2" [ngClass]="getBadgeClass(alert.level)">
+                  {{ alert.level }}
+                </span>
+                <span style="padding-left: 5px;">{{ alert.message }}</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main metrics with historical trends -->
+  <div class="row mb-4">
+    <div class="col-md-4 mb-3" *ngFor="let metric of ['soilTemp', 'soilPH', 'moisture']">
+      <div class="card h-100">
+        <div class="card-header" [ngClass]="getAlertClass(nutrientStatus[metric]?.status || 'Normal')">
+          <h5 class="mb-0">{{ getMetricTitle(metric) }} 
+            <span class="badge" [ngClass]="getBadgeClass(nutrientStatus[metric]?.status || 'Normal')">
+              {{ nutrientStatus[metric]?.status || 'Normal' }}
+            </span>
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="text-center mb-3">
+            <span class="display-5 fw-bold" [ngClass]="getTextClass(nutrientStatus[metric]?.status || 'Normal')">
+              {{ currentReadings[metric] }}{{ getUnit(metric) }}
+            </span>
+          </div>
+          <google-chart [data]="getChart(metric)" *ngIf="getChart(metric)"></google-chart>
+          <div class="alert mt-3" *ngIf="nutrientStatus[metric]?.action" [ngClass]="getAlertClass(nutrientStatus[metric].status)">
+            <strong>Action needed:</strong> {{ nutrientStatus[metric].action }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nutrient and System Status Gauges -->
+  <div class="row mb-4">
+    <div class="col-12 mb-3">
+      <h4>Soil Nutrient Levels</h4>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-3" *ngFor="let key of ['pH', 'nitrogen', 'phosphorus', 'potassium']">
+      <div class="card">
+        <div class="card-body text-center">
+          <google-chart [data]="getGauge(key)" *ngIf="getGauge(key)"></google-chart>
+          <div class="mt-2 badge" [ngClass]="getBadgeClass(nutrientStatus[key]?.status)">
+            {{ nutrientStatus[key]?.status }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-12 mb-3">
+      <h4>System Status</h4>
+    </div>
+    <div class="col-md-6 mb-3" *ngFor="let system of ['solarPanelVoltage', 'batteryVoltage']">
+      <div class="card">
+        <div class="card-body text-center">
+          <google-chart [data]="getGauge(system)" *ngIf="getGauge(system)"></google-chart>
+          <div class="mt-2 badge" [ngClass]="getBadgeClass(getSystemStatus(system))">
+            {{ getSystemStatus(system) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> 
+</div>
