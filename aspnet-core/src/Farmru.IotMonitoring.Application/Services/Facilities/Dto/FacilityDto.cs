@@ -29,6 +29,7 @@ namespace Farmru.IotMonitoring.Services.Facilities.Dto
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
         public decimal? Altitude { get; set; }
+        public bool? IsDefault { get; set; }
 
     }
 }

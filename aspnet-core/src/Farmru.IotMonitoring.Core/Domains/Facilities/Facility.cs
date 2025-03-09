@@ -30,5 +30,6 @@ namespace Farmru.IotMonitoring.Domains.Facilities
         public virtual decimal? Longitude { get; set; }
         [Column(TypeName = "decimal(10, 8)")]
         public virtual decimal? Altitude { get; set; }
+        public virtual bool? IsDefault { get; set; }
     }
 }
