@@ -1402,6 +1402,57 @@ export class NodeDataServiceProxy {
     }
 
     /**
+     * @return OK
+     */
+    getReadings(): Observable<HistoricalDataResponse> {
+        let url_ = this.baseUrl + "/api/services/app/NodeData/GetReadings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetReadings(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetReadings(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<HistoricalDataResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<HistoricalDataResponse>;
+        }));
+    }
+
+    protected processGetReadings(response: HttpResponseBase): Observable<HistoricalDataResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = HistoricalDataResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @param nodeId (optional) 
      * @param startDate (optional) 
      * @param endDate (optional) 
@@ -4744,6 +4795,7 @@ export class CreateFacilityDto implements ICreateFacilityDto {
     latitude: number | undefined;
     longitude: number | undefined;
     altitude: number | undefined;
+    isDefault: boolean | undefined;
 
     constructor(data?: ICreateFacilityDto) {
         if (data) {
@@ -4765,6 +4817,7 @@ export class CreateFacilityDto implements ICreateFacilityDto {
             this.latitude = _data["latitude"];
             this.longitude = _data["longitude"];
             this.altitude = _data["altitude"];
+            this.isDefault = _data["isDefault"];
         }
     }
 
@@ -4786,6 +4839,7 @@ export class CreateFacilityDto implements ICreateFacilityDto {
         data["latitude"] = this.latitude;
         data["longitude"] = this.longitude;
         data["altitude"] = this.altitude;
+        data["isDefault"] = this.isDefault;
         return data;
     }
 
@@ -4807,6 +4861,7 @@ export interface ICreateFacilityDto {
     latitude: number | undefined;
     longitude: number | undefined;
     altitude: number | undefined;
+    isDefault: boolean | undefined;
 }
 
 export class CreateNode implements ICreateNode {
@@ -5231,6 +5286,77 @@ export interface ICreateUserDto {
     person: PersonDto;
 }
 
+export class CurrentReadings implements ICurrentReadings {
+    soilTemp: number;
+    soilPH: number;
+    moisture: number;
+    phosphorus: number;
+    potassium: number;
+    nitrogen: number;
+    solarVoltage: number;
+    batteryVoltage: number;
+
+    constructor(data?: ICurrentReadings) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.soilTemp = _data["soilTemp"];
+            this.soilPH = _data["soilPH"];
+            this.moisture = _data["moisture"];
+            this.phosphorus = _data["phosphorus"];
+            this.potassium = _data["potassium"];
+            this.nitrogen = _data["nitrogen"];
+            this.solarVoltage = _data["solarVoltage"];
+            this.batteryVoltage = _data["batteryVoltage"];
+        }
+    }
+
+    static fromJS(data: any): CurrentReadings {
+        data = typeof data === 'object' ? data : {};
+        let result = new CurrentReadings();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["soilTemp"] = this.soilTemp;
+        data["soilPH"] = this.soilPH;
+        data["moisture"] = this.moisture;
+        data["phosphorus"] = this.phosphorus;
+        data["potassium"] = this.potassium;
+        data["nitrogen"] = this.nitrogen;
+        data["solarVoltage"] = this.solarVoltage;
+        data["batteryVoltage"] = this.batteryVoltage;
+        return data;
+    }
+
+    clone(): CurrentReadings {
+        const json = this.toJSON();
+        let result = new CurrentReadings();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICurrentReadings {
+    soilTemp: number;
+    soilPH: number;
+    moisture: number;
+    phosphorus: number;
+    potassium: number;
+    nitrogen: number;
+    solarVoltage: number;
+    batteryVoltage: number;
+}
+
 export class FacilitiesDto implements IFacilitiesDto {
     id: string;
     name: string | undefined;
@@ -5394,6 +5520,7 @@ export class FacilityDto implements IFacilityDto {
     latitude: number | undefined;
     longitude: number | undefined;
     altitude: number | undefined;
+    isDefault: boolean | undefined;
 
     constructor(data?: IFacilityDto) {
         if (data) {
@@ -5415,6 +5542,7 @@ export class FacilityDto implements IFacilityDto {
             this.latitude = _data["latitude"];
             this.longitude = _data["longitude"];
             this.altitude = _data["altitude"];
+            this.isDefault = _data["isDefault"];
         }
     }
 
@@ -5436,6 +5564,7 @@ export class FacilityDto implements IFacilityDto {
         data["latitude"] = this.latitude;
         data["longitude"] = this.longitude;
         data["altitude"] = this.altitude;
+        data["isDefault"] = this.isDefault;
         return data;
     }
 
@@ -5457,6 +5586,7 @@ export interface IFacilityDto {
     latitude: number | undefined;
     longitude: number | undefined;
     altitude: number | undefined;
+    isDefault: boolean | undefined;
 }
 
 export class FacilityDtoPagedResultDto implements IFacilityDtoPagedResultDto {
@@ -5728,6 +5858,116 @@ export class GuidNullableEntityWithDisplayNameDto implements IGuidNullableEntity
 export interface IGuidNullableEntityWithDisplayNameDto {
     id: string | undefined;
     displayText: string | undefined;
+}
+
+export class HistoricalData implements IHistoricalData {
+    day: string | undefined;
+    soilTemp: number;
+    moisture: number;
+    ph: number;
+
+    constructor(data?: IHistoricalData) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.day = _data["day"];
+            this.soilTemp = _data["soilTemp"];
+            this.moisture = _data["moisture"];
+            this.ph = _data["ph"];
+        }
+    }
+
+    static fromJS(data: any): HistoricalData {
+        data = typeof data === 'object' ? data : {};
+        let result = new HistoricalData();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["day"] = this.day;
+        data["soilTemp"] = this.soilTemp;
+        data["moisture"] = this.moisture;
+        data["ph"] = this.ph;
+        return data;
+    }
+
+    clone(): HistoricalData {
+        const json = this.toJSON();
+        let result = new HistoricalData();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IHistoricalData {
+    day: string | undefined;
+    soilTemp: number;
+    moisture: number;
+    ph: number;
+}
+
+export class HistoricalDataResponse implements IHistoricalDataResponse {
+    currentReadings: CurrentReadings;
+    historicalData: HistoricalData[] | undefined;
+
+    constructor(data?: IHistoricalDataResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.currentReadings = _data["currentReadings"] ? CurrentReadings.fromJS(_data["currentReadings"]) : <any>undefined;
+            if (Array.isArray(_data["historicalData"])) {
+                this.historicalData = [] as any;
+                for (let item of _data["historicalData"])
+                    this.historicalData.push(HistoricalData.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): HistoricalDataResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new HistoricalDataResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["currentReadings"] = this.currentReadings ? this.currentReadings.toJSON() : <any>undefined;
+        if (Array.isArray(this.historicalData)) {
+            data["historicalData"] = [];
+            for (let item of this.historicalData)
+                data["historicalData"].push(item.toJSON());
+        }
+        return data;
+    }
+
+    clone(): HistoricalDataResponse {
+        const json = this.toJSON();
+        let result = new HistoricalDataResponse();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IHistoricalDataResponse {
+    currentReadings: CurrentReadings;
+    historicalData: HistoricalData[] | undefined;
 }
 
 export class Int64EntityDto implements IInt64EntityDto {

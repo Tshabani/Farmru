@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { CurrentReadings, HistoricalData, HistoricalDataResponse } from '@shared/service-proxies/service-proxies';
 import { ChartType } from 'angular-google-charts';
 
 @Component({
@@ -6,27 +7,14 @@ import { ChartType } from 'angular-google-charts';
   templateUrl: './agricultural-dashboard.component.html',
   styleUrls: ['./agricultural-dashboard.component.scss']
 })
-export class AgriculturalDashboardComponent implements OnInit {
+export class AgriculturalDashboardComponent implements OnInit, OnChanges {
+  @Input() readingsData: HistoricalDataResponse; 
+  
   // Current readings
-  currentReadings = {
-    soilTemp: 29.1,
-    soilPH: 7.79,
-    moisture: 88,
-    phosphorus: 122.05,
-    potassium: 115.05,
-    nitrogen: 32.65,
-    solarVoltage: 12,
-    batteryVoltage: 12
-  };
+  currentReadings: CurrentReadings;
 
   // Sample historical data (would be replaced with actual data)
-  historicalData = [
-    { day: 'Mon', soilTemp: 28.5, moisture: 95, pH: 3.51 },
-    { day: 'Tue', soilTemp: 28.8, moisture: 97, pH: 3.50 },
-    { day: 'Wed', soilTemp: 29.0, moisture: 98, pH: 3.49 },
-    { day: 'Thu', soilTemp: 29.1, moisture: 100, pH: 3.49 },
-    { day: 'Fri', soilTemp: 29.1, moisture: 100, pH: 3.49 }
-  ];
+  historicalData: HistoricalData[];
   
   // Nutrient levels status and recommendations - these will be initialized in ngOnInit
   nutrientStatus: {
@@ -151,159 +139,168 @@ export class AgriculturalDashboardComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    // First calculate and update all statuses based on initial data
-    this.updateNutrientStatus();
-    this.updateAlerts(); 
-    
-    // Then initialize charts with the updated status information
-    this.initializeGaugeCharts();
-    this.initializeLineCharts();
+          
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['readingsData'] && this.readingsData) { 
+      this.currentReadings = this.readingsData.currentReadings;
+      this.historicalData = this.readingsData.historicalData;
+
+      // First calculate and update all statuses based on initial data
+      this.updateNutrientStatus();
+      this.updateAlerts(); 
+
+       // Then initialize charts with the updated status information
+      this.initializeGaugeCharts();
+      this.initializeLineCharts(); 
+    }
   }
 
   updateAlerts(): void {
     this.systemAlerts = [];
   
     // Check soil pH
-    if (this.currentReadings.soilPH < 5.5) {
+    if (this.currentReadings?.soilPH < 5.5) {
       this.systemAlerts.push({
         level: 'Critical',
-        message: `Soil pH critically low (${this.currentReadings.soilPH}) - Add agricultural lime or dolomite to raise pH.`,
+        message: `Soil pH critically low (${this.currentReadings?.soilPH}) - Add agricultural lime or dolomite to raise pH.`,
         type: 'soil'
       });
-    } else if (this.currentReadings.soilPH >= 5.5 && this.currentReadings.soilPH < 6.0) {
+    } else if (this.currentReadings?.soilPH >= 5.5 && this.currentReadings?.soilPH < 6.0) {
       this.systemAlerts.push({
         level: 'Warning',
-        message: `Soil pH slightly low (${this.currentReadings.soilPH}) - Consider adding lime or organic matter to improve pH.`,
+        message: `Soil pH slightly low (${this.currentReadings?.soilPH}) - Consider adding lime or organic matter to improve pH.`,
         type: 'soil'
       });
-    } else if (this.currentReadings.soilPH > 7.5) {
+    } else if (this.currentReadings?.soilPH > 7.5) {
       this.systemAlerts.push({
         level: 'Warning',
-        message: `Soil pH too high (${this.currentReadings.soilPH}) - Consider adding sulfur or acidifying fertilizers to lower pH.`,
+        message: `Soil pH too high (${this.currentReadings?.soilPH}) - Consider adding sulfur or acidifying fertilizers to lower pH.`,
         type: 'soil'
       });
     }
   
     // Check soil temperature
-    if (this.currentReadings.soilTemp > 35) {
+    if (this.currentReadings?.soilTemp > 35) {
       this.systemAlerts.push({
         level: 'Warning',
-        message: `Soil temperature too high (${this.currentReadings.soilTemp}°C) - Use mulch or shade to cool the soil and protect plants.`,
+        message: `Soil temperature too high (${this.currentReadings?.soilTemp}°C) - Use mulch or shade to cool the soil and protect plants.`,
         type: 'soil'
       });
-    } else if (this.currentReadings.soilTemp < 10) {
+    } else if (this.currentReadings?.soilTemp < 10) {
       this.systemAlerts.push({
         level: 'Warning',
-        message: `Soil temperature too low (${this.currentReadings.soilTemp}°C) - Consider using row covers or black plastic to warm the soil.`,
+        message: `Soil temperature too low (${this.currentReadings?.soilTemp}°C) - Consider using row covers or black plastic to warm the soil.`,
         type: 'soil'
       });
     }
   
     // Check moisture level
-    if (this.currentReadings.moisture > 90) {
+    if (this.currentReadings?.moisture > 90) {
       this.systemAlerts.push({
         level: 'Warning',
-        message: `Moisture level too high (${this.currentReadings.moisture}%) - Improve drainage or reduce irrigation to prevent waterlogging.`,
+        message: `Moisture level too high (${this.currentReadings?.moisture}%) - Improve drainage or reduce irrigation to prevent waterlogging.`,
         type: 'soil'
       });
-    } else if (this.currentReadings.moisture < 30) {
+    } else if (this.currentReadings?.moisture < 30) {
       this.systemAlerts.push({
         level: 'Warning',
-        message: `Moisture level too low (${this.currentReadings.moisture}%) - Increase irrigation or use mulch to retain soil moisture.`,
+        message: `Moisture level too low (${this.currentReadings?.moisture}%) - Increase irrigation or use mulch to retain soil moisture.`,
         type: 'soil'
       });
     }
   
     // Check phosphorus level
-    if (this.currentReadings.phosphorus < 20) {
+    if (this.currentReadings?.phosphorus < 20) {
       this.systemAlerts.push({
         level: 'Warning',
-        message: `Phosphorus level low (${this.currentReadings.phosphorus}ppm) - Apply bone meal or rock phosphate to increase phosphorus.`,
+        message: `Phosphorus level low (${this.currentReadings?.phosphorus}ppm) - Apply bone meal or rock phosphate to increase phosphorus.`,
         type: 'soil'
       });
-    } else if (this.currentReadings.phosphorus > 100) {
+    } else if (this.currentReadings?.phosphorus > 100) {
       this.systemAlerts.push({
         level: 'Warning',
-        message: `Phosphorus level high (${this.currentReadings.phosphorus}ppm) - Avoid phosphorus-rich fertilizers to prevent nutrient imbalance.`,
+        message: `Phosphorus level high (${this.currentReadings?.phosphorus}ppm) - Avoid phosphorus-rich fertilizers to prevent nutrient imbalance.`,
         type: 'soil'
       });
     }
   
     // Check potassium level
-    if (this.currentReadings.potassium < 150) {
+    if (this.currentReadings?.potassium < 150) {
       this.systemAlerts.push({
         level: 'Warning',
-        message: `Potassium level low (${this.currentReadings.potassium}ppm) - Apply potash or wood ash to increase potassium.`,
+        message: `Potassium level low (${this.currentReadings?.potassium}ppm) - Apply potash or wood ash to increase potassium.`,
         type: 'soil'
       });
-    } else if (this.currentReadings.potassium > 300) {
+    } else if (this.currentReadings?.potassium > 300) {
       this.systemAlerts.push({
         level: 'Warning',
-        message: `Potassium level high (${this.currentReadings.potassium}ppm) - Avoid potassium-rich fertilizers to prevent nutrient imbalance.`,
+        message: `Potassium level high (${this.currentReadings?.potassium}ppm) - Avoid potassium-rich fertilizers to prevent nutrient imbalance.`,
         type: 'soil'
       });
     }
   
     // Check nitrogen level
-    if (this.currentReadings.nitrogen < 25) {
+    if (this.currentReadings?.nitrogen < 25) {
       this.systemAlerts.push({
         level: 'Warning',
-        message: `Nitrogen level low (${this.currentReadings.nitrogen}ppm) - Apply compost, manure, or nitrogen-rich fertilizers.`,
+        message: `Nitrogen level low (${this.currentReadings?.nitrogen}ppm) - Apply compost, manure, or nitrogen-rich fertilizers.`,
         type: 'soil'
       });
-    } else if (this.currentReadings.nitrogen > 50) {
+    } else if (this.currentReadings?.nitrogen > 50) {
       this.systemAlerts.push({
         level: 'Warning',
-        message: `Nitrogen level high (${this.currentReadings.nitrogen}ppm) - Avoid nitrogen-rich fertilizers to prevent overgrowth and nutrient runoff.`,
+        message: `Nitrogen level high (${this.currentReadings?.nitrogen}ppm) - Avoid nitrogen-rich fertilizers to prevent overgrowth and nutrient runoff.`,
         type: 'soil'
       });
     }
   
     // Check solar panel voltage
-    if (this.currentReadings.solarVoltage < 11.0) {
+    if (this.currentReadings?.solarVoltage < 11.0) {
       this.systemAlerts.push({
         level: 'Critical',
-        message: `Solar panel voltage critically low (${this.currentReadings.solarVoltage}V) - Check for obstructions, damage, or disconnections.`,
+        message: `Solar panel voltage critically low (${this.currentReadings?.solarVoltage}V) - Check for obstructions, damage, or disconnections.`,
         type: 'system'
       });
-    } else if (this.currentReadings.solarVoltage >= 11.0 && this.currentReadings.solarVoltage < 12.0) {
+    } else if (this.currentReadings?.solarVoltage >= 11.0 && this.currentReadings?.solarVoltage < 12.0) {
       this.systemAlerts.push({
         level: 'Warning',
-        message: `Solar panel voltage low (${this.currentReadings.solarVoltage}V) - Clean the panels or check for shading issues.`,
+        message: `Solar panel voltage low (${this.currentReadings?.solarVoltage}V) - Clean the panels or check for shading issues.`,
         type: 'system'
       });
-    } else if (this.currentReadings.solarVoltage >= 12.0 && this.currentReadings.solarVoltage < 13.0) {
+    } else if (this.currentReadings?.solarVoltage >= 12.0 && this.currentReadings?.solarVoltage < 13.0) {
       this.systemAlerts.push({
         level: 'Info',
-        message: `Solar panel voltage slightly low (${this.currentReadings.solarVoltage}V) - Monitor and ensure panels are clean and unobstructed.`,
+        message: `Solar panel voltage slightly low (${this.currentReadings?.solarVoltage}V) - Monitor and ensure panels are clean and unobstructed.`,
         type: 'system'
       });
     }
   
     // Check battery voltage
-    if (this.currentReadings.batteryVoltage < 10.5) {
+    if (this.currentReadings?.batteryVoltage < 10.5) {
       this.systemAlerts.push({
         level: 'Critical',
-        message: `Battery voltage critically low (${this.currentReadings.batteryVoltage}V) - Recharge or replace the battery immediately to avoid damage.`,
+        message: `Battery voltage critically low (${this.currentReadings?.batteryVoltage}V) - Recharge or replace the battery immediately to avoid damage.`,
         type: 'system'
       });
-    } else if (this.currentReadings.batteryVoltage >= 10.5 && this.currentReadings.batteryVoltage < 11.5) {
+    } else if (this.currentReadings?.batteryVoltage >= 10.5 && this.currentReadings?.batteryVoltage < 11.5) {
       this.systemAlerts.push({
         level: 'Warning',
-        message: `Battery voltage low (${this.currentReadings.batteryVoltage}V) - Recharge the battery soon to avoid system shutdown.`,
+        message: `Battery voltage low (${this.currentReadings?.batteryVoltage}V) - Recharge the battery soon to avoid system shutdown.`,
         type: 'system'
       });
-    } else if (this.currentReadings.batteryVoltage >= 11.5 && this.currentReadings.batteryVoltage < 12.0) {
+    } else if (this.currentReadings?.batteryVoltage >= 11.5 && this.currentReadings?.batteryVoltage < 12.0) {
       this.systemAlerts.push({
         level: 'Info',
-        message: `Battery voltage slightly low (${this.currentReadings.batteryVoltage}V) - Monitor and consider recharging if the trend continues.`,
+        message: `Battery voltage slightly low (${this.currentReadings?.batteryVoltage}V) - Monitor and consider recharging if the trend continues.`,
         type: 'system'
       });
     }
   
     // Additional checks and suggestions
     // Check for nutrient imbalance (N-P-K ratio)
-    const npkRatio = this.currentReadings.nitrogen / this.currentReadings.phosphorus / this.currentReadings.potassium;
+    const npkRatio = this.currentReadings?.nitrogen / this.currentReadings?.phosphorus / this.currentReadings?.potassium;
     if (npkRatio < 0.5 || npkRatio > 2.0) {
       this.systemAlerts.push({
         level: 'Warning',
@@ -313,7 +310,7 @@ export class AgriculturalDashboardComponent implements OnInit {
     }
   
     // Check for excessive moisture and temperature combination
-    if (this.currentReadings.moisture > 80 && this.currentReadings.soilTemp > 30) {
+    if (this.currentReadings?.moisture > 80 && this.currentReadings?.soilTemp > 30) {
       this.systemAlerts.push({
         level: 'Warning',
         message: `High moisture and temperature combination - Risk of fungal diseases. Improve ventilation and reduce watering.`,
@@ -322,10 +319,10 @@ export class AgriculturalDashboardComponent implements OnInit {
     }
   
     // Check for low solar voltage during daylight hours
-    if (this.currentReadings.solarVoltage < 12.0 && this.isDaytime()) {
+    if (this.currentReadings?.solarVoltage < 12.0 && this.isDaytime()) {
       this.systemAlerts.push({
         level: 'Warning',
-        message: `Solar panel underperforming during daylight (${this.currentReadings.solarVoltage}V) - Inspect for dirt, damage, or shading.`,
+        message: `Solar panel underperforming during daylight (${this.currentReadings?.solarVoltage}V) - Inspect for dirt, damage, or shading.`,
         type: 'system'
       });
     }
@@ -352,7 +349,7 @@ export class AgriculturalDashboardComponent implements OnInit {
     }
     
     // Update pH status based on current reading
-    const phValue = this.currentReadings.soilPH;
+    const phValue = this.currentReadings?.soilPH;
     if (phValue < 5.0) {
       this.nutrientStatus.pH = { status: 'Very Acidic', action: 'Add lime to raise pH' };
     } else if (phValue < 6.0) {
@@ -368,7 +365,7 @@ export class AgriculturalDashboardComponent implements OnInit {
     }
 
     // Update nitrogen status
-    const nitrogenValue = this.currentReadings.nitrogen;
+    const nitrogenValue = this.currentReadings?.nitrogen;
     if (nitrogenValue < 40) {
       this.nutrientStatus.nitrogen = { status: 'Low', action: 'Add nitrogen-rich amendments' };
     } else if (nitrogenValue < 60) {
@@ -378,7 +375,7 @@ export class AgriculturalDashboardComponent implements OnInit {
     }
 
     // Update phosphorus status
-    const phosphorusValue = this.currentReadings.phosphorus;
+    const phosphorusValue = this.currentReadings?.phosphorus;
     if (phosphorusValue < 30) {
       this.nutrientStatus.phosphorus = { status: 'Low', action: 'Add phosphorus-rich amendments' };
     } else if (phosphorusValue < 80) {
@@ -388,7 +385,7 @@ export class AgriculturalDashboardComponent implements OnInit {
     }
 
     // Update potassium status
-    const potassiumValue = this.currentReadings.potassium;
+    const potassiumValue = this.currentReadings?.potassium;
     if (potassiumValue < 40) {
       this.nutrientStatus.potassium = { status: 'Low', action: 'Add potassium-rich amendments' };
     } else if (potassiumValue < 90) {
@@ -404,7 +401,7 @@ export class AgriculturalDashboardComponent implements OnInit {
     if (this.soilTemperatureGauge) {
       this.soilTemperatureGauge.dataTable = [
         ['Label', 'Value'],
-        ['Soil Temp', this.currentReadings.soilTemp]
+        ['Soil Temp', this.currentReadings?.soilTemp]
       ];
     }
 
@@ -412,7 +409,7 @@ export class AgriculturalDashboardComponent implements OnInit {
     if (this.soilPHGauge) {
       this.soilPHGauge.dataTable = [
         ['Label', 'Value'],
-        ['Soil pH', this.currentReadings.soilPH]
+        ['Soil pH', this.currentReadings?.soilPH]
       ];
     }
 
@@ -420,7 +417,7 @@ export class AgriculturalDashboardComponent implements OnInit {
     if (this.moistureGauge) {
       this.moistureGauge.dataTable = [
         ['Label', 'Value'],
-        ['Moisture', this.currentReadings.moisture]
+        ['Moisture', this.currentReadings?.moisture]
       ];
     }
 
@@ -428,7 +425,7 @@ export class AgriculturalDashboardComponent implements OnInit {
     if (this.phosphorusGauge) {
       this.phosphorusGauge.dataTable = [
         ['Label', 'Value'],
-        ['Phosphorus', this.currentReadings.phosphorus]
+        ['Phosphorus', this.currentReadings?.phosphorus]
       ];
     }
 
@@ -436,7 +433,7 @@ export class AgriculturalDashboardComponent implements OnInit {
     if (this.potassiumGauge) {
       this.potassiumGauge.dataTable = [
         ['Label', 'Value'],
-        ['Potassium', this.currentReadings.potassium]
+        ['Potassium', this.currentReadings?.potassium]
       ];
     }
 
@@ -444,7 +441,7 @@ export class AgriculturalDashboardComponent implements OnInit {
     if (this.nitrogenGauge) {
       this.nitrogenGauge.dataTable = [
         ['Label', 'Value'],
-        ['Nitrogen', this.currentReadings.nitrogen]
+        ['Nitrogen', this.currentReadings?.nitrogen]
       ];
     }
 
@@ -452,7 +449,7 @@ export class AgriculturalDashboardComponent implements OnInit {
     if (this.solarPanelVoltageGauge) {
       this.solarPanelVoltageGauge.dataTable = [
         ['Label', 'Value'],
-        ['Solar Voltage', this.currentReadings.solarVoltage]
+        ['Solar Voltage', this.currentReadings?.solarVoltage]
       ];
     }
 
@@ -460,7 +457,7 @@ export class AgriculturalDashboardComponent implements OnInit {
     if (this.batteryVoltageGauge) {
       this.batteryVoltageGauge.dataTable = [
         ['Label', 'Value'],
-        ['Battery Voltage', this.currentReadings.batteryVoltage]
+        ['Battery Voltage', this.currentReadings?.batteryVoltage]
       ];
     }
   }
@@ -507,7 +504,7 @@ export class AgriculturalDashboardComponent implements OnInit {
       chartType: this.chartType,
       dataTable: [
         ['Label', 'Value'],
-        ['Soil Temp', this.currentReadings.soilTemp]
+        ['Soil Temp', this.currentReadings?.soilTemp]
       ],
       options: {
         ...gaugeOptions,
@@ -524,7 +521,7 @@ export class AgriculturalDashboardComponent implements OnInit {
       chartType: this.chartType,
       dataTable: [
         ['Label', 'Value'],
-        ['Soil pH', this.currentReadings.soilPH]
+        ['Soil pH', this.currentReadings?.soilPH]
       ],
       options: {
         ...gaugeOptions,
@@ -543,7 +540,7 @@ export class AgriculturalDashboardComponent implements OnInit {
       chartType: this.chartType,
       dataTable: [
         ['Label', 'Value'],
-        ['Moisture', this.currentReadings.moisture]
+        ['Moisture', this.currentReadings?.moisture]
       ],
       options: {
         ...gaugeOptions,
@@ -562,7 +559,7 @@ export class AgriculturalDashboardComponent implements OnInit {
       chartType: this.chartType,
       dataTable: [
         ['Label', 'Value'],
-        ['Phosphorus', this.currentReadings.phosphorus]
+        ['Phosphorus', this.currentReadings?.phosphorus]
       ],
       options: {
         ...gaugeOptions,
@@ -581,7 +578,7 @@ export class AgriculturalDashboardComponent implements OnInit {
       chartType: this.chartType,
       dataTable: [
         ['Label', 'Value'],
-        ['Potassium', this.currentReadings.potassium]
+        ['Potassium', this.currentReadings?.potassium]
       ],
       options: {
         ...gaugeOptions,
@@ -600,7 +597,7 @@ export class AgriculturalDashboardComponent implements OnInit {
       chartType: this.chartType,
       dataTable: [
         ['Label', 'Value'],
-        ['Nitrogen', this.currentReadings.nitrogen]
+        ['Nitrogen', this.currentReadings?.nitrogen]
       ],
       options: {
         ...gaugeOptions,
@@ -619,7 +616,7 @@ export class AgriculturalDashboardComponent implements OnInit {
       chartType: this.chartType,
       dataTable: [
         ['Label', 'Value'],
-        ['Solar Voltage', this.currentReadings.solarVoltage]
+        ['Solar Voltage', this.currentReadings?.solarVoltage]
       ],
       options: {
         ...gaugeOptions,
@@ -638,7 +635,7 @@ export class AgriculturalDashboardComponent implements OnInit {
       chartType: this.chartType,
       dataTable: [
         ['Label', 'Value'],
-        ['Battery Voltage', this.currentReadings.batteryVoltage]
+        ['Battery Voltage', this.currentReadings?.batteryVoltage]
       ],
       options: {
         ...gaugeOptions,
@@ -653,71 +650,76 @@ export class AgriculturalDashboardComponent implements OnInit {
       }
     };
   }
-
+ 
   initializeLineCharts(): void {
     // Transforming data for Google Charts format
     const temperatureData = [['Day', 'Temperature']];
     const pHData = [['Day', 'pH']];
     const moistureData = [['Day', 'Moisture']];
 
-    this.historicalData.forEach(day => {
-      temperatureData.push([day.day, day.soilTemp as any]);
-      pHData.push([day.day, day.pH as any]);
-      moistureData.push([day.day, day.moisture as any]);
-    });
+    if (this.historicalData) {
+        this.historicalData.forEach((day, index) => {
+            // Keep index as a number
+            temperatureData.push([index as any, day.soilTemp]);
+            pHData.push([index as any, day.ph]);
+            moistureData.push([index as any, day.moisture]);
+        });
 
-    const lineChartOptions = {
-      height: 200,
-      curveType: 'function',
-      legend: { position: 'none' },
-      hAxis: {
-        title: 'Day'
-      },
-      vAxis: {
-        viewWindow: { min: null, max: null }
-      }
-    };
+        const lineChartOptions = {
+            height: 200,
+            curveType: 'function',
+            legend: { position: 'none' },
+            hAxis: {
+                title: 'Day',
+                ticks: this.historicalData.map((day, index) => ({ v: index, f: day.day })) // Map indices to day labels
+            },
+            vAxis: {
+                viewWindow: { min: null, max: null }
+            }
+        };
 
-    this.temperatureChart = {
-      chartType: this.lineChartType,
-      dataTable: temperatureData,
-      options: {
-        ...lineChartOptions,
-        title: 'Soil Temperature Trend',
-        colors: ['#2563eb'],
-        vAxis: {
-          title: 'Temperature (°C)',
-          viewWindow: { min: 28, max: 30 }
-        }
-      }
-    };
+        this.temperatureChart = {
+            chartType: this.lineChartType,
+            dataTable: temperatureData,
+            options: {
+                ...lineChartOptions,
+                title: 'Soil Temperature Trend',
+                colors: ['#2563eb'],
+                vAxis: {
+                    title: 'Temperature (°C)',
+                    viewWindow: { min: 0, max: 30 }
+                }
+            }
+        };
 
-    this.pHChart = {
-      chartType: this.lineChartType,
-      dataTable: pHData,
-      options: {
-        ...lineChartOptions,
-        title: 'Soil pH Trend',
-        colors: ['#dc2626'],
-        vAxis: {
-          title: 'pH',
-          viewWindow: { min: 3.45, max: 3.55 }
-        }
-      }
-    };
+        this.pHChart = {
+            chartType: this.lineChartType,
+            dataTable: pHData,
+            options: {
+                ...lineChartOptions,
+                title: 'Soil pH Trend',
+                colors: ['#dc2626'],
+                vAxis: {
+                    title: 'pH',
+                    viewWindow: { min: 0, max: 14 }
+                }
+            }
+        };
 
-    this.moistureChart = {
-      chartType: this.lineChartType,
-      dataTable: moistureData,
-      options: {
-        ...lineChartOptions,
-        title: 'Moisture Trend',
-        colors: ['#d97706'],
-        vAxis: {
-          title: 'Moisture %',
-          viewWindow: { min: 90, max: 100 }
-        }
-      }
-    };
-  }
+        this.moistureChart = {
+            chartType: this.lineChartType,
+            dataTable: moistureData,
+            options: {
+                ...lineChartOptions,
+                title: 'Moisture Trend',
+                colors: ['#d97706'],
+                vAxis: {
+                    title: 'Moisture %',
+                    viewWindow: { min: 0, max: 100 }
+                }
+            }
+        };
+    }
+}
+
 }
