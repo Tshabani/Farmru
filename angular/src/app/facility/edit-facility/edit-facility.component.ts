@@ -82,8 +82,7 @@ implements OnInit {
   }
     
   save(): void {
-    this.saving = true; 
-    debugger; 
+    this.saving = true;  
     const facility = new FacilityDto();
     facility.init(this.facility);
 

@@ -42,7 +42,7 @@
               {{ currentReadings[metric] }}{{ getUnit(metric) }}
             </span>
           </div>
-          <google-chart [data]="getChart(metric)" *ngIf="getChart(metric)"></google-chart>
+          <google-chart style="display: block; width: 100%;" [data]="getChart(metric)" *ngIf="getChart(metric)"></google-chart>
           <div class="alert mt-3" *ngIf="nutrientStatus[metric]?.action" [ngClass]="getAlertClass(nutrientStatus[metric].status)">
             <strong>Action needed:</strong> {{ nutrientStatus[metric].action }}
           </div>
@@ -56,12 +56,15 @@
     <div class="col-12 mb-3">
       <h4>Soil Nutrient Levels</h4>
     </div>
-    <div class="col-md-3 col-sm-6 mb-3" *ngFor="let key of ['pH', 'nitrogen', 'phosphorus', 'potassium']">
+    <div class="col-md-3 col-sm-6 mb-3" *ngFor="let key of ['pH', 'nitrogen', 'phosphorus', 'potassium', 'conductivity']">
       <div class="card">
         <div class="card-body text-center">
           <google-chart [data]="getGauge(key)" *ngIf="getGauge(key)"></google-chart>
           <div class="mt-2 badge" [ngClass]="getBadgeClass(nutrientStatus[key]?.status)">
             {{ nutrientStatus[key]?.status }}
+          </div>
+          <div class="alert mt-3" *ngIf="nutrientStatus[key]?.action" [ngClass]="getAlertClass(nutrientStatus[key].status)">
+            <strong>Action needed:</strong> {{ nutrientStatus[key].action }}
           </div>
         </div>
       </div>

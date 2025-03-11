@@ -10,7 +10,7 @@
     border-top-left-radius: 0.5rem;
     border-top-right-radius: 0.5rem;
     background-color: rgba(0, 0, 0, 0.03);
-  }
+  }   
 }
 
 // Status indicators
@@ -21,8 +21,9 @@
 
 // Chart containers
 google-chart {
-  width: 100%;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 // Alert styling

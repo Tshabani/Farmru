@@ -16,5 +16,6 @@ namespace Farmru.IotMonitoring.Services.NodeDatas.Dto
         public double Nitrogen { get; set; }
         public double SolarVoltage { get; set; }
         public double BatteryVoltage { get; set; }
+        public double Conductivity { get; set; }
     }
 }

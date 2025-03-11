@@ -32,6 +32,33 @@
             ></abp-validation-summary>
           </div>
         </div>
+        <div class="form-group row required">
+          <label class="col-md-3 col-form-label" for="facility">
+            {{ "Facility" | localize }}
+          </label>
+          <div class="col-md-9">
+            <select
+              class="form-control"
+              name="facility"
+              id="facility"
+              required
+              [(ngModel)]="selectedFacility"
+              (ngModelChange)="onFaclityChange($event)"
+              #facilityModel="ngModel"
+              #facilityEl
+            >
+            @for (facility of facilities; track trackById; let i = $index) {
+              <option [value]="facility.id">
+                {{ facility.name }}
+              </option>
+            }
+            </select>
+            <abp-validation-summary
+              [control]="facilityModel"
+              [controlEl]="facilityEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
   </div>
   <abp-modal-footer
     [cancelDisabled]="saving"

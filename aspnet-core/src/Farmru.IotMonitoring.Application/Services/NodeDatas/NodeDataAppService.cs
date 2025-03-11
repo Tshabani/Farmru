@@ -100,7 +100,8 @@ namespace Farmru.IotMonitoring.Services.NodeDatas
                     Moisture = RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => ConvertToDouble(r.Moisture))),
                     Phosphorus = RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => ConvertToDouble(r.Phosphorus))),
                     Potassium = RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => ConvertToDouble(r.Potassium))),
-                    Nitrogen = RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => ConvertToDouble(r.Nitrogen))),
+                    Nitrogen = RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => ConvertToDouble(r.Nitrogen))), 
+                    Conductivity = pastWeekReadings.Any(r => r.Conductivity.HasValue) ? RoundToTwoDecimalPlaces(pastWeekReadings.Where(r => r.Conductivity.HasValue).Average(r => r.Conductivity.Value)) : 0,
                     SolarVoltage = RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => r.SolarPanelVoltage.HasValue ? r.SolarPanelVoltage.Value / 1000.0 : 0)),
                     BatteryVoltage = RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => r.BatteryVoltage.HasValue ? r.BatteryVoltage.Value / 1000.0 : 0))
                 };

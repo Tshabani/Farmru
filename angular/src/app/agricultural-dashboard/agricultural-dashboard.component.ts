@@ -7,7 +7,7 @@ import { ChartType } from 'angular-google-charts';
   templateUrl: './agricultural-dashboard.component.html',
   styleUrls: ['./agricultural-dashboard.component.scss']
 })
-export class AgriculturalDashboardComponent implements OnInit, OnChanges {
+export class AgriculturalDashboardComponent implements OnChanges {
   @Input() readingsData: HistoricalDataResponse; 
   
   // Current readings
@@ -29,6 +29,7 @@ export class AgriculturalDashboardComponent implements OnInit, OnChanges {
   soilTemperatureGauge: any;
   soilPHGauge: any;
   moistureGauge: any;
+  conductivityGauge: any;
   phosphorusGauge: any;
   potassiumGauge: any;
   nitrogenGauge: any;
@@ -60,7 +61,8 @@ export class AgriculturalDashboardComponent implements OnInit, OnChanges {
       potassium: 'Potassium Level',
       nitrogen: 'Nitrogen Level',
       solarVoltage: 'Solar Panel Voltage',
-      batteryVoltage: 'Battery Voltage'
+      batteryVoltage: 'Battery Voltage',
+      soilConductivity: 'Soil Conductivity'
     };
     return titles[metric] || metric;
   }
@@ -75,7 +77,8 @@ export class AgriculturalDashboardComponent implements OnInit, OnChanges {
       potassium: ' ppm',
       nitrogen: ' ppm',
       solarVoltage: 'V',
-      batteryVoltage: 'V'
+      batteryVoltage: 'V',
+      soilConductivity: 'S/m'
     };
     return units[metric] || '';
   }
@@ -91,6 +94,7 @@ export class AgriculturalDashboardComponent implements OnInit, OnChanges {
       nitrogen: this.nitrogenGauge,
       solarVoltage: this.solarPanelVoltageGauge,
       batteryVoltage: this.batteryVoltageGauge,      
+      soilConductivity: this.conductivityGauge
     };
     return chartMap[metric] || null;
   }
@@ -103,6 +107,7 @@ export class AgriculturalDashboardComponent implements OnInit, OnChanges {
       case 'potassium': return this.potassiumGauge;
       case 'solarPanelVoltage': return this.solarPanelVoltageGauge;
       case 'batteryVoltage': return this.batteryVoltageGauge;
+      case 'conductivity': return this.conductivityGauge;
       default: return null;
     }
   }
@@ -137,10 +142,7 @@ export class AgriculturalDashboardComponent implements OnInit, OnChanges {
   }
 
   constructor() { }
-
-  ngOnInit(): void {
-          
-  }
+ 
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['readingsData'] && this.readingsData) { 
@@ -334,8 +336,6 @@ export class AgriculturalDashboardComponent implements OnInit, OnChanges {
     return hours >= 6 && hours <= 18; // Assuming daytime is between 6 AM and 6 PM
   }
 
-   
-
   // Method to update nutrient status based on current readings
   updateNutrientStatus(): void {
     // Initialize nutrient status object if it's empty
@@ -344,7 +344,8 @@ export class AgriculturalDashboardComponent implements OnInit, OnChanges {
         phosphorus: { status: '', action: '' },
         potassium: { status: '', action: '' },
         nitrogen: { status: '', action: '' },
-        pH: { status: '', action: '' }
+        pH: { status: '', action: '' },
+        conductivity: { status: '', action: '' }
       };
     }
     
@@ -393,6 +394,14 @@ export class AgriculturalDashboardComponent implements OnInit, OnChanges {
     } else {
       this.nutrientStatus.potassium = { status: 'High', action: 'Reduce potassium fertilizers' };
     }
+
+    // Update conductivity status
+    const conductivityValue = this.currentReadings?.conductivity;
+    if (conductivityValue < 40) {
+      this.nutrientStatus.conductivity = { status: 'Low', action: 'Add potassium-rich amendments' };
+    } else  {
+      this.nutrientStatus.conductivity = { status: 'Normal', action: 'Maintain current potassium levels' };
+    }  
   }
 
   // Add a method to update all gauge charts when data changes
@@ -418,6 +427,14 @@ export class AgriculturalDashboardComponent implements OnInit, OnChanges {
       this.moistureGauge.dataTable = [
         ['Label', 'Value'],
         ['Moisture', this.currentReadings?.moisture]
+      ];
+    }
+
+    // Update conductivity gauge
+    if (this.moistureGauge) {
+      this.conductivityGauge.dataTable = [
+        ['Label', 'Value'],
+        ['Conductivity', this.currentReadings?.conductivity]
       ];
     }
 
@@ -468,15 +485,7 @@ export class AgriculturalDashboardComponent implements OnInit, OnChanges {
     this.updateAlerts(); 
     this.updateGaugeCharts();
   }
-
-  // Example method that would be called when new data is received
-  updateReadings(newReadings: any): void {
-    // Update the current readings
-    this.currentReadings = { ...this.currentReadings, ...newReadings };
-    
-    // Update all dashboard elements
-    this.updateDashboard();
-  }
+ 
 
   // Check if there are any critical alerts
   hasCriticalAlerts(): boolean {
@@ -555,6 +564,25 @@ export class AgriculturalDashboardComponent implements OnInit, OnChanges {
       }
     };
 
+    this.conductivityGauge = {
+      chartType: this.chartType,
+      dataTable: [
+        ['Label', 'Value'],
+        ['Conductivity', this.currentReadings?.conductivity]
+      ],
+      options: {
+        ...gaugeOptions,
+        min: 0,
+        max: 2500,
+        redFrom: 0,
+        redTo: 30,
+        yellowFrom: 30,
+        yellowTo: 60,
+        greenFrom: 60,
+        greenTo: 2000,
+      }
+    };
+
     this.phosphorusGauge = {
       chartType: this.chartType,
       dataTable: [
@@ -621,13 +649,13 @@ export class AgriculturalDashboardComponent implements OnInit, OnChanges {
       options: {
         ...gaugeOptions,
         min: 0,
-        max: 15,
+        max: 12,
         redFrom: 0,
-        redTo: 5,
-        yellowFrom: 5,
+        redTo: 8,
+        yellowFrom: 8,
         yellowTo: 10,
         greenFrom: 10,
-        greenTo: 15,
+        greenTo: 12,
       }
     };
 
@@ -640,13 +668,13 @@ export class AgriculturalDashboardComponent implements OnInit, OnChanges {
       options: {
         ...gaugeOptions,
         min: 0,
-        max: 15,
+        max: 12,
         redFrom: 0,
-        redTo: 10,
-        yellowFrom: 10,
-        yellowTo: 12,
-        greenFrom: 12,
-        greenTo: 15,
+        redTo: 8,
+        yellowFrom: 8,
+        yellowTo: 10,
+        greenFrom: 10,
+        greenTo: 12,
       }
     };
   }

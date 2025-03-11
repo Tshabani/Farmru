@@ -38,8 +38,8 @@
             <table class="table table-striped table-bordered" [busy]="isTableLoading">
               <thead class="bg-light">
                 <tr>
-                  <th>{{ "NodeId" | localize }}</th>
                   <th>{{ "SerialNumber" | localize }}</th>
+                  <th>{{ "Facility" | localize }}</th>
                   <th style="width: 226px;">{{ "Actions" | localize }}</th>
                 </tr>
               </thead>
@@ -56,8 +56,8 @@
                 ; track
                 node.id) {
                 <tr>
-                  <td>{{ node.id }}</td>
                   <td>{{ node.serialNumber }}</td>
+                  <td>{{ node?.facility?.displayText }}</td>
                   <td>
                     <button
                       type="button"

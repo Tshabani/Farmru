@@ -31,12 +31,14 @@ implements OnInit {
 
   ngOnInit(): void {
     this._personService.getListOfPeople().subscribe((result) => {
-      this.people = result; 
-      this._organisationsService.getListOfOrganisations().subscribe((result) => {
-        this.organisations = result;           
-        this.cd.detectChanges();  
-      });  
+      this.people = result;        
+      this.cd.detectChanges();  
     });
+
+    this._organisationsService.getListOfOrganisations().subscribe((result) => {
+      this.organisations = result;           
+      this.cd.detectChanges();  
+    }); 
   }
 
   onOwnerOrganisationChange(selectedId: string): void {

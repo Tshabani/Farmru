@@ -33,10 +33,14 @@ namespace Farmru.IotMonitoring
                 .ForMember(u => u.Node, opt => opt.MapFrom(r => r.Node != null ? new EntityWithDisplayNameDto<Guid?> { Id = r.Node.Id, DisplayText = r.Node.SerialNumber } : null));
             CreateMap<NodeDataDto, NodeData>();
             
-            CreateMap<CreateNode, Node>();
+            CreateMap<CreateNode, Node>()
+                .ForMember(u => u.Facility, options => options.MapFrom(e => GetEntity<Facility>(e.Facility)))
+                ;
+
             CreateMap<Node, NodeDto>()
                 .ForMember(u => u.Facility, opt => opt.MapFrom(r => r.Facility != null ? new EntityWithDisplayNameDto<Guid?> { Id = r.Facility.Id, DisplayText = r.Facility.Name } : null));
-            CreateMap<NodeDto, Node>();
+            CreateMap<NodeDto, Node>()
+                .ForMember(u => u.Facility, options => options.MapFrom(e => GetEntity<Facility>(e.Facility)));
 
             CreateMap<Facility, FacilityDto>()
                 .ForMember(r => r.OwnerOrganisation, opt => opt.MapFrom(r => r.OwnerOrganisation != null ? new EntityWithDisplayNameDto<Guid?> { Id = r.OwnerOrganisation.Id, DisplayText = r.OwnerOrganisation.Name } : null))

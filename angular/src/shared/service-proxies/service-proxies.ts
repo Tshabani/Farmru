@@ -4866,6 +4866,7 @@ export interface ICreateFacilityDto {
 
 export class CreateNode implements ICreateNode {
     serialNumber: string | undefined;
+    facility: GuidNullableEntityWithDisplayNameDto;
     tenantId: number;
 
     constructor(data?: ICreateNode) {
@@ -4880,6 +4881,7 @@ export class CreateNode implements ICreateNode {
     init(_data?: any) {
         if (_data) {
             this.serialNumber = _data["serialNumber"];
+            this.facility = _data["facility"] ? GuidNullableEntityWithDisplayNameDto.fromJS(_data["facility"]) : <any>undefined;
             this.tenantId = _data["tenantId"];
         }
     }
@@ -4894,6 +4896,7 @@ export class CreateNode implements ICreateNode {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["serialNumber"] = this.serialNumber;
+        data["facility"] = this.facility ? this.facility.toJSON() : <any>undefined;
         data["tenantId"] = this.tenantId;
         return data;
     }
@@ -4908,6 +4911,7 @@ export class CreateNode implements ICreateNode {
 
 export interface ICreateNode {
     serialNumber: string | undefined;
+    facility: GuidNullableEntityWithDisplayNameDto;
     tenantId: number;
 }
 
@@ -5295,6 +5299,7 @@ export class CurrentReadings implements ICurrentReadings {
     nitrogen: number;
     solarVoltage: number;
     batteryVoltage: number;
+    conductivity: number;
 
     constructor(data?: ICurrentReadings) {
         if (data) {
@@ -5315,6 +5320,7 @@ export class CurrentReadings implements ICurrentReadings {
             this.nitrogen = _data["nitrogen"];
             this.solarVoltage = _data["solarVoltage"];
             this.batteryVoltage = _data["batteryVoltage"];
+            this.conductivity = _data["conductivity"];
         }
     }
 
@@ -5335,6 +5341,7 @@ export class CurrentReadings implements ICurrentReadings {
         data["nitrogen"] = this.nitrogen;
         data["solarVoltage"] = this.solarVoltage;
         data["batteryVoltage"] = this.batteryVoltage;
+        data["conductivity"] = this.conductivity;
         return data;
     }
 
@@ -5355,6 +5362,7 @@ export interface ICurrentReadings {
     nitrogen: number;
     solarVoltage: number;
     batteryVoltage: number;
+    conductivity: number;
 }
 
 export class FacilitiesDto implements IFacilitiesDto {
