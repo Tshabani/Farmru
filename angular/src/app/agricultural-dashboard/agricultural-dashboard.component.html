@@ -75,7 +75,7 @@
     <div class="col-12 mb-3">
       <h4>System Status</h4>
     </div>
-    <div class="col-md-6 mb-3" *ngFor="let system of ['solarPanelVoltage', 'batteryVoltage']">
+    <div class="col-md-6 mb-3" *ngFor="let system of ['solarVoltage', 'batteryVoltage']">
       <div class="card">
         <div class="card-body text-center">
           <google-chart [data]="getGauge(system)" *ngIf="getGauge(system)"></google-chart>

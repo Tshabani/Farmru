@@ -92,18 +92,30 @@ namespace Farmru.IotMonitoring.Services.NodeDatas
                 if (!pastWeekReadings.Any())
                     return new HistoricalDataResponse(); // No readings available
 
-                // Calculate average values rounded to 2 decimal places
+                // Define max allowed values for each parameter
+                const double MaxSoilTemp = 50.0;
+                const double MaxSoilPH = 14.0;
+                const double MaxMoisture = 100.0;
+                const double MaxPhosphorus = 150.0;
+                const double MaxPotassium = 150.0;
+                const double MaxNitrogen = 100.0;
+                const double MaxConductivity = 2500.0;
+                const double MaxSolarVoltage = 12.0;
+                const double MaxBatteryVoltage = 12.0;
+
+                // Calculate average values rounded to 2 decimal places with upper limits applied
                 var averageReadings = new CurrentReadings
                 {
-                    SoilTemp = RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => ConvertToDouble(r.SoilTemperature))),
-                    SoilPH = RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => ConvertToDouble(r.SoilPH))),
-                    Moisture = RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => ConvertToDouble(r.Moisture))),
-                    Phosphorus = RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => ConvertToDouble(r.Phosphorus))),
-                    Potassium = RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => ConvertToDouble(r.Potassium))),
-                    Nitrogen = RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => ConvertToDouble(r.Nitrogen))), 
-                    Conductivity = pastWeekReadings.Any(r => r.Conductivity.HasValue) ? RoundToTwoDecimalPlaces(pastWeekReadings.Where(r => r.Conductivity.HasValue).Average(r => r.Conductivity.Value)) : 0,
-                    SolarVoltage = RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => r.SolarPanelVoltage.HasValue ? r.SolarPanelVoltage.Value / 1000.0 : 0)),
-                    BatteryVoltage = RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => r.BatteryVoltage.HasValue ? r.BatteryVoltage.Value / 1000.0 : 0))
+                    SoilTemp = Math.Min(RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => ConvertToDouble(r.SoilTemperature))), MaxSoilTemp),
+                    SoilPH = Math.Min(RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => ConvertToDouble(r.SoilPH))), MaxSoilPH),
+                    Moisture = Math.Min(RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => ConvertToDouble(r.Moisture))), MaxMoisture),
+                    Phosphorus = Math.Min(RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => ConvertToDouble(r.Phosphorus))), MaxPhosphorus),
+                    Potassium = Math.Min(RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => ConvertToDouble(r.Potassium))), MaxPotassium),
+                    Nitrogen = Math.Min(RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => ConvertToDouble(r.Nitrogen))), MaxNitrogen),
+                    Conductivity = pastWeekReadings.Any(r => r.Conductivity.HasValue) 
+                                        ? Math.Min(RoundToTwoDecimalPlaces(pastWeekReadings.Where(r => r.Conductivity.HasValue).Average(r => r.Conductivity.Value)), MaxConductivity) : 0,
+                    SolarVoltage = Math.Min(RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => r.SolarPanelVoltage.HasValue ? r.SolarPanelVoltage.Value / 1000.0 : 0)), MaxSolarVoltage),
+                    BatteryVoltage = Math.Min(RoundToTwoDecimalPlaces(pastWeekReadings.Average(r => r.BatteryVoltage.HasValue ? r.BatteryVoltage.Value / 1000.0 : 0)), MaxBatteryVoltage)
                 };
 
                 // Group historical data by day
