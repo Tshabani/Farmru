@@ -21,7 +21,7 @@ namespace Farmru.IotMonitoring.Services.NodeDatas
     /// <summary>
     /// 
     /// </summary>
-    [AbpAuthorize()]
+    //[AbpAuthorize()]
     public class NodeDataAppService : AsyncCrudAppService<Domains.Nodes.NodeData, NodeDataDto, Guid, PagedUserResultRequestDto, CreateNodeData, NodeDataDto>, INodeDataAppService
     {
         private readonly IRepository<Node, Guid> _nodeRepository;
@@ -81,7 +81,7 @@ namespace Farmru.IotMonitoring.Services.NodeDatas
                 if (!nodes.Any())
                     return new HistoricalDataResponse(); // No nodes found
 
-                var sevenDaysAgo = DateTime.UtcNow.AddDays(-6); // Include today (7 days total)
+                var sevenDaysAgo = DateTime.UtcNow.AddDays(-150); // Include today (7 days total)
 
                 // Fetch all readings for the past 7 days
                 var pastWeekReadings = await Repository.GetAll()
