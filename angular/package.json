@@ -11,7 +11,8 @@
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0 --port 4200",
     "test": "ng test",
-    "exp": "ng build --configuration production && node copy-web-config.js"
+    "exp": "ng build --configuration production && node copy-web-config.js",
+    "fi": "npm install --legacy-peer-deps"
   },
   "dependencies": {
     "@angular/animations": "^18.1.2",

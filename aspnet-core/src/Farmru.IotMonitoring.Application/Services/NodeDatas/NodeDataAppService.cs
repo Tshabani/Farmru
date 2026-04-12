@@ -1,4 +1,4 @@
-﻿using Abp.Application.Services;
+using Abp.Application.Services;
 using Abp.Domain.Repositories;
 using Farmru.IotMonitoring.Services.NodeData.Dto;
 using Farmru.IotMonitoring.Users.Dto;
@@ -15,6 +15,8 @@ using Farmru.IotMonitoring.Domains.Facilities;
 using Farmru.IotMonitoring.Domains.Organisations;
 using Node = Farmru.IotMonitoring.Domains.Nodes.Node;
 using Abp.Authorization;
+using System.IO;
+using ClosedXML.Excel;
 
 namespace Farmru.IotMonitoring.Services.NodeDatas
 {
@@ -81,7 +83,7 @@ namespace Farmru.IotMonitoring.Services.NodeDatas
                 if (!nodes.Any())
                     return new HistoricalDataResponse(); // No nodes found
 
-                var sevenDaysAgo = DateTime.UtcNow.AddDays(-150); // Include today (7 days total)
+                var sevenDaysAgo = DateTime.UtcNow.AddDays(-800); // Include today (7 days total)
 
                 // Fetch all readings for the past 7 days
                 var pastWeekReadings = await Repository.GetAll()
@@ -164,20 +166,100 @@ namespace Farmru.IotMonitoring.Services.NodeDatas
         /// <returns></returns>
         public async Task<PagedResultDto<NodeDataDto>> GetNodeDataByNodeId(Guid nodeId, PagedNodeDataResultRequestDto input)
         {
-            // Ensure the node exists
+            await EnsureNodeExistsAsync(nodeId);
+
+            var query = GetNodeDataQuery(nodeId, input);
+
+            var totalCount = await query.CountAsync();
+
+            var nodeData = await query
+                .OrderByDescending(c => c.CreationTime)
+                .Skip(input.SkipCount)
+                .Take(input.MaxResultCount)
+                .ToListAsync();
+
+            return new PagedResultDto<NodeDataDto>(
+                totalCount,
+                ObjectMapper.Map<List<NodeDataDto>>(nodeData)
+            );
+        }
+
+        /// <summary>
+        /// Builds an Excel workbook for all node readings matching the same filters as the grid (not paginated).
+        /// </summary>
+        public async Task<NodeDataExcelExportDto> ExportNodeDataToExcel(Guid nodeId, PagedNodeDataResultRequestDto input)
+        {
+            await EnsureNodeExistsAsync(nodeId);
+
+            var rows = await GetNodeDataQuery(nodeId, input)
+                .OrderByDescending(c => c.CreationTime)
+                .ToListAsync();
+
+            using var workbook = new XLWorkbook();
+            var ws = workbook.Worksheets.Add("Node Data");
+
+            ws.Cell(1, 1).Value = "Latitude";
+            ws.Cell(1, 2).Value = "Longitude";
+            ws.Cell(1, 3).Value = "Creation Time";
+            ws.Cell(1, 4).Value = "Moisture";
+            ws.Cell(1, 5).Value = "Nitrogen";
+            ws.Cell(1, 6).Value = "Phosphorus";
+            ws.Cell(1, 7).Value = "Potassium";
+            ws.Cell(1, 8).Value = "Soil PH";
+            ws.Cell(1, 9).Value = "Soil Temperature";
+            ws.Cell(1, 10).Value = "Solar Panel Voltage";
+            ws.Cell(1, 11).Value = "Battery Voltage";
+            ws.Cell(1, 12).Value = "Conductivity";
+
+            for (var i = 0; i < rows.Count; i++)
+            {
+                var r = rows[i];
+                var excelRow = i + 2;
+                ws.Cell(excelRow, 1).Value = r.Latitude;
+                ws.Cell(excelRow, 2).Value = r.Longitude;
+                ws.Cell(excelRow, 3).Value = r.CreationTime;
+                ws.Cell(excelRow, 3).Style.DateFormat.Format = "dd MMMM yyyy HH:mm:ss";
+                ws.Cell(excelRow, 4).Value = r.Moisture;
+                ws.Cell(excelRow, 5).Value = r.Nitrogen;
+                ws.Cell(excelRow, 6).Value = r.Phosphorus;
+                ws.Cell(excelRow, 7).Value = r.Potassium;
+                ws.Cell(excelRow, 8).Value = r.SoilPH;
+                ws.Cell(excelRow, 9).Value = r.SoilTemperature;
+                ws.Cell(excelRow, 10).Value = r.SolarPanelVoltage;
+                ws.Cell(excelRow, 11).Value = r.BatteryVoltage;
+                ws.Cell(excelRow, 12).Value = r.Conductivity;
+            }
+
+            ws.SheetView.FreezeRows(1);
+            ws.Columns().AdjustToContents();
+
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            return new NodeDataExcelExportDto
+            {
+                FileName = $"node-data-{nodeId:N}.xlsx",
+                ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                FileBytes = stream.ToArray()
+            };
+        }
+
+        private async Task EnsureNodeExistsAsync(Guid nodeId)
+        {
             var nodeExists = await _nodeRepository.FirstOrDefaultAsync(x => x.Id == nodeId);
             if (nodeExists == null)
             {
                 throw new UserFriendlyException("Node not found");
             }
+        }
 
-            // Determine the date range based on predefined period or custom range
+        private static (DateTime? Start, DateTime? End) ResolveDateRange(PagedNodeDataResultRequestDto input)
+        {
             DateTime? startDate = input.StartDate;
             DateTime? endDate = input.EndDate;
 
             if (!string.IsNullOrEmpty(input.PredefinedPeriod))
             {
-                switch (input.PredefinedPeriod.ToLower())
+                switch (input.PredefinedPeriod.ToLowerInvariant())
                 {
                     case "today":
                         startDate = DateTime.Today;
@@ -198,30 +280,22 @@ namespace Farmru.IotMonitoring.Services.NodeDatas
                 }
             }
 
-            // Query filtered data
+            return (startDate, endDate);
+        }
+
+        private IQueryable<Domains.Nodes.NodeData> GetNodeDataQuery(Guid nodeId, PagedNodeDataResultRequestDto input)
+        {
+            var (startDate, endDate) = ResolveDateRange(input);
+
             var query = Repository.GetAll()
-                .Where(r => r.Node != null && r.Node.Id == nodeId); // Filter by navigation property
+                .Where(r => r.Node != null && r.Node.Id == nodeId);
 
             if (startDate.HasValue && endDate.HasValue)
             {
                 query = query.Where(r => r.CreationTime >= startDate && r.CreationTime <= endDate);
             }
 
-            // Get total count for pagination
-            var totalCount = await query.CountAsync();
-
-            // Apply pagination and fetch results
-            var nodeData = await query
-                .OrderByDescending(c => c.CreationTime)
-                .Skip(input.SkipCount)
-                .Take(input.MaxResultCount)
-                .ToListAsync();
-
-            // Map and return paginated results
-            return new PagedResultDto<NodeDataDto>(
-                totalCount,
-                ObjectMapper.Map<List<NodeDataDto>>(nodeData)
-            );
+            return query;
         }
 
     }

@@ -256,6 +256,15 @@
                   (click)="refresh()">
                   <i class="fas fa-redo-alt"></i>
                 </button>
+                <button
+                  type="button"
+                  class="btn btn-success ml-2"
+                  (click)="exportToExcel()"
+                  [disabled]="isExporting"
+                  >
+                  <i class="fas fa-file-excel"></i>
+                  {{ "ExportToExcel" | localize }}
+                </button>
               </div>
               <div class="col-sm-4 col-12 text-center">
                 <p class="mb-0 my-2">

@@ -1534,6 +1534,94 @@ export class NodeDataServiceProxy {
     }
 
     /**
+     * @param nodeId (optional)
+     * @param startDate (optional)
+     * @param endDate (optional)
+     * @param predefinedPeriod (optional)
+     * @param skipCount (optional)
+     * @param maxResultCount (optional)
+     * @return OK
+     */
+    exportNodeDataToExcel(nodeId: string | undefined, startDate: moment.Moment | undefined, endDate: moment.Moment | undefined, predefinedPeriod: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<NodeDataExcelExportDto> {
+        let url_ = this.baseUrl + "/api/services/app/NodeData/ExportNodeDataToExcel?";
+        if (nodeId === null)
+            throw new Error("The parameter 'nodeId' cannot be null.");
+        else if (nodeId !== undefined)
+            url_ += "nodeId=" + encodeURIComponent("" + nodeId) + "&";
+        if (startDate === null)
+            throw new Error("The parameter 'startDate' cannot be null.");
+        else if (startDate !== undefined)
+            url_ += "StartDate=" + encodeURIComponent(startDate ? "" + startDate.toISOString() : "") + "&";
+        if (endDate === null)
+            throw new Error("The parameter 'endDate' cannot be null.");
+        else if (endDate !== undefined)
+            url_ += "EndDate=" + encodeURIComponent(endDate ? "" + endDate.toISOString() : "") + "&";
+        if (predefinedPeriod === null)
+            throw new Error("The parameter 'predefinedPeriod' cannot be null.");
+        else if (predefinedPeriod !== undefined)
+            url_ += "PredefinedPeriod=" + encodeURIComponent("" + predefinedPeriod) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        // ABP exposes non-Get* app service methods as POST only; GET returns 405.
+        const content_ = "{}";
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain",
+                "Content-Type": "application/json; charset=UTF-8"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processExportNodeDataToExcel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processExportNodeDataToExcel(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<NodeDataExcelExportDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<NodeDataExcelExportDto>;
+        }));
+    }
+
+    protected processExportNodeDataToExcel(response: HttpResponseBase): Observable<NodeDataExcelExportDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (resultData200 && Object.prototype.hasOwnProperty.call(resultData200, "result") && !Object.prototype.hasOwnProperty.call(resultData200, "fileName")) {
+                resultData200 = resultData200.result;
+            }
+            result200 = NodeDataExcelExportDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @param id (optional) 
      * @return OK
      */
@@ -6109,6 +6197,58 @@ export class IsTenantAvailableOutput implements IIsTenantAvailableOutput {
 export interface IIsTenantAvailableOutput {
     state: TenantAvailabilityState;
     tenantId: number | undefined;
+}
+
+export class NodeDataExcelExportDto implements INodeDataExcelExportDto {
+    fileName: string | undefined;
+    contentType: string | undefined;
+    /** Base64-encoded file bytes from the API */
+    fileBytes: string | undefined;
+
+    constructor(data?: INodeDataExcelExportDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.fileName = _data["fileName"];
+            this.contentType = _data["contentType"];
+            this.fileBytes = _data["fileBytes"];
+        }
+    }
+
+    static fromJS(data: any): NodeDataExcelExportDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new NodeDataExcelExportDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["fileName"] = this.fileName;
+        data["contentType"] = this.contentType;
+        data["fileBytes"] = this.fileBytes;
+        return data;
+    }
+
+    clone(): NodeDataExcelExportDto {
+        const json = this.toJSON();
+        let result = new NodeDataExcelExportDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface INodeDataExcelExportDto {
+    fileName: string | undefined;
+    contentType: string | undefined;
+    fileBytes: string | undefined;
 }
 
 export class NodeDataDto implements INodeDataDto {

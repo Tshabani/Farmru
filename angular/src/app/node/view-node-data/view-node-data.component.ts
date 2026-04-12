@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, HostListener, Injector } from '@angular/c
 import { ActivatedRoute } from '@angular/router';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { PagedListingComponentBase, PagedRequestDto } from '@shared/paged-listing-component-base';
-import { NodeDataDto, NodeDataDtoPagedResultDto, NodeDataServiceProxy } from '@shared/service-proxies/service-proxies';
+import { NodeDataDto, NodeDataDtoPagedResultDto, NodeDataExcelExportDto, NodeDataServiceProxy } from '@shared/service-proxies/service-proxies';
 import moment from 'moment';
 import { Moment } from 'moment';
 import { GoogleChartInterface, GoogleChartType } from 'ng2-google-charts';
@@ -29,6 +29,7 @@ export class ViewNodeDataComponent extends PagedListingComponentBase<NodeDataDto
   _startDate:Moment | undefined = undefined;
   _endDate:Moment | undefined = undefined;
   advancedFiltersVisible = false;
+  isExporting = false;
 
   public pieChart: GoogleChartInterface;
   public barChart: GoogleChartInterface;
@@ -82,7 +83,64 @@ export class ViewNodeDataComponent extends PagedListingComponentBase<NodeDataDto
     this.getDataPage(1);
     this.updateChart(); 
   }
-  
+
+  exportToExcel(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (!id) {
+      return;
+    }
+
+    this.isExporting = true;
+    this._nodesService
+      .exportNodeDataToExcel(
+        id,
+        this._startDate,
+        this._endDate,
+        this.predefinedPeriod || undefined,
+        undefined,
+        undefined
+      )
+      .pipe(
+        finalize(() => {
+          this.isExporting = false;
+          this.cd.detectChanges();
+        })
+      )
+      .subscribe({
+        next: (result: NodeDataExcelExportDto) => {
+          const raw = result?.fileBytes as string | number[] | undefined;
+          if (raw === undefined || raw === null || (typeof raw === 'string' && raw.length === 0)) {
+            abp.notify.error(this.l('ExportFailed'));
+            return;
+          }
+          const blob = this.bytesPayloadToBlob(raw, result.contentType);
+          const fileName = result.fileName || `node-data-${id}.xlsx`;
+          const link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = fileName;
+          link.click();
+          window.URL.revokeObjectURL(link.href);
+          abp.notify.success(this.l('ExportCompleted'));
+        },
+        error: () => {
+          abp.notify.error(this.l('ExportFailed'));
+        },
+      });
+  }
+
+  private bytesPayloadToBlob(payload: string | number[], contentType: string | undefined): Blob {
+    const mime =
+      contentType || 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    if (typeof payload === 'string') {
+      const binary = atob(payload);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      return new Blob([bytes], { type: mime });
+    }
+    return new Blob([new Uint8Array(payload)], { type: mime });
+  }
 
   refreshCharts(): void {
     const pieChartData = this.pieChart;

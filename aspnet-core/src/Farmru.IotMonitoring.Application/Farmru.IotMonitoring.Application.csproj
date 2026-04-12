@@ -15,4 +15,7 @@
     <ProjectReference Include="..\Farmru.IotMonitoring.Core\Farmru.IotMonitoring.Core.csproj" />
     <ProjectReference Include="..\Farmru.IotMonitoring.EntityFrameworkCore\Farmru.IotMonitoring.EntityFrameworkCore.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.104.2" />
+  </ItemGroup>
 </Project>
