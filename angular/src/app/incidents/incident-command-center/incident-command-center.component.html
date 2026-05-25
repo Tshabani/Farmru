@@ -1,0 +1,67 @@
+<div [@routerTransition]>
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>{{ 'IncidentCommandCenter' | localize }}</h1>
+        </div>
+        <div class="col-sm-6 text-right">
+          <button class="btn btn-outline-primary mr-2" (click)="goKanban()">{{ 'IncidentKanban' | localize }}</button>
+          <button class="btn btn-outline-secondary" (click)="goDispatch()">{{ 'TechnicianDispatch' | localize }}</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content px-2" *ngIf="loading"><div class="text-center p-5"><i class="fas fa-spinner fa-spin fa-2x"></i></div></section>
+
+  <section class="content px-2" *ngIf="!loading && dashboard">
+    <div class="container-fluid">
+      <div class="row mb-3">
+        <div class="col-md-2"><div class="small-box bg-info"><div class="inner"><h3>{{ dashboard.totalActive }}</h3><p>{{ 'ActiveIncidents' | localize }}</p></div></div></div>
+        <div class="col-md-2"><div class="small-box bg-warning"><div class="inner"><h3>{{ dashboard.overdueCount }}</h3><p>{{ 'OverdueIncidents' | localize }}</p></div></div></div>
+        <div class="col-md-2"><div class="small-box bg-danger"><div class="inner"><h3>{{ dashboard.slaBreachedCount }}</h3><p>{{ 'SlaBreaches' | localize }}</p></div></div></div>
+        <div class="col-md-2"><div class="small-box bg-secondary"><div class="inner"><h3>{{ dashboard.escalatedCount }}</h3><p>Escalated</p></div></div></div>
+        <div class="col-md-2"><div class="small-box bg-success"><div class="inner"><h3>{{ dashboard.slaCompliancePercent }}%</h3><p>{{ 'SlaCompliance' | localize }}</p></div></div></div>
+        <div class="col-md-2"><div class="small-box bg-primary"><div class="inner"><h3>{{ dashboard.averageResponseMinutes | number:'1.0-0' }}m</h3><p>Avg response</p></div></div></div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">Active queue</h3></div>
+            <div class="card-body p-0 table-responsive">
+              <table class="table table-striped mb-0">
+                <thead><tr><th>Title</th><th>Status</th><th>Priority</th><th>SLA</th><th>Assignee</th></tr></thead>
+                <tbody>
+                  <ng-container *ngFor="let col of dashboard.kanban">
+                    <tr *ngFor="let item of col.items" class="cursor-pointer" (click)="openIncident(item)">
+                      <td>{{ item.title }}</td>
+                      <td>{{ statusLabels[item.status] }}</td>
+                      <td><span class="badge" [ngClass]="priorityClass(item.priority)">{{ priorityLabels[item.priority] }}</span></td>
+                      <td><span class="badge" [ngClass]="slaClass(item.slaStatus)">{{ item.slaStatus }}</span></td>
+                      <td>{{ item.assignedTo?.displayText || '—' }}</td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">{{ 'TechnicianWorkload' | localize }}</h3></div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between" *ngFor="let w of dashboard.technicianWorkload">
+                <span>{{ w.displayName }}</span>
+                <span class="badge badge-primary">{{ w.activeAssignments }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+

@@ -51,6 +51,30 @@ import { AppComponent } from './app.component';
                         canActivate: [AppRouteGuard]
                     },
                     {
+                        path: 'alerts',
+                        loadChildren: () => import('./alerts/alerts.module').then((m) => m.AlertsModule),
+                        data: { permission: 'Pages.Alerts' },
+                        canActivate: [AppRouteGuard]
+                    },
+                    {
+                        path: 'monitoring',
+                        loadChildren: () => import('./monitoring/monitoring.module').then((m) => m.MonitoringModule),
+                        data: { permission: 'Pages.Monitoring' },
+                        canActivate: [AppRouteGuard]
+                    },
+                    {
+                        path: 'gis',
+                        loadChildren: () => import('./gis/gis.module').then((m) => m.GisModule),
+                        data: { permission: 'Pages.Gis' },
+                        canActivate: [AppRouteGuard]
+                    },
+                    {
+                        path: 'incidents',
+                        loadChildren: () => import('./incidents/incidents.module').then((m) => m.IncidentsModule),
+                        data: { permission: 'Pages.Incidents' },
+                        canActivate: [AppRouteGuard]
+                    },
+                    {
                         path: 'person',
                         loadChildren: () => import('./person/person.module').then((m) => m.PersonModule),
                         data: { permission: 'Pages.People' },

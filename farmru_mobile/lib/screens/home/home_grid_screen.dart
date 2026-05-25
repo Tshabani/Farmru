@@ -4,6 +4,8 @@ import '../../models/category_model.dart';
 import '../../models/nodeResponse.dart';
 import '../../services/node_service.dart';
 import '../Nodes/NodeDetails.dart';
+import '../alerts/alerts_screen.dart';
+import '../monitoring/monitoring_screen.dart';
 import '../components/CustomContainer.dart';
 import '../components/carousel_card.dart';
 
@@ -52,6 +54,30 @@ class _HomeGridScreenState extends State<HomeGridScreen> {
                 .toList(),
           ),
           Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: ListTile(
+              leading: const Icon(Icons.monitor_heart, color: Color(0xFFB7873B)),
+              title: const Text('Operational monitoring'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const MonitoringScreen()),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: ListTile(
+              leading: const Icon(Icons.notifications_active, color: Color(0xFFB7873B)),
+              title: const Text('Operational alerts'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const AlertsScreen()),
+              ),
+            ),
+          ),
+          Padding(
             padding: const EdgeInsets.all(10.0),
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
@@ -65,10 +91,10 @@ class _HomeGridScreenState extends State<HomeGridScreen> {
                             crossAxisSpacing: 20),
                     children: _node?.map((node) {
                           return CustomContainer(
-                            text: node.facility
-                                .displayText, // Use node property for text
-                            SubText: node
-                                .serialNumber, // Use node property for subtext
+                            text: node.displayName?.isNotEmpty == true
+                                ? node.displayName!
+                                : node.facility.displayText,
+                            SubText: '${node.isOnline ? "● " : "○ "}${node.serialNumber}',
                             page: NodeDetailsPage(
                               node: node,
                             ), // Pass the node to the details page

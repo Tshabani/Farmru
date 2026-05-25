@@ -125,9 +125,86 @@
     <text name="403PageDescription">You don't have permission to access this resource. Please contact your administrator.</text>
     <text name="403PageButton">Go back to Dashboard</text>
 	<text name="Nodes" value="Nodes" />
+    <text name="Devices" value="Devices" />
+    <text name="DeviceManagement" value="Device management" />
+    <text name="DeviceDetails" value="Device details" />
+    <text name="DeviceStatus" value="Device status" />
+    <text name="DeviceHealth" value="Device health" />
+    <text name="LastSeen" value="Last seen" />
+    <text name="BatteryLevel" value="Battery level" />
+    <text name="SignalStrength" value="Signal strength" />
+    <text name="FirmwareVersion" value="Firmware version" />
+    <text name="Online" value="Online" />
+    <text name="Offline" value="Offline" />
+    <text name="Activate" value="Activate" />
+    <text name="Deactivate" value="Deactivate" />
+    <text name="ReplaceDevice" value="Replace device" />
+    <text name="ReplacementHistory" value="Replacement history" />
+    <text name="TelemetrySummary" value="Telemetry summary" />
+    <text name="NodeNotFound" value="Device not found" />
+    <text name="DeviceSerialAlreadyExists" value="A device with this serial number already exists" />
+    <text name="AllStatuses" value="All statuses" />
+    <text name="AllHealth" value="All health states" />
+    <text name="ViewTelemetry" value="View telemetry" />
+    <text name="NewSerialNumber" value="New serial number" />
+    <text name="ReplacementReason" value="Replacement reason" />
+    <text name="SerialNumber" value="Serial number" />
+    <text name="Notes" value="Notes" />
+    <text name="Alerts" value="Alerts" />
+    <text name="AlertManagement" value="Alert management" />
+    <text name="AlertDashboard" value="Alert dashboard" />
+    <text name="AlertDetails" value="Alert details" />
+    <text name="AlertNotFound" value="Alert not found" />
+    <text name="ActiveAlerts" value="Active alerts" />
+    <text name="CriticalAlerts" value="Critical alerts" />
+    <text name="Acknowledge" value="Acknowledge" />
+    <text name="Resolve" value="Resolve" />
+    <text name="ResolutionNotes" value="Resolution notes" />
+    <text name="Severity" value="Severity" />
+    <text name="AlertType" value="Alert type" />
+    <text name="TriggeredAt" value="Triggered at" />
+    <text name="AllSeverities" value="All severities" />
+    <text name="AllTypes" value="All types" />
+    <text name="Unacknowledged" value="Unacknowledged" />
+    <text name="AlertHistory" value="Alert history" />
+    <text name="OperationalMonitoring" value="Operational monitoring" />
+    <text name="MonitoringConfiguration" value="Monitoring configuration" />
+    <text name="MonitoringDashboard" value="Monitoring dashboard" />
+    <text name="MonitoringEngine" value="Monitoring engine" />
+    <text name="LastExecution" value="Last execution" />
+    <text name="StaleTelemetry" value="Stale telemetry" />
+    <text name="OnlineDevices" value="Online devices" />
+    <text name="OfflineDevices" value="Offline devices" />
+    <text name="LiveOperationalFeed" value="Live operational feed" />
+    <text name="EscalationTimeoutMinutes" value="Escalation timeout (minutes)" />
+    <text name="StaleTelemetryThresholdMinutes" value="Stale telemetry threshold (minutes)" />
+    <text name="AnomalySensitivityPercent" value="Anomaly sensitivity (%)" />
+    <text name="MonitoringEnabled" value="Monitoring enabled" />
+    <text name="OperationalGis" value="Operational GIS" />
+    <text name="GisManagement" value="GIS management" />
+    <text name="OperationalMap" value="Operational map" />
+    <text name="ExecutiveGisDashboard" value="Executive GIS overview" />
+    <text name="GeoFences" value="Geo-fences" />
+    <text name="AlertHeatmap" value="Alert heatmap" />
+    <text name="NearbyDevices" value="Nearby devices" />
 	<text name="People" value="People" />
     <text name="Organisations" value="Organisations" />
 	<text name="Facilities" value="Facilities" />
 	<text name="FacilityAppointments" value="Facility Appointments" />
+    <text name="Incidents" value="Incidents" />
+    <text name="IncidentManagement" value="Incident management" />
+    <text name="IncidentCommandCenter" value="Incident command center" />
+    <text name="IncidentKanban" value="Incident board" />
+    <text name="IncidentDetail" value="Incident detail" />
+    <text name="TechnicianDispatch" value="Technician dispatch" />
+    <text name="IncidentNotFound" value="Incident not found." />
+    <text name="PersonNotFound" value="Person not found." />
+    <text name="InvalidIncidentStatusTransition" value="This status change is not allowed." />
+    <text name="AttachmentFileRequired" value="Attachment file is required." />
+    <text name="ActiveIncidents" value="Active incidents" />
+    <text name="SlaBreaches" value="SLA breaches" />
+    <text name="OverdueIncidents" value="Overdue incidents" />
+    <text name="SlaCompliance" value="SLA compliance" />
+    <text name="TechnicianWorkload" value="Technician workload" />
   </texts>
 </localizationDictionary>

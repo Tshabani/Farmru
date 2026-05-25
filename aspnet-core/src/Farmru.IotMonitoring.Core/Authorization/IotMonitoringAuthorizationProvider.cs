@@ -12,12 +12,25 @@ namespace Farmru.IotMonitoring.Authorization
             context.CreatePermission(PermissionNames.Pages_Users, L("Users"));
             context.CreatePermission(PermissionNames.Pages_Users_Activation, L("UsersActivation"));
             context.CreatePermission(PermissionNames.Pages_Roles, L("Roles"));
-            context.CreatePermission(PermissionNames.Pages_Nodes, L("Nodes"));
+            var nodes = context.CreatePermission(PermissionNames.Pages_Nodes, L("Devices"));
+            nodes.CreateChildPermission(PermissionNames.Pages_Nodes_Manage, L("DeviceManagement"));
             context.CreatePermission(PermissionNames.Pages_People, L("People"));
             context.CreatePermission(PermissionNames.Pages_Organisations, L("Organisations"));
             context.CreatePermission(PermissionNames.Pages_Facilities, L("Facilities"));
             context.CreatePermission(PermissionNames.Pages_Facility_Appointments, L("FacilityAppointments"));
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
+
+            var alerts = context.CreatePermission(PermissionNames.Pages_Alerts, L("Alerts"));
+            alerts.CreateChildPermission(PermissionNames.Pages_Alerts_Manage, L("AlertManagement"));
+
+            var monitoring = context.CreatePermission(PermissionNames.Pages_Monitoring, L("OperationalMonitoring"));
+            monitoring.CreateChildPermission(PermissionNames.Pages_Monitoring_Manage, L("MonitoringConfiguration"));
+
+            var gis = context.CreatePermission(PermissionNames.Pages_Gis, L("OperationalGis"));
+            gis.CreateChildPermission(PermissionNames.Pages_Gis_Manage, L("GisManagement"));
+
+            var incidents = context.CreatePermission(PermissionNames.Pages_Incidents, L("Incidents"));
+            incidents.CreateChildPermission(PermissionNames.Pages_Incidents_Manage, L("IncidentManagement"));
         }
 
         private static ILocalizableString L(string name)

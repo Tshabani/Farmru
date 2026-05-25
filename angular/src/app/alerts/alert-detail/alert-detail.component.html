@@ -1,0 +1,17 @@
+﻿<div class="content-header"><div class="container-fluid"><button class="btn btn-link p-0" (click)="back()">Back</button><h1>{{ "AlertDetails" | localize }}</h1></div></div>
+<section class="content px-2" *ngIf="!loading && alert">
+  <div class="card"><div class="card-body">
+    <span class="badge mr-2" [ngClass]="severityClass(alert.severity)">{{ severityLabels[alert.severity] }}</span>
+    <h4>{{ alert.title }}</h4>
+    <p>{{ alert.description }}</p>
+    <p><strong>Device:</strong> {{ alert.node?.displayText || 'â€”' }}</p>
+    <p><strong>Facility:</strong> {{ alert.facility?.displayText || 'â€”' }}</p>
+    <p><strong>{{ "TriggeredAt" | localize }}:</strong> {{ alert.triggeredAt | date:'medium' }}</p>
+    <div *ngIf="canManage && !alert.isResolved" class="mt-3">
+      <textarea class="form-control mb-2" [(ngModel)]="resolutionNotes" [placeholder]="'ResolutionNotes' | localize"></textarea>
+      <button class="btn btn-secondary mr-2" *ngIf="!alert.isAcknowledged" (click)="acknowledge()">{{ "Acknowledge" | localize }}</button>
+      <button class="btn btn-success" (click)="resolve()">{{ "Resolve" | localize }}</button>
+    </div>
+  </div></div>
+</section>
+

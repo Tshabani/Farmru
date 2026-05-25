@@ -1576,6 +1576,191 @@ namespace Farmru.IotMonitoring.Migrations
                     b.ToTable("AbpUsers");
                 });
 
+            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Alerts.Alert", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("AcknowledgedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("AcknowledgedByUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("AlertType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("EscalatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EscalationLevel")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("FacilityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsAcknowledged")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsResolved")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastEscalatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("LastTriggeredAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("MetadataJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("NodeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ResolutionNotes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ResolvedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("ResolvedByUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Severity")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("SourceTelemetryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TriggeredAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FacilityId");
+
+                    b.HasIndex("NodeId");
+
+                    b.HasIndex("TriggeredAt");
+
+                    b.HasIndex("TenantId", "IsActive", "IsResolved");
+
+                    b.HasIndex("TenantId", "Severity", "TriggeredAt");
+
+                    b.HasIndex("TenantId", "NodeId", "AlertType", "IsActive");
+
+                    b.ToTable("Alerts");
+                });
+
+            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Alerts.AlertThresholdConfiguration", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AnomalySensitivityPercent")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("AutoResolveWhenNormalized")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal>("CriticalBatteryPercent")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EscalationTimeoutMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("FacilityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal>("MaximumTemperature")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("MinimumBatteryPercent")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("MinimumMoisturePercent")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("MinimumTemperature")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("MonitoringEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("OfflineTimeoutMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StaleTelemetryThresholdMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FacilityId");
+
+                    b.HasIndex("TenantId", "FacilityId");
+
+                    b.ToTable("AlertThresholdConfigurations");
+                });
+
             modelBuilder.Entity("Farmru.IotMonitoring.Domains.Facilities.Facility", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1684,14 +1869,103 @@ namespace Farmru.IotMonitoring.Migrations
                     b.ToTable("FacilityAppointments");
                 });
 
+            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Geo.GeoFence", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("CenterLatitude")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("CenterLongitude")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("FacilityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("GeoFenceType")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PolygonJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("RadiusMeters")
+                        .HasColumnType("float");
+
+                    b.Property<int>("Severity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("TriggerAlertOnEntry")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("TriggerAlertOnExit")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FacilityId");
+
+                    b.HasIndex("TenantId", "FacilityId");
+
+                    b.HasIndex("TenantId", "IsActive");
+
+                    b.ToTable("GeoFences");
+                });
+
             modelBuilder.Entity("Farmru.IotMonitoring.Domains.Incidents.Incident", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime?>("AcknowledgedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("AssignedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("AssignedTeamName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid?>("AssignedToId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ClosedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid?>("CreatedById")
                         .HasColumnType("uniqueidentifier");
@@ -1714,7 +1988,19 @@ namespace Farmru.IotMonitoring.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("EscalationLevel")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("FacilityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("FirstResponseAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsEscalated")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModificationTime")
@@ -1723,13 +2009,46 @@ namespace Farmru.IotMonitoring.Migrations
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<int?>("Priority")
+                    b.Property<decimal?>("Latitude")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("Longitude")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid?>("NodeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Priority")
                         .HasColumnType("int");
+
+                    b.Property<Guid?>("RelatedAlertId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("ResolutionDueAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ResolutionNotes")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ResolvedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("Status")
+                    b.Property<DateTime>("ResponseDueAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("SlaResolutionBreached")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("SlaResponseBreached")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("SlaStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TenantId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -1741,14 +2060,36 @@ namespace Farmru.IotMonitoring.Migrations
 
                     b.HasIndex("CreatedById");
 
+                    b.HasIndex("FacilityId");
+
+                    b.HasIndex("Latitude", "Longitude");
+
+                    b.HasIndex("TenantId", "AssignedToId", "Status");
+
+                    b.HasIndex("TenantId", "SlaStatus", "ResolutionDueAt");
+
+                    b.HasIndex("TenantId", "Status", "Priority");
+
                     b.ToTable("Incidents");
                 });
 
-            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Nodes.Node", b =>
+            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Incidents.IncidentAssignment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("AssignedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("AssignedByUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid?>("AssignedPersonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AssignedTeamName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
@@ -1762,7 +2103,74 @@ namespace Farmru.IotMonitoring.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("FacilityId")
+                    b.Property<string>("DispatchNotes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("IncidentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UnassignedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignedPersonId");
+
+                    b.HasIndex("IncidentId");
+
+                    b.HasIndex("TenantId", "AssignedPersonId", "IsActive");
+
+                    b.HasIndex("TenantId", "IncidentId", "IsActive");
+
+                    b.ToTable("IncidentAssignments");
+                });
+
+            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Incidents.IncidentAttachment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Caption")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContentType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("FileSizeBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("IncidentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
@@ -1774,7 +2182,7 @@ namespace Farmru.IotMonitoring.Migrations
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("SerialNumber")
+                    b.Property<string>("StoragePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TenantId")
@@ -1782,7 +2190,183 @@ namespace Farmru.IotMonitoring.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("IncidentId");
+
+                    b.HasIndex("TenantId", "IncidentId");
+
+                    b.ToTable("IncidentAttachments");
+                });
+
+            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Incidents.IncidentTimelineEvent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EventType")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("IncidentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("MetadataJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IncidentId");
+
+                    b.HasIndex("TenantId", "IncidentId", "CreationTime");
+
+                    b.ToTable("IncidentTimelineEvents");
+                });
+
+            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Monitoring.MonitoringExecutionHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AlertsGenerated")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AlertsResolved")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DevicesEvaluated")
+                        .HasColumnType("int");
+
+                    b.Property<long>("DurationMs")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EscalationsPerformed")
+                        .HasColumnType("int");
+
+                    b.Property<int>("JobType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Succeeded")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SummaryJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StartedAt");
+
+                    b.HasIndex("TenantId", "JobType", "StartedAt");
+
+                    b.ToTable("MonitoringExecutionHistories");
+                });
+
+            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Nodes.Node", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("BatteryLevel")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("DeleterUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("DeletionTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DeviceStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("FacilityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FirmwareVersion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("HealthStatus")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastHealthEvaluatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal?>("LastKnownLatitude")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("LastKnownLongitude")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("LastModifierUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("LastSeenAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SerialNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SignalStrength")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TelemetryQuality")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
                     b.HasIndex("FacilityId");
+
+                    b.HasIndex("TenantId", "LastKnownLatitude", "LastKnownLongitude");
 
                     b.ToTable("Nodes");
                 });
@@ -1861,6 +2445,46 @@ namespace Farmru.IotMonitoring.Migrations
                     b.HasIndex("NodeId");
 
                     b.ToTable("NodeDatas");
+                });
+
+            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Nodes.NodeReplacementHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("CreatorUserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("NewSerialNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("NodeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OldSerialNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ReplacedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NodeId");
+
+                    b.ToTable("NodeReplacementHistories");
                 });
 
             modelBuilder.Entity("Farmru.IotMonitoring.Domains.Organisations.Organisation", b =>
@@ -1969,9 +2593,6 @@ namespace Farmru.IotMonitoring.Migrations
                     b.Property<string>("FirstName")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Gender")
                         .HasColumnType("int");
@@ -2386,6 +3007,30 @@ namespace Farmru.IotMonitoring.Migrations
                     b.Navigation("LastModifierUser");
                 });
 
+            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Alerts.Alert", b =>
+                {
+                    b.HasOne("Farmru.IotMonitoring.Domains.Facilities.Facility", "Facility")
+                        .WithMany()
+                        .HasForeignKey("FacilityId");
+
+                    b.HasOne("Farmru.IotMonitoring.Domains.Nodes.Node", "Node")
+                        .WithMany()
+                        .HasForeignKey("NodeId");
+
+                    b.Navigation("Facility");
+
+                    b.Navigation("Node");
+                });
+
+            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Alerts.AlertThresholdConfiguration", b =>
+                {
+                    b.HasOne("Farmru.IotMonitoring.Domains.Facilities.Facility", "Facility")
+                        .WithMany()
+                        .HasForeignKey("FacilityId");
+
+                    b.Navigation("Facility");
+                });
+
             modelBuilder.Entity("Farmru.IotMonitoring.Domains.Facilities.Facility", b =>
                 {
                     b.HasOne("Farmru.IotMonitoring.Domains.Organisations.Organisation", "OwnerOrganisation")
@@ -2416,19 +3061,77 @@ namespace Farmru.IotMonitoring.Migrations
                     b.Navigation("Facility");
                 });
 
+            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Geo.GeoFence", b =>
+                {
+                    b.HasOne("Farmru.IotMonitoring.Domains.Facilities.Facility", "Facility")
+                        .WithMany()
+                        .HasForeignKey("FacilityId");
+
+                    b.Navigation("Facility");
+                });
+
             modelBuilder.Entity("Farmru.IotMonitoring.Domains.Incidents.Incident", b =>
                 {
                     b.HasOne("Farmru.IotMonitoring.Domains.Persons.Person", "AssignedTo")
                         .WithMany()
-                        .HasForeignKey("AssignedToId");
+                        .HasForeignKey("AssignedToId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Farmru.IotMonitoring.Domains.Persons.Person", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById");
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Farmru.IotMonitoring.Domains.Facilities.Facility", "Facility")
+                        .WithMany()
+                        .HasForeignKey("FacilityId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("AssignedTo");
 
                     b.Navigation("CreatedBy");
+
+                    b.Navigation("Facility");
+                });
+
+            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Incidents.IncidentAssignment", b =>
+                {
+                    b.HasOne("Farmru.IotMonitoring.Domains.Persons.Person", "AssignedPerson")
+                        .WithMany()
+                        .HasForeignKey("AssignedPersonId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Farmru.IotMonitoring.Domains.Incidents.Incident", "Incident")
+                        .WithMany("Assignments")
+                        .HasForeignKey("IncidentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AssignedPerson");
+
+                    b.Navigation("Incident");
+                });
+
+            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Incidents.IncidentAttachment", b =>
+                {
+                    b.HasOne("Farmru.IotMonitoring.Domains.Incidents.Incident", "Incident")
+                        .WithMany("Attachments")
+                        .HasForeignKey("IncidentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Incident");
+                });
+
+            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Incidents.IncidentTimelineEvent", b =>
+                {
+                    b.HasOne("Farmru.IotMonitoring.Domains.Incidents.Incident", "Incident")
+                        .WithMany("Timeline")
+                        .HasForeignKey("IncidentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Incident");
                 });
 
             modelBuilder.Entity("Farmru.IotMonitoring.Domains.Nodes.Node", b =>
@@ -2444,6 +3147,15 @@ namespace Farmru.IotMonitoring.Migrations
                 {
                     b.HasOne("Farmru.IotMonitoring.Domains.Nodes.Node", "Node")
                         .WithMany()
+                        .HasForeignKey("NodeId");
+
+                    b.Navigation("Node");
+                });
+
+            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Nodes.NodeReplacementHistory", b =>
+                {
+                    b.HasOne("Farmru.IotMonitoring.Domains.Nodes.Node", "Node")
+                        .WithMany("ReplacementHistories")
                         .HasForeignKey("NodeId");
 
                     b.Navigation("Node");
@@ -2569,6 +3281,20 @@ namespace Farmru.IotMonitoring.Migrations
                     b.Navigation("Settings");
 
                     b.Navigation("Tokens");
+                });
+
+            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Incidents.Incident", b =>
+                {
+                    b.Navigation("Assignments");
+
+                    b.Navigation("Attachments");
+
+                    b.Navigation("Timeline");
+                });
+
+            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Nodes.Node", b =>
+                {
+                    b.Navigation("ReplacementHistories");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,20 @@
+<section class="content-header"><h1>{{ "GeoFences" | localize }}</h1></section>
+<section class="content px-2">
+  <button class="btn btn-secondary mb-2" (click)="back()">Back to map</button>
+  <button class="btn btn-primary mb-2 ml-2" (click)="create()">Create</button>
+  <table class="table table-striped" *ngIf="!loading">
+    <thead><tr><th>Name</th><th>Type</th><th>Active</th><th>Severity</th><th></th></tr></thead>
+    <tbody>
+      <tr *ngFor="let f of fences">
+        <td>{{ f.name }}</td>
+        <td>{{ f.geoFenceType === 0 ? 'Radius' : 'Polygon' }}</td>
+        <td>{{ f.isActive ? 'Yes' : 'No' }}</td>
+        <td>{{ f.severity }}</td>
+        <td>
+          <button class="btn btn-sm btn-outline-primary mr-1" (click)="edit(f)">Edit</button>
+          <button class="btn btn-sm btn-outline-danger" (click)="remove(f)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>

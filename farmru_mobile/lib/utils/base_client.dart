@@ -83,7 +83,7 @@ class BaseClient {
       } else {
         CustomToast.errorShortToast('An unexpected error occurred: $e');
       }
-      return "error";
+      return null;
     }
   }
 

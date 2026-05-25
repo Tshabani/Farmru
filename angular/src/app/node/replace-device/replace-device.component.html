@@ -1,0 +1,28 @@
+<form class="form-horizontal" #replaceForm="ngForm" (ngSubmit)="save()">
+  <abp-modal-header [title]="'ReplaceDevice' | localize" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+  <div class="modal-body">
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label">{{ "NewSerialNumber" | localize }}</label>
+      <div class="col-md-9">
+        <input type="text" class="form-control" name="newSerialNumber" required [(ngModel)]="input.newSerialNumber" />
+      </div>
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label">{{ "ReplacementReason" | localize }}</label>
+      <div class="col-md-9">
+        <textarea class="form-control" name="reason" rows="3" required [(ngModel)]="input.reason"></textarea>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label">{{ "Notes" | localize }}</label>
+      <div class="col-md-9">
+        <textarea class="form-control" name="notes" rows="2" [(ngModel)]="input.notes"></textarea>
+      </div>
+    </div>
+  </div>
+  <abp-modal-footer
+    [cancelDisabled]="saving"
+    [saveDisabled]="!replaceForm.form.valid || saving"
+    (onCancelClick)="bsModalRef.hide()">
+  </abp-modal-footer>
+</form>

@@ -1,38 +1,57 @@
 ﻿using Abp.Domain.Entities.Auditing;
-using Farmru.IotMonitoring.Authorization.Users;
+using Farmru.IotMonitoring.Domains;
 using Farmru.IotMonitoring.Domains.Persons;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Farmru.IotMonitoring.Domains.Tasks
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public class TaskManagement : FullAuditedEntity<Guid>
+    public class TaskManagement : FullAuditedAggregateRoot<Guid>
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual Person AssignedTo { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual Person AssignedBy { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual RefListTaskStatus? Status { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual string Title { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual string Description { get; set; }
+        protected TaskManagement()
+        {
+        }
+
+        public virtual Person AssignedTo { get; private set; }
+        public virtual Person AssignedBy { get; private set; }
+        public virtual RefListTaskStatus? Status { get; private set; }
+        public virtual string Title { get; private set; }
+        public virtual string Description { get; private set; }
+
+        public static TaskManagement Create(string title, string description, Person assignedTo, Person assignedBy)
+        {
+            if (string.IsNullOrWhiteSpace(title?.Trim()))
+            {
+                throw new DomainRuleException("Task title is required.");
+            }
+
+            return new TaskManagement
+            {
+                Title = title.Trim(),
+                Description = description?.Trim(),
+                AssignedTo = assignedTo,
+                AssignedBy = assignedBy,
+                Status = RefListTaskStatus.New
+            };
+        }
+
+        public virtual void UpdateDetails(string title, string description, Person assignedTo, RefListTaskStatus? status)
+        {
+            if (!string.IsNullOrWhiteSpace(title?.Trim()))
+            {
+                Title = title.Trim();
+            }
+
+            Description = description?.Trim();
+            AssignedTo = assignedTo;
+            if (status.HasValue)
+            {
+                Status = status;
+            }
+        }
+
+        public virtual void ChangeStatus(RefListTaskStatus status)
+        {
+            Status = status;
+        }
     }
 }

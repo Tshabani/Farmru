@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 
 namespace Farmru.IotMonitoring.Services.Persons.Dtos
 {
-    [AutoMapTo(typeof(Person))]
     public class CreatePersonDto
     {
         [Required]

@@ -1,0 +1,127 @@
+<div [@routerTransition]>
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row align-items-center">
+        <div class="col">
+          <button type="button" class="btn btn-link p-0 mb-2" (click)="back()">
+            <i class="fas fa-arrow-left"></i> {{ "Back" | localize }}
+          </button>
+          <h1>{{ "DeviceDetails" | localize }}</h1>
+          <p class="text-muted mb-0" *ngIf="device">
+            {{ device.displayName || device.serialNumber }}
+          </p>
+        </div>
+        <div class="col-auto text-right" *ngIf="device">
+          <span class="badge mr-2" [ngClass]="device.isOnline ? 'badge-success' : 'badge-secondary'">
+            {{ (device.isOnline ? "Online" : "Offline") | localize }}
+          </span>
+          <span class="badge" [ngClass]="healthClass">{{ healthLabel }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content px-2" *ngIf="loading">
+    <div class="text-center p-5">
+      <i class="fas fa-spinner fa-spin fa-2x"></i>
+    </div>
+  </section>
+
+  <section class="content px-2" *ngIf="!loading && device">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="card card-outline card-primary">
+            <div class="card-header">
+              <h3 class="card-title">{{ "DeviceStatus" | localize }}</h3>
+            </div>
+            <div class="card-body">
+              <dl class="row mb-0">
+                <dt class="col-sm-5">{{ "SerialNumber" | localize }}</dt>
+                <dd class="col-sm-7">{{ device.serialNumber }}</dd>
+                <dt class="col-sm-5">{{ "DisplayName" | localize }}</dt>
+                <dd class="col-sm-7">{{ device.displayName || "—" }}</dd>
+                <dt class="col-sm-5">{{ "Facility" | localize }}</dt>
+                <dd class="col-sm-7">{{ device.facility?.displayText || "—" }}</dd>
+                <dt class="col-sm-5">{{ "DeviceStatus" | localize }}</dt>
+                <dd class="col-sm-7">{{ statusLabel }}</dd>
+                <dt class="col-sm-5">{{ "LastSeen" | localize }}</dt>
+                <dd class="col-sm-7">{{ device.lastSeenAt ? (device.lastSeenAt.toDate() | date: "medium") : "—" }}</dd>
+                <dt class="col-sm-5">{{ "BatteryLevel" | localize }}</dt>
+                <dd class="col-sm-7">{{ device.batteryLevel != null ? device.batteryLevel + "%" : "—" }}</dd>
+                <dt class="col-sm-5">{{ "SignalStrength" | localize }}</dt>
+                <dd class="col-sm-7">{{ device.signalStrength ?? "—" }}</dd>
+                <dt class="col-sm-5">{{ "FirmwareVersion" | localize }}</dt>
+                <dd class="col-sm-7">{{ device.firmwareVersion || "—" }}</dd>
+              </dl>
+            </div>
+            <div class="card-footer">
+              <button type="button" class="btn btn-sm btn-success mr-2" *ngIf="!device.isActive" (click)="activate()">{{ "Activate" | localize }}</button>
+              <button type="button" class="btn btn-sm btn-warning mr-2" *ngIf="device.isActive" (click)="deactivate()">{{ "Deactivate" | localize }}</button>
+              <button type="button" class="btn btn-sm btn-outline-primary mr-2" (click)="openReplaceDialog()">{{ "ReplaceDevice" | localize }}</button>
+              <button type="button" class="btn btn-sm bg-blue" (click)="viewTelemetry()">{{ "ViewTelemetry" | localize }}</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-8">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">{{ "TelemetrySummary" | localize }}</h3></div>
+            <div class="card-body">
+              <div *ngIf="device.telemetrySummary?.lastReadingTime; else noTelemetry">
+                <p class="text-muted">{{ device.telemetrySummary.lastReadingTime?.toDate() | date: "medium" }} ({{ device.telemetrySummary.totalReadings }} readings)</p>
+                <div class="row">
+                  <div class="col-md-4 mb-3"><div class="border rounded p-3"><small>Moisture</small><div>{{ device.telemetrySummary.moisture || "—" }}</div></div></div>
+                  <div class="col-md-4 mb-3"><div class="border rounded p-3"><small>Temperature</small><div>{{ device.telemetrySummary.soilTemperature || "—" }}</div></div></div>
+                  <div class="col-md-4 mb-3"><div class="border rounded p-3"><small>pH</small><div>{{ device.telemetrySummary.soilPH || "—" }}</div></div></div>
+                </div>
+              </div>
+              <ng-template #noTelemetry><p class="text-muted mb-0">No telemetry readings yet.</p></ng-template>
+            </div>
+          </div>          <div class="card mt-3" *ngIf="deviceAlerts?.length">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h3 class="card-title mb-0">{{ "AlertHistory" | localize }}</h3>
+              <a routerLink="/app/alerts" class="btn btn-sm btn-outline-primary">View all</a>
+            </div>
+            <div class="card-body table-responsive p-0">
+              <table class="table table-hover mb-0">
+                <thead>
+                  <tr>
+                    <th>Severity</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Triggered</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let a of deviceAlerts" [routerLink]="['/app/alerts', a.id]" style="cursor:pointer">
+                    <td><span class="badge" [ngClass]="severityClass(a.severity)">{{ severityLabels[a.severity] }}</span></td>
+                    <td>{{ a.title }}</td>
+                    <td>
+                      <span *ngIf="a.isResolved" class="badge badge-success">Resolved</span>
+                      <span *ngIf="!a.isResolved && a.isAcknowledged" class="badge badge-secondary">Acknowledged</span>
+                      <span *ngIf="!a.isResolved && !a.isAcknowledged" class="badge badge-warning">Open</span>
+                    </td>
+                    <td>{{ a.triggeredAt | date: 'short' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card mt-3" *ngIf="device.replacementHistory?.length">
+            <div class="card-header"><h3 class="card-title">{{ "ReplacementHistory" | localize }}</h3></div>
+            <div class="card-body table-responsive p-0">
+              <table class="table table-striped mb-0">
+                <thead><tr><th>{{ "NewSerialNumber" | localize }}</th><th>Previous</th><th>{{ "ReplacementReason" | localize }}</th><th>Date</th></tr></thead>
+                <tbody>
+                  <tr *ngFor="let item of device.replacementHistory">
+                    <td>{{ item.newSerialNumber }}</td><td>{{ item.oldSerialNumber }}</td><td>{{ item.reason }}</td><td>{{ item.replacedAt | date: "short" }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

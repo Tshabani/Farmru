@@ -1,0 +1,16 @@
+﻿<section class="content-header"><h1>All alerts</h1></section>
+<section class="content px-2">
+  <div class="card"><div class="card-body table-responsive">
+    <table class="table table-striped" [busy]="isTableLoading">
+      <thead><tr><th>Severity</th><th>Title</th><th>Device</th><th>When</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let a of alerts" (click)="open(a)" style="cursor:pointer">
+          <td>{{ a.severity }}</td><td>{{ a.title }}</td><td>{{ a.node?.displayText }}</td>
+          <td>{{ a.triggeredAt | date:'short' }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <abp-pagination-controls id="server" (pageChange)="getDataPage($event)"></abp-pagination-controls>
+  </div></div>
+</section>
+

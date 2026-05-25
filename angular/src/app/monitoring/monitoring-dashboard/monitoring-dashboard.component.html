@@ -1,0 +1,73 @@
+<div [@routerTransition]>
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row align-items-center">
+        <div class="col"><h1>{{ "MonitoringDashboard" | localize }}</h1></div>
+        <div class="col-auto">
+          <button class="btn btn-outline-secondary mr-2" (click)="openAlerts()">{{ "Alerts" | localize }}</button>
+          <button class="btn btn-primary" (click)="openConfig()">{{ "MonitoringConfiguration" | localize }}</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="content px-2" *ngIf="loading"><div class="text-center p-5"><i class="fas fa-spinner fa-spin fa-2x"></i></div></section>
+  <section class="content px-2" *ngIf="!loading && dashboard">
+    <div class="container-fluid">
+      <div class="row mb-3">
+        <div class="col-md-3"><div class="small-box bg-success"><div class="inner"><h3>{{ dashboard.onlineDevices }}</h3><p>{{ "OnlineDevices" | localize }}</p></div></div></div>
+        <div class="col-md-3"><div class="small-box bg-danger"><div class="inner"><h3>{{ dashboard.offlineDevices }}</h3><p>{{ "OfflineDevices" | localize }}</p></div></div></div>
+        <div class="col-md-3"><div class="small-box bg-warning"><div class="inner"><h3>{{ dashboard.staleTelemetryDevices }}</h3><p>{{ "StaleTelemetry" | localize }}</p></div></div></div>
+        <div class="col-md-3"><div class="small-box bg-info"><div class="inner"><h3>{{ dashboard.criticalAlerts }}</h3><p>{{ "CriticalAlerts" | localize }}</p></div></div></div>
+      </div>
+      <div class="row">
+        <div class="col-md-7">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">{{ "MonitoringEngine" | localize }}</h3></div>
+            <div class="card-body">
+              <p>
+                <span class="badge" [ngClass]="dashboard.monitoringEnabled ? 'badge-success' : 'badge-secondary'">
+                  {{ dashboard.monitoringEnabled ? 'Enabled' : 'Disabled' }}
+                </span>
+                <span class="ml-2" *ngIf="dashboard.lastExecutionAt">
+                  {{ "LastExecution" | localize }}: {{ dashboard.lastExecutionAt | date: 'medium' }}
+                  <span class="badge ml-1" [ngClass]="dashboard.lastExecutionSucceeded ? 'badge-success' : 'badge-danger'">
+                    {{ dashboard.lastExecutionSucceeded ? 'OK' : 'Failed' }}
+                  </span>
+                </span>
+              </p>
+              <p class="mb-0">Active alerts: {{ dashboard.activeAlerts }} · Escalated: {{ dashboard.escalatedAlerts }}</p>
+            </div>
+          </div>
+          <div class="card mt-3">
+            <div class="card-header"><h3 class="card-title">Execution history</h3></div>
+            <div class="card-body table-responsive p-0">
+              <table class="table table-sm mb-0">
+                <tr *ngFor="let h of history">
+                  <td>{{ jobLabels[h.jobType] ?? h.jobType }}</td>
+                  <td>{{ h.startedAt | date: 'short' }}</td>
+                  <td>{{ h.durationMs }}ms</td>
+                  <td><span class="badge" [ngClass]="h.succeeded ? 'badge-success' : 'badge-danger'">{{ h.succeeded ? 'OK' : 'Fail' }}</span></td>
+                  <td>+{{ h.alertsGenerated }}/-{{ h.alertsResolved }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">{{ "LiveOperationalFeed" | localize }}</h3></div>
+            <div class="card-body p-0" style="max-height: 400px; overflow-y: auto">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item" *ngFor="let f of feed">
+                  <small class="text-muted">{{ f.occurredAt | date: 'short' }}</small>
+                  <span class="d-block"><strong>{{ f.eventType }}</strong> — {{ f.message }}</span>
+                </li>
+                <li class="list-group-item text-muted" *ngIf="!feed.length">Waiting for live events…</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

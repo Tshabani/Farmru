@@ -17,7 +17,6 @@ namespace Farmru.IotMonitoring.Services.Facilities.Dto
     /// <summary>
     /// 
     /// </summary>
-    [AutoMap(typeof(Facility))]
     public class CreateFacilityDto : EntityDto<Guid>
     {
         public string Name { get; set; } 

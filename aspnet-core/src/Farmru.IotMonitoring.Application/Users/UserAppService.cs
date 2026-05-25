@@ -18,6 +18,7 @@ using Farmru.IotMonitoring.Authorization;
 using Farmru.IotMonitoring.Authorization.Accounts;
 using Farmru.IotMonitoring.Authorization.Roles;
 using Farmru.IotMonitoring.Authorization.Users;
+using Farmru.IotMonitoring.Domains;
 using Farmru.IotMonitoring.Domains.Persons;
 using Farmru.IotMonitoring.Roles.Dto;
 using Farmru.IotMonitoring.Services.Persons.Dtos;
@@ -63,7 +64,7 @@ namespace Farmru.IotMonitoring.Users
             CheckCreatePermission();
 
             var user = ObjectMapper.Map<User>(input);
-            var person = ObjectMapper.Map<Person>(input.Person);
+            var person = BuildPersonFromDto(input.Person);
 
             user.TenantId = AbpSession.TenantId;
             user.IsEmailConfirmed = true;
@@ -75,7 +76,7 @@ namespace Farmru.IotMonitoring.Users
 
             if (results.Succeeded)
             { 
-                person.User = user; 
+                person.LinkToUser(user);
                 await _personRepository.InsertAsync(person);
 
                 if (input.RoleNames != null)
@@ -108,9 +109,19 @@ namespace Farmru.IotMonitoring.Users
             var updateUserResult = await _userManager.UpdateAsync(user);
             CheckErrors(updateUserResult);
 
-            var person = ObjectMapper.Map<Person>(input.Person);
-            person.User = user;  
-            await _personRepository.UpdateAsync(person);
+            var person = await _personRepository.FirstOrDefaultAsync(p => p.User.Id == user.Id);
+            if (person == null)
+            {
+                person = BuildPersonFromDto(input.Person);
+                person.LinkToUser(user);
+                await _personRepository.InsertAsync(person);
+            }
+            else
+            {
+                ApplyPersonDto(person, input.Person);
+                person.LinkToUser(user);
+                await _personRepository.UpdateAsync(person);
+            }
 
             if (input.RoleNames != null)
             {
@@ -292,6 +303,30 @@ namespace Farmru.IotMonitoring.Users
             }
 
             return true;
+        }
+
+        private static Person BuildPersonFromDto(PersonDto dto)
+        {
+            var person = Person.Create(dto.FirstName, dto.LastName);
+            ApplyPersonDto(person, dto);
+            return person;
+        }
+
+        private static void ApplyPersonDto(Person person, PersonDto dto)
+        {
+            person.UpdateProfile(
+                dto.IdentityNumber,
+                dto.Title,
+                dto.Biography,
+                null,
+                null,
+                dto.HomeNumber,
+                dto.MobileNumber,
+                dto.AltMobileNumber,
+                null,
+                dto.AltEmailAddress,
+                dto.DateOfBirth,
+                dto.Gender);
         }
     }
 }

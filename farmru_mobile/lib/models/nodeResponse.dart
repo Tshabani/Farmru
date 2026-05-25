@@ -48,26 +48,70 @@ class NodeResponse {
 
 class NodeResult {
   String serialNumber;
+  String? displayName;
   Facility facility;
   String id;
+  bool isActive;
+  int deviceStatus;
+  int healthStatus;
+  String? lastSeenAt;
+  double? batteryLevel;
+  int? signalStrength;
+  String? firmwareVersion;
+  bool isOnline;
 
   NodeResult({
     required this.serialNumber,
+    this.displayName,
     required this.facility,
     required this.id,
+    this.isActive = true,
+    this.deviceStatus = 0,
+    this.healthStatus = 0,
+    this.lastSeenAt,
+    this.batteryLevel,
+    this.signalStrength,
+    this.firmwareVersion,
+    this.isOnline = false,
   });
 
   factory NodeResult.fromJson(Map<String, dynamic> json) => NodeResult(
-        serialNumber: json["serialNumber"],
-        facility: Facility.fromJson(json["facility"]),
-        id: json["id"],
+        serialNumber: json["serialNumber"] ?? '',
+        displayName: json["displayName"],
+        facility: json["facility"] != null
+            ? Facility.fromJson(json["facility"])
+            : Facility(displayText: '', id: ''),
+        id: json["id"] ?? '',
+        isActive: json["isActive"] ?? true,
+        deviceStatus: json["deviceStatus"] ?? 0,
+        healthStatus: json["healthStatus"] ?? 0,
+        lastSeenAt: json["lastSeenAt"],
+        batteryLevel: json["batteryLevel"]?.toDouble(),
+        signalStrength: json["signalStrength"],
+        firmwareVersion: json["firmwareVersion"],
+        isOnline: json["isOnline"] ?? false,
       );
 
   Map<String, dynamic> toJson() => {
         "serialNumber": serialNumber,
+        "displayName": displayName,
         "facility": facility.toJson(),
         "id": id,
+        "isActive": isActive,
+        "deviceStatus": deviceStatus,
+        "healthStatus": healthStatus,
+        "lastSeenAt": lastSeenAt,
+        "batteryLevel": batteryLevel,
+        "signalStrength": signalStrength,
+        "firmwareVersion": firmwareVersion,
+        "isOnline": isOnline,
       };
+
+  String get healthLabel {
+    const labels = ['Unknown', 'Healthy', 'Warning', 'Critical'];
+    if (healthStatus < 0 || healthStatus >= labels.length) return 'Unknown';
+    return labels[healthStatus];
+  }
 }
 
 class Facility {

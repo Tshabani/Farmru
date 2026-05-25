@@ -43,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       _isLoading = !false;
     });
-    _tenants = (await TenantService.GetAll());
+    _tenants = (await TenantService.GetAll()) ?? [];
     setState(() {
       _isLoading = false;
     });

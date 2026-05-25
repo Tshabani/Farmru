@@ -14,6 +14,8 @@ using Abp.Runtime.Session;
 using Farmru.IotMonitoring.Domains.Facilities;
 using Farmru.IotMonitoring.Domains.Organisations;
 using Node = Farmru.IotMonitoring.Domains.Nodes.Node;
+using Farmru.IotMonitoring.Domains.Alerts.Services;
+using Farmru.IotMonitoring.Domains.Geo.Services;
 using Abp.Authorization;
 using System.IO;
 using ClosedXML.Excel;
@@ -28,17 +30,20 @@ namespace Farmru.IotMonitoring.Services.NodeDatas
     {
         private readonly IRepository<Node, Guid> _nodeRepository;
         private readonly IAbpSession _session;
+        private readonly ITelemetryAlertEvaluationService _alertEvaluationService;
+        private readonly IGeoFenceEvaluationService _geoFenceEvaluationService;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="repository"></param>
-        /// <param name="nodeRepository"></param>
-        /// <param name="session"></param>
-        public NodeDataAppService(IRepository<Domains.Nodes.NodeData, Guid> repository, IRepository<Node, Guid> nodeRepository, IAbpSession session) : base(repository)
+        public NodeDataAppService(
+            IRepository<Domains.Nodes.NodeData, Guid> repository,
+            IRepository<Node, Guid> nodeRepository,
+            IAbpSession session,
+            ITelemetryAlertEvaluationService alertEvaluationService,
+            IGeoFenceEvaluationService geoFenceEvaluationService) : base(repository)
         {
             _nodeRepository = nodeRepository;
             _session = session;
+            _alertEvaluationService = alertEvaluationService;
+            _geoFenceEvaluationService = geoFenceEvaluationService;
         }
 
         public override async Task<NodeDataDto> CreateAsync(CreateNodeData input)
@@ -48,13 +53,42 @@ namespace Farmru.IotMonitoring.Services.NodeDatas
 
             var node = await _nodeRepository.FirstOrDefaultAsync(x => x.SerialNumber == input.SerialNumber) ?? throw new UserFriendlyException("Node not found");
 
-            var nodeData = new Domains.Nodes.NodeData();
-            ObjectMapper.Map(input, nodeData);
-
-            nodeData.Node = node;
-            nodeData.TenantId = node.TenantId;
+            var nodeData = Domains.Nodes.NodeData.RecordFromDevice(
+                node,
+                input.SoilTemperature,
+                input.SoilPH,
+                input.Moisture,
+                input.Phosphorus,
+                input.Potassium,
+                input.Nitrogen,
+                input.Latitude,
+                input.Longitude,
+                input.SolarPanelVoltage,
+                input.BatteryVoltage,
+                input.Conductivity,
+                input.LoggingTime);
 
             nodeData = await Repository.InsertAsync(nodeData);
+
+            var seenAt = nodeData.LoggingTime ?? DateTime.UtcNow;
+            var batteryLevel = Node.BatteryLevelFromVoltage(input.BatteryVoltage);
+            node.RecordTelemetry(seenAt, batteryLevel, node.SignalStrength);
+            node.UpdateKnownLocation(input.Latitude, input.Longitude);
+            await _nodeRepository.UpdateAsync(node);
+
+            await CurrentUnitOfWork.SaveChangesAsync();
+
+            await _alertEvaluationService.EvaluateAfterTelemetryAsync(node, nodeData);
+
+            var coords = node.ResolveMapCoordinates();
+            if (coords.HasValue)
+            {
+                await _geoFenceEvaluationService.EvaluateNodeLocationAsync(
+                    node,
+                    coords.Value.Latitude,
+                    coords.Value.Longitude);
+            }
+
             return ObjectMapper.Map<NodeDataDto>(nodeData);
         }
 

@@ -11,7 +11,15 @@ using Abp.Reflection.Extensions;
 using Abp.Zero.Configuration;
 using Farmru.IotMonitoring.Authentication.JwtBearer;
 using Farmru.IotMonitoring.Configuration;
+using Farmru.IotMonitoring.Alerts;
 using Farmru.IotMonitoring.EntityFrameworkCore;
+using Farmru.IotMonitoring.Monitoring;
+using Farmru.IotMonitoring.Web.Alerts;
+using Farmru.IotMonitoring.GeoSpatial;
+using Farmru.IotMonitoring.Web.GeoSpatial;
+using Farmru.IotMonitoring.Web.Monitoring;
+using Farmru.IotMonitoring.Incidents;
+using Farmru.IotMonitoring.Web.Incidents;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 namespace Farmru.IotMonitoring
@@ -69,6 +77,11 @@ namespace Farmru.IotMonitoring
 
         public override void PostInitialize()
         {
+            Configuration.ReplaceService(typeof(IAlertRealtimeNotifier), () => IocManager.Resolve<AlertRealtimeNotifier>());
+            Configuration.ReplaceService(typeof(IOperationalRealtimeNotifier), () => IocManager.Resolve<OperationalRealtimeNotifier>());
+            Configuration.ReplaceService(typeof(IGeoSpatialRealtimeNotifier), () => IocManager.Resolve<GeoSpatialRealtimeNotifier>());
+            Configuration.ReplaceService(typeof(IIncidentRealtimeNotifier), () => IocManager.Resolve<IncidentRealtimeNotifier>());
+
             IocManager.Resolve<ApplicationPartManager>()
                 .AddApplicationPartsIfNotAddedBefore(typeof(IotMonitoringWebCoreModule).Assembly);
         }

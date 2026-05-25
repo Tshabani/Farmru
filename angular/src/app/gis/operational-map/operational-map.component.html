@@ -1,0 +1,42 @@
+<div [@routerTransition] class="gis-map-page">
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row align-items-center">
+        <div class="col">
+          <h1>{{ "OperationalMap" | localize }}</h1>
+        </div>
+        <div class="col-auto">
+          <button class="btn btn-outline-secondary mr-2" (click)="openExecutive()">{{ "ExecutiveGisDashboard" | localize }}</button>
+          <button class="btn btn-primary" (click)="openGeoFences()">{{ "GeoFences" | localize }}</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="content px-2">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-9">
+          <div class="card">
+            <div class="card-body p-0">
+              <div #mapContainer class="operational-map" style="height: 70vh; min-height: 480px"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">Live activity</h3></div>
+            <div class="card-body p-0" style="max-height: 70vh; overflow-y: auto">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item" *ngFor="let f of feed">
+                  <small class="text-muted">{{ f.time | date: 'short' }}</small>
+                  <span class="d-block"><strong>{{ f.type }}</strong> {{ f.message }}</span>
+                </li>
+                <li class="list-group-item text-muted" *ngIf="!feed.length">Waiting for events…</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

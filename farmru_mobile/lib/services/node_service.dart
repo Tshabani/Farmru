@@ -1,3 +1,4 @@
+import 'dart:convert';
 import '../models/NodeAvgDataResponse.dart';
 import '../models/nodeDataResponse.dart';
 import '../models/nodeResponse.dart';
@@ -19,6 +20,14 @@ class NodeService {
     var nodeData = nodeDataResponseFromJson(response);
 
     return nodeData.result.items;
+  }
+
+  static Future<Map<String, dynamic>?> GetDeviceDetail(String nodeId) async {
+    var response = await BaseClient()
+        .get('api/services/app/Node/GetDetail?Id=$nodeId');
+    if (response == null) return null;
+    final decoded = jsonDecode(response);
+    return decoded['result'] as Map<String, dynamic>?;
   }
 
   static Future<NodeAvgData?> GetSensorData() async {

@@ -3,6 +3,9 @@ import '../../models/UserModel.dart';
 import '../../services/user_services.dart';
 import '../../utils/UserSettings.dart';
 import '../auth/login_screen.dart';
+import '../alerts/alerts_screen.dart';
+import '../monitoring/monitoring_screen.dart';
+import '../gis/operational_map_screen.dart';
 
 class SideMenu extends StatefulWidget {
   const SideMenu({super.key});
@@ -81,21 +84,35 @@ class _SideMenuState extends State<SideMenu> {
             color: Color(0xFFB7873B),
           ),
           ListTile(
-              leading: const Icon(Icons.notifications),
-              title: const Text('Request'),
-              trailing: ClipOval(
-                child: Container(
-                  color: Colors.redAccent,
-                  width: 20,
-                  height: 20,
-                  child: const Center(
-                    child: Text(
-                      '8',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                  ),
-                ),
-              )),
+            leading: const Icon(Icons.map),
+            title: const Text('Operational map'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const OperationalMapScreen()),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.monitor_heart),
+            title: const Text('Monitoring'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const MonitoringScreen()),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.notifications_active),
+            title: const Text('Alerts'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const AlertsScreen()),
+              );
+            },
+          ),
           const ListTile(
             leading: Icon(Icons.settings),
             title: Text('Settings'),

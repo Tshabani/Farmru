@@ -19,6 +19,9 @@ namespace Farmru.IotMonitoring.Services.Nodes.Dto
         /// 
         /// </summary>
         public string SerialNumber { get; set; }
+        public string DisplayName { get; set; }
+        public string FirmwareVersion { get; set; }
+        public string Notes { get; set; }
         /// <summary>
         /// 
         /// </summary>

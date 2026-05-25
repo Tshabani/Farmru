@@ -15,9 +15,18 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ViewNodeDataComponent } from './view-node-data/view-node-data.component';
+import { DeviceDetailsComponent } from './device-details/device-details.component';
+import { ReplaceDeviceComponent } from './replace-device/replace-device.component';
 
 @NgModule({
-    declarations: [NodeComponent, EditNodeComponent, CreateNodeComponent, ViewNodeDataComponent],
+    declarations: [
+        NodeComponent,
+        EditNodeComponent,
+        CreateNodeComponent,
+        ViewNodeDataComponent,
+        DeviceDetailsComponent,
+        ReplaceDeviceComponent,
+    ],
     imports: [
         SharedModule,
         NodeRoutingModule,

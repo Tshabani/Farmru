@@ -1,0 +1,28 @@
+<section class="content-header"><h1>{{ "ExecutiveGisDashboard" | localize }}</h1></section>
+<section class="content px-2" *ngIf="loading"><div class="text-center p-5"><i class="fas fa-spinner fa-spin fa-2x"></i></div></section>
+<section class="content px-2" *ngIf="!loading && summary">
+  <div class="container-fluid">
+    <button class="btn btn-primary mb-3" (click)="openMap()">{{ "OperationalMap" | localize }}</button>
+    <div class="row mb-3">
+      <div class="col-md-2"><div class="small-box bg-info"><div class="inner"><h3>{{ summary.totalDevices }}</h3><p>Devices</p></div></div></div>
+      <div class="col-md-2"><div class="small-box bg-success"><div class="inner"><h3>{{ summary.onlineDevices }}</h3><p>Online</p></div></div></div>
+      <div class="col-md-2"><div class="small-box bg-danger"><div class="inner"><h3>{{ summary.offlineDevices }}</h3><p>Offline</p></div></div></div>
+      <div class="col-md-2"><div class="small-box bg-warning"><div class="inner"><h3>{{ summary.criticalAlerts }}</h3><p>Critical</p></div></div></div>
+      <div class="col-md-2"><div class="small-box bg-secondary"><div class="inner"><h3>{{ summary.facilitiesMonitored }}</h3><p>Facilities</p></div></div></div>
+      <div class="col-md-2"><div class="small-box bg-purple"><div class="inner"><h3>{{ summary.activeGeoFences }}</h3><p>Geo-fences</p></div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3 class="card-title">Top risk facilities</h3></div>
+      <div class="card-body table-responsive p-0">
+        <table class="table mb-0">
+          <tr *ngFor="let f of summary.topRiskFacilities">
+            <td>{{ f.name }}</td>
+            <td>Score {{ f.operationalScore }}</td>
+            <td>{{ f.offlineDeviceCount }} offline</td>
+            <td>{{ f.activeAlertCount }} alerts</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

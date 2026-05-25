@@ -73,10 +73,34 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
       //   "Pages.People"
       // ),
       new MenuItem(
-        this.l("Nodes"),
+        this.l("Devices"),
         "/app/node",
         "fa-solid fa-circle-down",   
         "Pages.Nodes"
+      ),
+      new MenuItem(
+        this.l("Alerts"),
+        "/app/alerts",
+        "fas fa-bell",
+        "Pages.Alerts"
+      ),
+      new MenuItem(
+        this.l("OperationalMonitoring"),
+        "/app/monitoring",
+        "fas fa-heartbeat",
+        "Pages.Monitoring"
+      ),
+      new MenuItem(
+        this.l("OperationalGis"),
+        "/app/gis",
+        "fas fa-map-marked-alt",
+        "Pages.Gis"
+      ),
+      new MenuItem(
+        this.l("Incidents"),
+        "/app/incidents",
+        "fas fa-clipboard-list",
+        "Pages.Incidents"
       ),
       new MenuItem(
         this.l("Organisations"),

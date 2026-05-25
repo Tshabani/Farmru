@@ -1169,6 +1169,123 @@ export class NodeServiceProxy {
         return _observableOf(null as any);
     }
 
+    getAllFiltered(
+        keyword: string | undefined,
+        facilityId: string | undefined,
+        deviceStatus: number | undefined,
+        healthStatus: number | undefined,
+        onlineOnly: boolean | undefined,
+        offlineOnly: boolean | undefined,
+        sorting: string | undefined,
+        skipCount: number | undefined,
+        maxResultCount: number | undefined
+    ): Observable<NodeDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Node/GetAll?";
+        if (keyword !== undefined && keyword !== null) url_ += "Keyword=" + encodeURIComponent("" + keyword) + "&";
+        if (facilityId !== undefined && facilityId !== null) url_ += "FacilityId=" + encodeURIComponent("" + facilityId) + "&";
+        if (deviceStatus !== undefined && deviceStatus !== null) url_ += "DeviceStatus=" + encodeURIComponent("" + deviceStatus) + "&";
+        if (healthStatus !== undefined && healthStatus !== null) url_ += "HealthStatus=" + encodeURIComponent("" + healthStatus) + "&";
+        if (onlineOnly !== undefined && onlineOnly !== null) url_ += "OnlineOnly=" + encodeURIComponent("" + onlineOnly) + "&";
+        if (offlineOnly !== undefined && offlineOnly !== null) url_ += "OfflineOnly=" + encodeURIComponent("" + offlineOnly) + "&";
+        if (sorting !== undefined && sorting !== null) url_ += "Sorting=" + encodeURIComponent("" + sorting) + "&";
+        if (skipCount !== undefined && skipCount !== null) url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount !== undefined && maxResultCount !== null) url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({ Accept: "text/plain" }),
+        };
+
+        return this.http.request("get", url_, options_).pipe(
+            _observableMergeMap((response_: any) => this.processGetAll(response_)),
+            _observableCatch((response_: any) => {
+                if (response_ instanceof HttpResponseBase) {
+                    try {
+                        return this.processGetAll(response_ as any);
+                    } catch (e) {
+                        return _observableThrow(e) as any as Observable<NodeDtoPagedResultDto>;
+                    }
+                }
+                return _observableThrow(response_) as any as Observable<NodeDtoPagedResultDto>;
+            })
+        );
+    }
+
+    getDetail(id: string | undefined): Observable<NodeDetailDto> {
+        let url_ = this.baseUrl + "/api/services/app/Node/GetDetail?";
+        if (id !== undefined) url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({ Accept: "text/plain" }),
+        };
+
+        return this.http.request("get", url_, options_).pipe(
+            _observableMergeMap((response_: any) => {
+                const status = response_.status;
+                const responseBlob = response_ instanceof HttpResponse ? response_.body : undefined;
+                if (status === 200) {
+                    return blobToText(responseBlob).pipe(
+                        _observableMergeMap((_responseText: string) => {
+                            const resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                            return _observableOf(NodeDetailDto.fromJS(resultData200));
+                        })
+                    );
+                }
+                return _observableThrow(response_);
+            })
+        );
+    }
+
+    activate(id: string | undefined): Observable<NodeDto> {
+        const url_ = this.baseUrl + "/api/services/app/Node/Activate";
+        return this.http.post(url_, JSON.stringify({ id: id }), {
+            headers: new HttpHeaders({ "Content-Type": "application/json", Accept: "text/plain" }),
+            responseType: "blob",
+            observe: "response",
+        }).pipe(
+            _observableMergeMap((response_: any) => {
+                return blobToText(response_.body).pipe(
+                    _observableMergeMap((text: string) => _observableOf(NodeDto.fromJS(JSON.parse(text))))
+                );
+            })
+        );
+    }
+
+    deactivate(id: string | undefined): Observable<NodeDto> {
+        const url_ = this.baseUrl + "/api/services/app/Node/Deactivate";
+        return this.http.post(url_, JSON.stringify({ id: id }), {
+            headers: new HttpHeaders({ "Content-Type": "application/json", Accept: "text/plain" }),
+            responseType: "blob",
+            observe: "response",
+        }).pipe(
+            _observableMergeMap((response_: any) => {
+                return blobToText(response_.body).pipe(
+                    _observableMergeMap((text: string) => _observableOf(NodeDto.fromJS(JSON.parse(text))))
+                );
+            })
+        );
+    }
+
+    replaceDevice(body: ReplaceNodeInput | undefined): Observable<NodeDto> {
+        const url_ = this.baseUrl + "/api/services/app/Node/ReplaceDevice";
+        return this.http.post(url_, JSON.stringify(body), {
+            headers: new HttpHeaders({ "Content-Type": "application/json", Accept: "text/plain" }),
+            responseType: "blob",
+            observe: "response",
+        }).pipe(
+            _observableMergeMap((response_: any) => {
+                return blobToText(response_.body).pipe(
+                    _observableMergeMap((text: string) => _observableOf(NodeDto.fromJS(JSON.parse(text))))
+                );
+            })
+        );
+    }
+
     /**
      * @param body (optional) 
      * @return OK
@@ -6408,7 +6525,17 @@ export interface INodeDataDtoPagedResultDto {
 export class NodeDto implements INodeDto {
     id: string;
     serialNumber: string | undefined;
+    displayName: string | undefined;
     facility: GuidNullableEntityWithDisplayNameDto;
+    isActive: boolean;
+    deviceStatus: number;
+    healthStatus: number;
+    lastSeenAt: moment.Moment | undefined;
+    batteryLevel: number | undefined;
+    signalStrength: number | undefined;
+    firmwareVersion: string | undefined;
+    notes: string | undefined;
+    isOnline: boolean;
 
     constructor(data?: INodeDto) {
         if (data) {
@@ -6423,7 +6550,17 @@ export class NodeDto implements INodeDto {
         if (_data) {
             this.id = _data["id"];
             this.serialNumber = _data["serialNumber"];
+            this.displayName = _data["displayName"];
             this.facility = _data["facility"] ? GuidNullableEntityWithDisplayNameDto.fromJS(_data["facility"]) : <any>undefined;
+            this.isActive = _data["isActive"];
+            this.deviceStatus = _data["deviceStatus"];
+            this.healthStatus = _data["healthStatus"];
+            this.lastSeenAt = _data["lastSeenAt"] ? moment(_data["lastSeenAt"]) : <any>undefined;
+            this.batteryLevel = _data["batteryLevel"];
+            this.signalStrength = _data["signalStrength"];
+            this.firmwareVersion = _data["firmwareVersion"];
+            this.notes = _data["notes"];
+            this.isOnline = _data["isOnline"];
         }
     }
 
@@ -6438,7 +6575,17 @@ export class NodeDto implements INodeDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["serialNumber"] = this.serialNumber;
+        data["displayName"] = this.displayName;
         data["facility"] = this.facility ? this.facility.toJSON() : <any>undefined;
+        data["isActive"] = this.isActive;
+        data["deviceStatus"] = this.deviceStatus;
+        data["healthStatus"] = this.healthStatus;
+        data["lastSeenAt"] = this.lastSeenAt ? this.lastSeenAt.toISOString() : <any>undefined;
+        data["batteryLevel"] = this.batteryLevel;
+        data["signalStrength"] = this.signalStrength;
+        data["firmwareVersion"] = this.firmwareVersion;
+        data["notes"] = this.notes;
+        data["isOnline"] = this.isOnline;
         return data;
     }
 
@@ -6453,7 +6600,145 @@ export class NodeDto implements INodeDto {
 export interface INodeDto {
     id: string;
     serialNumber: string | undefined;
+    displayName: string | undefined;
     facility: GuidNullableEntityWithDisplayNameDto;
+    isActive: boolean;
+    deviceStatus: number;
+    healthStatus: number;
+    lastSeenAt: moment.Moment | undefined;
+    batteryLevel: number | undefined;
+    signalStrength: number | undefined;
+    firmwareVersion: string | undefined;
+    notes: string | undefined;
+    isOnline: boolean;
+}
+
+export class NodeDetailDto implements INodeDetailDto {
+    id: string;
+    serialNumber: string | undefined;
+    displayName: string | undefined;
+    facility: GuidNullableEntityWithDisplayNameDto;
+    isActive: boolean;
+    deviceStatus: number;
+    healthStatus: number;
+    lastSeenAt: moment.Moment | undefined;
+    batteryLevel: number | undefined;
+    signalStrength: number | undefined;
+    firmwareVersion: string | undefined;
+    notes: string | undefined;
+    isOnline: boolean;
+    telemetrySummary: NodeTelemetrySummaryDto;
+    replacementHistory: NodeReplacementHistoryDto[] | undefined;
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.serialNumber = _data["serialNumber"];
+            this.displayName = _data["displayName"];
+            this.facility = _data["facility"] ? GuidNullableEntityWithDisplayNameDto.fromJS(_data["facility"]) : <any>undefined;
+            this.isActive = _data["isActive"];
+            this.deviceStatus = _data["deviceStatus"];
+            this.healthStatus = _data["healthStatus"];
+            this.lastSeenAt = _data["lastSeenAt"] ? moment(_data["lastSeenAt"]) : <any>undefined;
+            this.batteryLevel = _data["batteryLevel"];
+            this.signalStrength = _data["signalStrength"];
+            this.firmwareVersion = _data["firmwareVersion"];
+            this.notes = _data["notes"];
+            this.isOnline = _data["isOnline"];
+            this.telemetrySummary = _data["telemetrySummary"] ? NodeTelemetrySummaryDto.fromJS(_data["telemetrySummary"]) : <any>undefined;
+            if (Array.isArray(_data["replacementHistory"])) {
+                this.replacementHistory = [];
+                for (const item of _data["replacementHistory"]) {
+                    this.replacementHistory.push(NodeReplacementHistoryDto.fromJS(item));
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): NodeDetailDto {
+        const result = new NodeDetailDto();
+        result.init(data);
+        return result;
+    }
+}
+
+export interface INodeDetailDto {
+    id: string;
+    serialNumber: string | undefined;
+    displayName: string | undefined;
+    facility: GuidNullableEntityWithDisplayNameDto;
+    isActive: boolean;
+    deviceStatus: number;
+    healthStatus: number;
+    lastSeenAt: moment.Moment | undefined;
+    batteryLevel: number | undefined;
+    signalStrength: number | undefined;
+    firmwareVersion: string | undefined;
+    notes: string | undefined;
+    isOnline: boolean;
+    telemetrySummary: NodeTelemetrySummaryDto;
+    replacementHistory: NodeReplacementHistoryDto[] | undefined;
+}
+
+export class NodeTelemetrySummaryDto {
+    lastReadingTime: moment.Moment | undefined;
+    moisture: string | undefined;
+    soilTemperature: string | undefined;
+    soilPH: string | undefined;
+    nitrogen: string | undefined;
+    phosphorus: string | undefined;
+    potassium: string | undefined;
+    latitude: number | undefined;
+    longitude: number | undefined;
+    totalReadings: number;
+
+    static fromJS(data: any): NodeTelemetrySummaryDto {
+        const result = new NodeTelemetrySummaryDto();
+        if (data) {
+            result.lastReadingTime = data["lastReadingTime"] ? moment(data["lastReadingTime"]) : undefined;
+            result.moisture = data["moisture"];
+            result.soilTemperature = data["soilTemperature"];
+            result.soilPH = data["soilPH"];
+            result.nitrogen = data["nitrogen"];
+            result.phosphorus = data["phosphorus"];
+            result.potassium = data["potassium"];
+            result.latitude = data["latitude"];
+            result.longitude = data["longitude"];
+            result.totalReadings = data["totalReadings"];
+        }
+        return result;
+    }
+}
+
+export class NodeReplacementHistoryDto {
+    id: string;
+    nodeId: string;
+    oldSerialNumber: string | undefined;
+    newSerialNumber: string | undefined;
+    replacedAt: moment.Moment;
+    reason: string | undefined;
+    notes: string | undefined;
+
+    static fromJS(data: any): NodeReplacementHistoryDto {
+        const result = new NodeReplacementHistoryDto();
+        if (data) {
+            result.id = data["id"];
+            result.nodeId = data["nodeId"];
+            result.oldSerialNumber = data["oldSerialNumber"];
+            result.newSerialNumber = data["newSerialNumber"];
+            result.replacedAt = moment(data["replacedAt"]);
+            result.reason = data["reason"];
+            result.notes = data["notes"];
+        }
+        return result;
+    }
+}
+
+export class ReplaceNodeInput {
+    nodeId: string;
+    newSerialNumber: string | undefined;
+    reason: string | undefined;
+    notes: string | undefined;
 }
 
 export class NodeDtoPagedResultDto implements INodeDtoPagedResultDto {

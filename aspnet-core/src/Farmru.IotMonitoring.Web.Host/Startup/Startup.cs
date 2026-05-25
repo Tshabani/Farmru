@@ -47,6 +47,7 @@ namespace Farmru.IotMonitoring.Web.Host.Startup
             AuthConfigurer.Configure(services, _appConfiguration);
 
             services.AddSignalR();
+            services.AddHostedService<Farmru.IotMonitoring.Web.Host.Monitoring.OperationalMonitoringHostedService>();
 
             // Configure CORS for angular2 UI
             services.AddCors(
@@ -99,6 +100,7 @@ namespace Farmru.IotMonitoring.Web.Host.Startup
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<AbpCommonHub>("/signalr");
+                endpoints.MapHub<Farmru.IotMonitoring.Web.Alerts.AlertNotificationHub>("/signalr-alerts");
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute("defaultWithArea", "{area}/{controller=Home}/{action=Index}/{id?}");
             });
