@@ -7,7 +7,10 @@
       "PowerShell(Get-ChildItem -Path \"d:\\\\Development\\\\TechnoB\\\\Farmru\\\\aspnet-core\" -Depth 2 -Directory | Select-Object FullName | ForEach-Object { $_.FullName.Replace\\('d:\\\\Development\\\\TechnoB\\\\Farmru\\\\', ''\\) })",
       "PowerShell(Get-ChildItem -Path \"d:\\\\Development\\\\TechnoB\\\\Farmru\\\\angular\" -Depth 2 -Directory -Exclude node_modules | Select-Object FullName | ForEach-Object { $_.FullName.Replace\\('d:\\\\Development\\\\TechnoB\\\\Farmru\\\\', ''\\) })",
       "PowerShell(Get-ChildItem -Path \"d:\\\\Development\\\\TechnoB\\\\Farmru\\\\farmru_mobile\" -Depth 2 -Directory | Select-Object FullName | ForEach-Object { $_.FullName.Replace\\('d:\\\\Development\\\\TechnoB\\\\Farmru\\\\', ''\\) })",
-      "PowerShell(Get-ChildItem -Path \"d:\\\\Development\\\\TechnoB\\\\Farmru\\\\.github\" -Recurse -Force 2>$null | Select-Object FullName | ForEach-Object { $_.FullName.Replace\\('d:\\\\Development\\\\TechnoB\\\\Farmru\\\\', ''\\) })"
+      "PowerShell(Get-ChildItem -Path \"d:\\\\Development\\\\TechnoB\\\\Farmru\\\\.github\" -Recurse -Force 2>$null | Select-Object FullName | ForEach-Object { $_.FullName.Replace\\('d:\\\\Development\\\\TechnoB\\\\Farmru\\\\', ''\\) })",
+      "Bash(keytool -version)",
+      "Bash(\"C:\\\\Program Files\\\\Android\\\\Android Studio\\\\jbr\\\\bin\\\\keytool\" -version)",
+      "PowerShell($keystorePath = \"$env:USERPROFILE\\\\upload-keystore.jks\"; keytool -genkeypair -v -keystore $keystorePath -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias upload -storepass farmru2024 -keypass farmru2024 -dname \"CN=Farmru, OU=Mobile, O=TechnoB, L=Unknown, ST=Unknown, C=ZA\")"
     ]
   }
 }
