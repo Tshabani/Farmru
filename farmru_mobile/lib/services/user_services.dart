@@ -18,7 +18,7 @@ class UserService {
     };
     var response =
         await BaseClient().post('api/TokenAuth/AuthenticateWithTenant', body);
-    var apiResponse = genericApiResponseFromJson(response);
+    var apiResponse = genericApiResponseFromJson(response!);
 
     if (apiResponse.success) {
       var authModel = authenticateFromJson(response);

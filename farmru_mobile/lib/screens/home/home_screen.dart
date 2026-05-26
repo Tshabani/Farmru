@@ -23,42 +23,20 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const SideMenu(),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFB7873B),
-        title: const Text(
-          'Dashboard',
-          style: TextStyle(color: Colors.white),
-        ),
-        iconTheme: const IconThemeData(
-          color: Colors.white, // Set the color of the hamburger menu icon
-        ),
-      ),
+      appBar: AppBar(title: const Text('Dashboard')),
       body: screens[_page],
       bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         color: const Color(0xFFB7873B),
         height: 60,
         items: const <Widget>[
-          Icon(
-            Icons.data_thresholding_outlined,
-            size: 20,
-            color: Colors.white,
-          ),
-          Icon(
-            Icons.data_exploration_outlined,
-            size: 20,
-            color: Colors.white,
-          ),
+          Icon(Icons.data_thresholding_outlined, size: 20, color: Colors.white),
+          Icon(Icons.data_exploration_outlined, size: 20, color: Colors.white),
         ],
         animationDuration: const Duration(milliseconds: 200),
         animationCurve: Curves.ease,
         index: _page,
-        onTap: (index) {
-          //Handle button tap
-          setState(() {
-            _page = index;
-          });
-        },
+        onTap: (index) => setState(() => _page = index),
       ),
     );
   }

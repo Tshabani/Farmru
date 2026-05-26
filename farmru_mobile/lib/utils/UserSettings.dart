@@ -10,6 +10,7 @@ class UserSettings {
   static const _backendUrl = 'backendUrl';
   static const _user = 'user';
   static const _logSheet = 'user';
+  static const _darkMode = 'darkMode';
 
   static Future init() async {
     _sharedPreferences = await SharedPreferences.getInstance();
@@ -47,4 +48,10 @@ class UserSettings {
 
   static bool getShowIntroWizzard() =>
       _sharedPreferences.getBool(_showIntroWizard) ?? true;
+
+  static Future setDarkMode(bool value) async =>
+      await _sharedPreferences.setBool(_darkMode, value);
+
+  static bool getDarkMode() =>
+      _sharedPreferences.getBool(_darkMode) ?? false;
 }

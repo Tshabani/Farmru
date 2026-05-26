@@ -135,7 +135,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     return Scaffold(
-      backgroundColor: Colors.white,
       body: isLoggedIn
           ? const HomeScreen()
           : Container(

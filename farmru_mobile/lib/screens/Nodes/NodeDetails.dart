@@ -75,15 +75,7 @@ class _NodeDetailsPageState extends State<NodeDetailsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFFB7873B),
-        title: Text(
-          widget.node.displayName ?? widget.node.serialNumber,
-          style: const TextStyle(color: Colors.white),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        title: Text(widget.node.displayName ?? widget.node.serialNumber),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -114,7 +106,7 @@ class _NodeDetailsPageState extends State<NodeDetailsPage> {
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
-                                  color: _healthColor(healthStatus).withOpacity(0.15),
+                                  color: _healthColor(healthStatus).withValues(alpha: 0.15),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: Text(
@@ -168,11 +160,17 @@ class _NodeDetailsPageState extends State<NodeDetailsPage> {
   }
 
   Widget _statusRow(String label, String value) {
+    final onSurface = Theme.of(context).colorScheme.onSurface;
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: Row(
         children: [
-          SizedBox(width: 90, child: Text(label, style: const TextStyle(color: Colors.black54))),
+          SizedBox(
+            width: 90,
+            child: Text(label,
+                style: TextStyle(
+                    color: onSurface.withValues(alpha: 0.54))),
+          ),
           Expanded(child: Text(value)),
         ],
       ),
