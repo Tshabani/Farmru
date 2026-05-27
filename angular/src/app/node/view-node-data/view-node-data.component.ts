@@ -30,6 +30,7 @@ export class ViewNodeDataComponent extends PagedListingComponentBase<NodeDataDto
   _endDate:Moment | undefined = undefined;
   advancedFiltersVisible = false;
   isExporting = false;
+  isChartUpdating = false;
 
   public pieChart: GoogleChartInterface;
   public barChart: GoogleChartInterface;
@@ -75,10 +76,7 @@ export class ViewNodeDataComponent extends PagedListingComponentBase<NodeDataDto
     this.startDate = undefined;
     this.endDate = undefined;
   
-    this.graphOptions = this.graphOptions.map(option => ({
-      ...option,
-      selected: true
-    }));
+    this.graphOptions.forEach(option => option.selected = true);
   
     this.getDataPage(1);
     this.updateChart(); 
@@ -201,8 +199,8 @@ export class ViewNodeDataComponent extends PagedListingComponentBase<NodeDataDto
 updateChart() {
   const selectedOptions = this.graphOptions.filter(option => option.selected);
 
-  if (selectedOptions.length === 0) {
-    this.lineChart = null; 
+  if (selectedOptions.length === 0 || this.nodeData.length === 0) {
+    this.lineChart = null;
     this.cd.detectChanges();
     return;
   }
@@ -217,19 +215,20 @@ updateChart() {
 
     const row = [
       creationTime,
-      ...selectedOptions.map(option => Number(item[option.key]))
+      ...selectedOptions.map(option => Number(item[option.key]) || 0)
     ];
     lineChartData.push(row);
   });
 
-  this.lineChart = {
+  const newChart: GoogleChartInterface = {
     chartType: GoogleChartType.LineChart,
     dataTable: lineChartData,
     options: {
       title: 'System Metrics Over Time',
       hAxis: { title: 'Time', format: 'MMM dd, yyyy HH:mm' },
       vAxis: { title: 'Values' },
-      height: 600,
+      height: 580,
+      legend: { position: 'top', maxLines: 2 },
       series: selectedOptions.reduce(
         (acc, option, index) => ({
           ...acc,
@@ -239,14 +238,24 @@ updateChart() {
       )
     }
   };
+
+  // Flag suppresses the empty-state placeholder during the null frame
+  this.isChartUpdating = true;
+  this.lineChart = null;
   this.cd.detectChanges();
+
+  setTimeout(() => {
+    this.lineChart = newChart;
+    this.isChartUpdating = false;
+    this.cd.detectChanges();
+  });
 }
 
 toggleGraph(key: string, event: any) {
-  const isSelected = event.target.checked;
-  this.graphOptions = this.graphOptions.map(option =>
-    option.key === key ? { ...option, selected: isSelected } : option
-  );
+  const option = this.graphOptions.find(o => o.key === key);
+  if (option) {
+    option.selected = event.target.checked;
+  }
   this.updateChart();
 }
 

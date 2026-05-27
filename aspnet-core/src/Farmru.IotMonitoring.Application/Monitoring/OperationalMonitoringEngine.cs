@@ -106,7 +106,8 @@ namespace Farmru.IotMonitoring.Monitoring
                 await NotifySummaryAsync(tenantId, aggregate, false);
             }
 
-            await _historyRepository.UpdateAsync(history);
+            // No explicit UpdateAsync needed — EF change tracking picks up the Complete() call
+            // since history is already tracked as Added. SaveChanges handles INSERT + UPDATE.
             await _unitOfWorkManager.Current.SaveChangesAsync();
         }
 
@@ -128,13 +129,13 @@ namespace Farmru.IotMonitoring.Monitoring
                     mapped.AlertsResolved,
                     mapped.DevicesEvaluated,
                     mapped.EscalationsPerformed);
-                await _historyRepository.UpdateAsync(jobHistory);
+                // EF change tracking detects property changes on tracked entity — no UpdateAsync needed
                 return mapped;
             }
             catch (Exception ex)
             {
                 jobHistory.Complete(false, 0, 0, 0, 0, null, ex.Message);
-                await _historyRepository.UpdateAsync(jobHistory);
+                // EF change tracking detects property changes on tracked entity — no UpdateAsync needed
                 throw;
             }
         }

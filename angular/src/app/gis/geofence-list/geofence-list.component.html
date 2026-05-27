@@ -1,20 +1,66 @@
-<section class="content-header"><h1>{{ "GeoFences" | localize }}</h1></section>
-<section class="content px-2">
-  <button class="btn btn-secondary mb-2" (click)="back()">Back to map</button>
-  <button class="btn btn-primary mb-2 ml-2" (click)="create()">Create</button>
-  <table class="table table-striped" *ngIf="!loading">
-    <thead><tr><th>Name</th><th>Type</th><th>Active</th><th>Severity</th><th></th></tr></thead>
-    <tbody>
-      <tr *ngFor="let f of fences">
-        <td>{{ f.name }}</td>
-        <td>{{ f.geoFenceType === 0 ? 'Radius' : 'Polygon' }}</td>
-        <td>{{ f.isActive ? 'Yes' : 'No' }}</td>
-        <td>{{ f.severity }}</td>
-        <td>
-          <button class="btn btn-sm btn-outline-primary mr-1" (click)="edit(f)">Edit</button>
-          <button class="btn btn-sm btn-outline-danger" (click)="remove(f)">Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</section>
+<div [@routerTransition]>
+  <section class="content-header pb-0">
+    <div class="container-fluid">
+      <div class="fr-page-header">
+        <div>
+          <button class="fr-btn fr-btn-ghost fr-btn-sm mb-2" (click)="back()">
+            <i class="fas fa-arrow-left mr-1"></i>Back to map
+          </button>
+          <h1 class="fr-page-title">{{ "GeoFences" | localize }}</h1>
+          <p class="fr-page-sub">Manage geographic boundary zones and alerts</p>
+        </div>
+        <div class="ml-auto d-flex align-items-center">
+          <button class="fr-btn fr-btn-primary" (click)="create()">
+            <i class="fa fa-plus-square mr-1"></i>Create
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content px-2 pt-3">
+    <div class="container-fluid">
+      <div class="fr-card">
+        <div class="fr-card__body">
+          <div class="table-responsive">
+            <table class="fr-table" *ngIf="!loading">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Active</th>
+                  <th>Severity</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let f of fences">
+                  <td>{{ f.name }}</td>
+                  <td>{{ f.geoFenceType === 0 ? 'Radius' : 'Polygon' }}</td>
+                  <td>
+                    <span class="fr-chip" [class.fr-chip-green]="f.isActive" [class.fr-chip-grey]="!f.isActive">
+                      {{ f.isActive ? 'Yes' : 'No' }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="fr-chip fr-chip-yellow">{{ f.severity }}</span>
+                  </td>
+                  <td>
+                    <div class="fr-row-actions">
+                      <button class="fr-btn fr-btn-outline fr-btn-sm" (click)="edit(f)">
+                        <i class="fas fa-pencil-alt mr-1"></i>Edit
+                      </button>
+                      <button class="fr-btn fr-btn-danger fr-btn-sm" (click)="remove(f)">
+                        <i class="fas fa-trash mr-1"></i>Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

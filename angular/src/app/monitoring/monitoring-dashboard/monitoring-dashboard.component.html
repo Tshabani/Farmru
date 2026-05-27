@@ -1,69 +1,125 @@
-<div [@routerTransition]>
-  <section class="content-header">
+﻿<div [@routerTransition]>
+  <section class="content-header pb-0">
     <div class="container-fluid">
-      <div class="row align-items-center">
-        <div class="col"><h1>{{ "MonitoringDashboard" | localize }}</h1></div>
-        <div class="col-auto">
-          <button class="btn btn-outline-secondary mr-2" (click)="openAlerts()">{{ "Alerts" | localize }}</button>
-          <button class="btn btn-primary" (click)="openConfig()">{{ "MonitoringConfiguration" | localize }}</button>
+      <div class="fr-page-header">
+        <div>
+          <h1 class="fr-page-title">{{ "MonitoringDashboard" | localize }}</h1>
+          <p class="fr-page-sub">Real-time monitoring engine status and operational feed</p>
+        </div>
+        <div class="ml-auto d-flex align-items-center">
+          <button class="fr-btn fr-btn-outline mr-2" (click)="openAlerts()">{{ "Alerts" | localize }}</button>
+          <button class="fr-btn fr-btn-primary" (click)="openConfig()">{{ "MonitoringConfiguration" | localize }}</button>
         </div>
       </div>
     </div>
   </section>
-  <section class="content px-2" *ngIf="loading"><div class="text-center p-5"><i class="fas fa-spinner fa-spin fa-2x"></i></div></section>
-  <section class="content px-2" *ngIf="!loading && dashboard">
+
+  <section class="content px-2 pt-3" *ngIf="loading">
+    <div class="fr-loading"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
+  </section>
+
+  <section class="content px-2 pt-3" *ngIf="!loading && dashboard">
     <div class="container-fluid">
-      <div class="row mb-3">
-        <div class="col-md-3"><div class="small-box bg-success"><div class="inner"><h3>{{ dashboard.onlineDevices }}</h3><p>{{ "OnlineDevices" | localize }}</p></div></div></div>
-        <div class="col-md-3"><div class="small-box bg-danger"><div class="inner"><h3>{{ dashboard.offlineDevices }}</h3><p>{{ "OfflineDevices" | localize }}</p></div></div></div>
-        <div class="col-md-3"><div class="small-box bg-warning"><div class="inner"><h3>{{ dashboard.staleTelemetryDevices }}</h3><p>{{ "StaleTelemetry" | localize }}</p></div></div></div>
-        <div class="col-md-3"><div class="small-box bg-info"><div class="inner"><h3>{{ dashboard.criticalAlerts }}</h3><p>{{ "CriticalAlerts" | localize }}</p></div></div></div>
+      <div class="fr-stat-row">
+        <div class="fr-stat fr-stat--success">
+          <div class="fr-stat__icon"><i class="fas fa-signal"></i></div>
+          <div class="fr-stat__value">{{ dashboard.onlineDevices }}</div>
+          <div class="fr-stat__label">{{ "OnlineDevices" | localize }}</div>
+        </div>
+        <div class="fr-stat fr-stat--danger">
+          <div class="fr-stat__icon"><i class="fas fa-times-circle"></i></div>
+          <div class="fr-stat__value">{{ dashboard.offlineDevices }}</div>
+          <div class="fr-stat__label">{{ "OfflineDevices" | localize }}</div>
+        </div>
+        <div class="fr-stat fr-stat--warning">
+          <div class="fr-stat__icon"><i class="fas fa-clock"></i></div>
+          <div class="fr-stat__value">{{ dashboard.staleTelemetryDevices }}</div>
+          <div class="fr-stat__label">{{ "StaleTelemetry" | localize }}</div>
+        </div>
+        <div class="fr-stat fr-stat--danger">
+          <div class="fr-stat__icon"><i class="fas fa-exclamation-triangle"></i></div>
+          <div class="fr-stat__value">{{ dashboard.criticalAlerts }}</div>
+          <div class="fr-stat__label">{{ "CriticalAlerts" | localize }}</div>
+        </div>
       </div>
+
       <div class="row">
         <div class="col-md-7">
-          <div class="card">
-            <div class="card-header"><h3 class="card-title">{{ "MonitoringEngine" | localize }}</h3></div>
-            <div class="card-body">
-              <p>
-                <span class="badge" [ngClass]="dashboard.monitoringEnabled ? 'badge-success' : 'badge-secondary'">
+          <div class="fr-card">
+            <div class="fr-card__header">
+              <h5 class="mb-0">{{ "MonitoringEngine" | localize }}</h5>
+            </div>
+            <div class="fr-card__body">
+              <div class="d-flex align-items-center mb-2">
+                <span class="fr-chip mr-2" [class.fr-chip-green]="dashboard.monitoringEnabled" [class.fr-chip-grey]="!dashboard.monitoringEnabled">
                   {{ dashboard.monitoringEnabled ? 'Enabled' : 'Disabled' }}
                 </span>
-                <span class="ml-2" *ngIf="dashboard.lastExecutionAt">
+                <span class="fr-text-muted" *ngIf="dashboard.lastExecutionAt">
                   {{ "LastExecution" | localize }}: {{ dashboard.lastExecutionAt | date: 'medium' }}
-                  <span class="badge ml-1" [ngClass]="dashboard.lastExecutionSucceeded ? 'badge-success' : 'badge-danger'">
+                  <span class="fr-chip ml-1" [class.fr-chip-green]="dashboard.lastExecutionSucceeded" [class.fr-chip-red]="!dashboard.lastExecutionSucceeded">
                     {{ dashboard.lastExecutionSucceeded ? 'OK' : 'Failed' }}
                   </span>
                 </span>
+              </div>
+              <p class="fr-text-muted mb-0">
+                Active alerts: <strong>{{ dashboard.activeAlerts }}</strong> &middot;
+                Escalated: <strong>{{ dashboard.escalatedAlerts }}</strong>
               </p>
-              <p class="mb-0">Active alerts: {{ dashboard.activeAlerts }} · Escalated: {{ dashboard.escalatedAlerts }}</p>
             </div>
           </div>
-          <div class="card mt-3">
-            <div class="card-header"><h3 class="card-title">Execution history</h3></div>
-            <div class="card-body table-responsive p-0">
-              <table class="table table-sm mb-0">
-                <tr *ngFor="let h of history">
-                  <td>{{ jobLabels[h.jobType] ?? h.jobType }}</td>
-                  <td>{{ h.startedAt | date: 'short' }}</td>
-                  <td>{{ h.durationMs }}ms</td>
-                  <td><span class="badge" [ngClass]="h.succeeded ? 'badge-success' : 'badge-danger'">{{ h.succeeded ? 'OK' : 'Fail' }}</span></td>
-                  <td>+{{ h.alertsGenerated }}/-{{ h.alertsResolved }}</td>
-                </tr>
-              </table>
+
+          <div class="fr-card mt-3">
+            <div class="fr-card__header">
+              <h5 class="mb-0">Execution History</h5>
+            </div>
+            <div class="fr-card__body p-0">
+              <div class="table-responsive">
+                <table class="fr-table">
+                  <thead>
+                    <tr>
+                      <th>Job</th>
+                      <th>Started</th>
+                      <th>Duration</th>
+                      <th>Result</th>
+                      <th>Alerts</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let h of history">
+                      <td>{{ jobLabels[h.jobType] ?? h.jobType }}</td>
+                      <td>{{ h.startedAt | date: 'short' }}</td>
+                      <td>{{ h.durationMs }}ms</td>
+                      <td>
+                        <span class="fr-chip" [class.fr-chip-green]="h.succeeded" [class.fr-chip-red]="!h.succeeded">
+                          {{ h.succeeded ? 'OK' : 'Fail' }}
+                        </span>
+                      </td>
+                      <td>+{{ h.alertsGenerated }}/-{{ h.alertsResolved }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
+
         <div class="col-md-5">
-          <div class="card">
-            <div class="card-header"><h3 class="card-title">{{ "LiveOperationalFeed" | localize }}</h3></div>
-            <div class="card-body p-0" style="max-height: 400px; overflow-y: auto">
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item" *ngFor="let f of feed">
-                  <small class="text-muted">{{ f.occurredAt | date: 'short' }}</small>
-                  <span class="d-block"><strong>{{ f.eventType }}</strong> — {{ f.message }}</span>
-                </li>
-                <li class="list-group-item text-muted" *ngIf="!feed.length">Waiting for live events…</li>
-              </ul>
+          <div class="fr-card">
+            <div class="fr-card__header">
+              <h5 class="mb-0">{{ "LiveOperationalFeed" | localize }}</h5>
+            </div>
+            <div class="fr-card__body p-0" style="max-height: 420px; overflow-y: auto;">
+              <div class="fr-feed">
+                <ng-container *ngFor="let f of feed">
+                  <div class="d-flex align-items-start px-3 py-2 border-bottom">
+                    <span class="fr-feed__time">{{ f.occurredAt | date: 'short' }}</span>
+                    <span class="fr-feed__msg ml-2">
+                      <strong class="fr-feed__type">{{ f.eventType }}</strong> - {{ f.message }}
+                    </span>
+                  </div>
+                </ng-container>
+                <div class="fr-feed__empty" *ngIf="!feed.length">Waiting for live events…</div>
+              </div>
             </div>
           </div>
         </div>

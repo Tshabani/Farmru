@@ -1,18 +1,33 @@
-﻿<div class="login-box">
-  <div class="card">
-    @if (showTenantChange()) {
-      <div class="card-header">
-        <tenant-change></tenant-change>
+<div class="fr-login-page">
+  <!-- Left brand panel -->
+  <div class="fr-login-brand">
+    <div class="fr-login-brand__inner">
+      <img src="assets/img/farmru-logo.png" alt="Farmru" class="fr-login-brand__logo"
+           onerror="this.style.display='none'" />
+      <h1 class="fr-login-brand__name">Farmru</h1>
+      <p class="fr-login-brand__tagline">IoT Monitoring Platform</p>
+      <p class="fr-login-brand__sub">Real-time sensor data, alerts and field intelligence — all in one place.</p>
+    </div>
+  </div>
+
+  <!-- Right form panel -->
+  <div class="fr-login-form-panel">
+    <div class="fr-login-card">
+      @if (showTenantChange()) {
+        <div class="fr-login-tenant">
+          <tenant-change></tenant-change>
+        </div>
+      }
+
+      <div class="fr-login-card__logo">
+        <img [src]="imageUrl" alt="Farmru logo" />
       </div>
-    }
-    <div class="card-body login-card-body">
-      <div class="d-flex justify-content-center">
-        <img [src]="imageUrl" alt="FARMRU application logo" href="/">
-      </div>
+
       <router-outlet></router-outlet>
+
+      <div class="fr-login-card__footer">
+        <account-footer></account-footer>
+      </div>
     </div>
-    <div class="card-footer">
-      <account-footer></account-footer>
-    </div>
-  </div>  
+  </div>
 </div>

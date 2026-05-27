@@ -1,16 +1,48 @@
-﻿<section class="content-header"><h1>All alerts</h1></section>
-<section class="content px-2">
-  <div class="card"><div class="card-body table-responsive">
-    <table class="table table-striped" [busy]="isTableLoading">
-      <thead><tr><th>Severity</th><th>Title</th><th>Device</th><th>When</th></tr></thead>
-      <tbody>
-        <tr *ngFor="let a of alerts" (click)="open(a)" style="cursor:pointer">
-          <td>{{ a.severity }}</td><td>{{ a.title }}</td><td>{{ a.node?.displayText }}</td>
-          <td>{{ a.triggeredAt | date:'short' }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <abp-pagination-controls id="server" (pageChange)="getDataPage($event)"></abp-pagination-controls>
-  </div></div>
-</section>
+<div [@routerTransition]>
+  <section class="content-header pb-0">
+    <div class="container-fluid">
+      <div class="fr-page-header">
+        <div>
+          <h1 class="fr-page-title">{{ "AllAlerts" | localize }}</h1>
+          <p class="fr-page-sub">View and manage all system alerts</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <section class="content px-2 pt-3">
+    <div class="container-fluid">
+      <div class="fr-card">
+        <div class="fr-card__body">
+          <div class="table-responsive">
+            <table class="fr-table" [busy]="isTableLoading">
+              <thead>
+                <tr>
+                  <th>Severity</th>
+                  <th>Title</th>
+                  <th>Device</th>
+                  <th>When</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let a of alerts" class="cursor-pointer" (click)="open(a)">
+                  <td>
+                    <span class="fr-chip fr-chip-brand">{{ a.severity }}</span>
+                  </td>
+                  <td>{{ a.title }}</td>
+                  <td>{{ a.node?.displayText }}</td>
+                  <td>{{ a.triggeredAt | date:'short' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="fr-card__footer">
+          <span></span>
+          <span class="fr-total">Total: <strong>{{ totalItems }}</strong></span>
+          <abp-pagination-controls id="server" (pageChange)="getDataPage($event)"></abp-pagination-controls>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

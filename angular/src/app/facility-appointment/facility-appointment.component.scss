@@ -1,0 +1,280 @@
+// ── Brand tokens ───────────────────────────────────────────────────────────
+$brand:       #B7873B;
+$brand-light: #F5E6C8;
+$brand-dark:  #9A6E2A;
+
+// ── Page header ────────────────────────────────────────────────────────────
+.fa-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.fa-page-title {
+  margin: 0;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.fa-page-sub {
+  font-size: 12px;
+  color: #718096;
+}
+
+// ── Brand button ───────────────────────────────────────────────────────────
+.fa-btn-brand {
+  display: inline-flex;
+  align-items: center;
+  background: $brand;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 9px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.18s;
+
+  &:hover, &:focus {
+    background: $brand-dark;
+    color: #fff;
+    outline: none;
+  }
+}
+
+// ── Search bar ─────────────────────────────────────────────────────────────
+.fa-search-bar {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+
+  &__icon {
+    padding: 0 12px;
+    color: #a0aec0;
+    flex-shrink: 0;
+  }
+
+  &__input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 8px 4px;
+    font-size: 13px;
+    background: transparent;
+    color: #2d3748;
+
+    &::placeholder { color: #a0aec0; }
+  }
+
+  &__btn {
+    background: $brand;
+    color: #fff;
+    border: none;
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.16s;
+    flex-shrink: 0;
+
+    &:hover { background: $brand-dark; }
+  }
+}
+
+// ── Appointment card ───────────────────────────────────────────────────────
+.fa-card {
+  display: flex;
+  flex-direction: row;
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  height: 100%;
+  transition: box-shadow 0.2s, transform 0.2s;
+
+  &:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    transform: translateY(-2px);
+  }
+
+  &__accent {
+    width: 5px;
+    flex-shrink: 0;
+    background: $brand;
+  }
+
+  &__body {
+    flex: 1;
+    padding: 16px 16px 14px;
+    min-width: 0;
+  }
+}
+
+// ── Avatar ─────────────────────────────────────────────────────────────────
+.fa-user-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.fa-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: $brand-light;
+  color: $brand-dark;
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-right: 12px;
+  letter-spacing: 0.5px;
+}
+
+.fa-user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.fa-user-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #2d3748;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fa-badge {
+  display: inline-block;
+  background: rgba($brand, 0.12);
+  color: $brand-dark;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 2px 8px;
+  margin-top: 2px;
+}
+
+// ── Info row ───────────────────────────────────────────────────────────────
+.fa-info-row {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: #4a5568;
+
+  &__icon {
+    color: $brand;
+    width: 16px;
+    flex-shrink: 0;
+    margin-right: 8px;
+  }
+
+  &__text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.fa-divider {
+  height: 1px;
+  background: #f0f0f0;
+  margin: 12px 0;
+}
+
+// ── Card action buttons ────────────────────────────────────────────────────
+.fa-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.fa-btn-edit,
+.fa-btn-delete {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: all 0.16s;
+  border: 1px solid transparent;
+}
+
+.fa-btn-edit {
+  background: rgba($brand, 0.10);
+  color: $brand-dark;
+  border-color: rgba($brand, 0.25);
+
+  &:hover {
+    background: $brand;
+    color: #fff;
+    border-color: $brand;
+  }
+}
+
+.fa-btn-delete {
+  background: rgba(#e53e3e, 0.07);
+  color: #c53030;
+  border-color: rgba(#e53e3e, 0.20);
+
+  &:hover {
+    background: #e53e3e;
+    color: #fff;
+    border-color: #e53e3e;
+  }
+}
+
+// ── Empty state ────────────────────────────────────────────────────────────
+.fa-empty {
+  text-align: center;
+  padding: 64px 24px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+
+  &__icon {
+    font-size: 50px;
+    color: rgba(0,0,0,0.12);
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  &__title {
+    font-size: 17px;
+    font-weight: 600;
+    color: rgba(0,0,0,0.42);
+    margin-bottom: 4px;
+  }
+
+  &__sub {
+    font-size: 13px;
+    color: rgba(0,0,0,0.26);
+    margin-bottom: 0;
+  }
+}
+
+// ── Footer ─────────────────────────────────────────────────────────────────
+.fa-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  &__count {
+    font-size: 13px;
+    color: #718096;
+  }
+}

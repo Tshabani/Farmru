@@ -10,7 +10,16 @@
       "PowerShell(Get-ChildItem -Path \"d:\\\\Development\\\\TechnoB\\\\Farmru\\\\.github\" -Recurse -Force 2>$null | Select-Object FullName | ForEach-Object { $_.FullName.Replace\\('d:\\\\Development\\\\TechnoB\\\\Farmru\\\\', ''\\) })",
       "Bash(keytool -version)",
       "Bash(\"C:\\\\Program Files\\\\Android\\\\Android Studio\\\\jbr\\\\bin\\\\keytool\" -version)",
-      "PowerShell($keystorePath = \"$env:USERPROFILE\\\\upload-keystore.jks\"; keytool -genkeypair -v -keystore $keystorePath -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias upload -storepass farmru2024 -keypass farmru2024 -dname \"CN=Farmru, OU=Mobile, O=TechnoB, L=Unknown, ST=Unknown, C=ZA\")"
+      "PowerShell($keystorePath = \"$env:USERPROFILE\\\\upload-keystore.jks\"; keytool -genkeypair -v -keystore $keystorePath -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias upload -storepass farmru2024 -keypass farmru2024 -dname \"CN=Farmru, OU=Mobile, O=TechnoB, L=Unknown, ST=Unknown, C=ZA\")",
+      "Bash(dotnet ef *)",
+      "Bash(dotnet build *)",
+      "Bash(Get-ChildItem -Recurse \"d:\\\\Development\\\\TechnoB\\\\Farmru\\\\aspnet-core\\\\src\" -Filter \"*.cshtml\")",
+      "Bash(Select-Object -First 5 FullName)",
+      "PowerShell(Get-ChildItem \"d:\\\\Development\\\\TechnoB\\\\Farmru\\\\aspnet-core\\\\src\" | ForEach-Object { $_.Name })",
+      "PowerShell(Get-ChildItem \"d:\\\\Development\\\\TechnoB\\\\Farmru\" | ForEach-Object { $_.Name })",
+      "PowerShell(Get-ChildItem \"d:\\\\Development\\\\TechnoB\\\\Farmru\\\\angular\\\\src\\\\app\" | ForEach-Object { $_.Name })",
+      "PowerShell(Get-ChildItem \"d:\\\\Development\\\\TechnoB\\\\Farmru\\\\angular\\\\src\\\\app\\\\facility-appointment\" | ForEach-Object { $_.Name })",
+      "Bash(npx ng *)"
     ]
   }
 }

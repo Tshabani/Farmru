@@ -1,17 +1,57 @@
-﻿<div class="content-header"><div class="container-fluid"><button class="btn btn-link p-0" (click)="back()">Back</button><h1>{{ "AlertDetails" | localize }}</h1></div></div>
-<section class="content px-2" *ngIf="!loading && alert">
-  <div class="card"><div class="card-body">
-    <span class="badge mr-2" [ngClass]="severityClass(alert.severity)">{{ severityLabels[alert.severity] }}</span>
-    <h4>{{ alert.title }}</h4>
-    <p>{{ alert.description }}</p>
-    <p><strong>Device:</strong> {{ alert.node?.displayText || 'â€”' }}</p>
-    <p><strong>Facility:</strong> {{ alert.facility?.displayText || 'â€”' }}</p>
-    <p><strong>{{ "TriggeredAt" | localize }}:</strong> {{ alert.triggeredAt | date:'medium' }}</p>
-    <div *ngIf="canManage && !alert.isResolved" class="mt-3">
-      <textarea class="form-control mb-2" [(ngModel)]="resolutionNotes" [placeholder]="'ResolutionNotes' | localize"></textarea>
-      <button class="btn btn-secondary mr-2" *ngIf="!alert.isAcknowledged" (click)="acknowledge()">{{ "Acknowledge" | localize }}</button>
-      <button class="btn btn-success" (click)="resolve()">{{ "Resolve" | localize }}</button>
+﻿<div [@routerTransition]>
+  <section class="content-header pb-0">
+    <div class="container-fluid">
+      <div class="fr-page-header">
+        <div>
+          <button class="fr-btn fr-btn-ghost fr-btn-sm mb-2" (click)="back()">
+            <i class="fas fa-arrow-left mr-1"></i>{{ "Back" | localize }}
+          </button>
+          <h1 class="fr-page-title">{{ "AlertDetails" | localize }}</h1>
+        </div>
+      </div>
     </div>
-  </div></div>
-</section>
+  </section>
 
+  <section class="content px-2 pt-3" *ngIf="!loading && alert">
+    <div class="container-fluid">
+      <div class="fr-card">
+        <div class="fr-card__header">
+          <div class="d-flex align-items-center">
+            <span class="fr-chip mr-2" [ngClass]="severityClass(alert.severity)">{{ severityLabels[alert.severity] }}</span>
+            <h5 class="mb-0">{{ alert.title }}</h5>
+          </div>
+        </div>
+        <div class="fr-card__body">
+          <p class="fr-text-muted">{{ alert.description }}</p>
+          <ul class="fr-info-list">
+            <li>
+              <span class="fr-info-list__label">Device</span>
+              <span class="fr-info-list__value">{{ alert.node?.displayText || '-' }}</span>
+            </li>
+            <li>
+              <span class="fr-info-list__label">Facility</span>
+              <span class="fr-info-list__value">{{ alert.facility?.displayText || '-' }}</span>
+            </li>
+            <li>
+              <span class="fr-info-list__label">{{ "TriggeredAt" | localize }}</span>
+              <span class="fr-info-list__value">{{ alert.triggeredAt | date:'medium' }}</span>
+            </li>
+          </ul>
+
+          <div *ngIf="canManage && !alert.isResolved" class="mt-3">
+            <textarea class="form-control mb-2" [(ngModel)]="resolutionNotes"
+              [placeholder]="'ResolutionNotes' | localize" rows="3"></textarea>
+            <div class="d-flex">
+              <button class="fr-btn fr-btn-secondary mr-2" *ngIf="!alert.isAcknowledged" (click)="acknowledge()">
+                {{ "Acknowledge" | localize }}
+              </button>
+              <button class="fr-btn fr-btn-primary" (click)="resolve()">
+                {{ "Resolve" | localize }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

@@ -1,79 +1,41 @@
 ﻿<div [@routerTransition] [busy]="isLoading">
-  <section class="content-header">
+  <section class="content-header pb-0">
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-12">
-          <h1>{{ "HomePage" | localize }}</h1>
+      <div class="fr-page-header">
+        <div>
+          <h1 class="fr-page-title">{{ "HomePage" | localize }}</h1>
+          <p class="fr-page-sub">FarmRu IoT Monitoring - official farm management dashboard</p>
         </div>
       </div>
     </div>
   </section>
-  <section class="content px-2">
+
+  <section class="content px-2 pt-3">
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-12">
-          <div class="alert alert-info alert-dismissible">
-            <h6><i class="icon fa fa-"></i> Home FarmRu Iot monitoring
-              This is the official dashboard for managing your farm.</h6>
-          </div>
+      <div class="fr-stat-row">
+        <div class="fr-stat fr-stat--secondary">
+          <div class="fr-stat__icon"><i class="fas fa-shield-alt"></i></div>
+          <div class="fr-stat__value">{{ stats.totalNumberOfRoles }}</div>
+          <div class="fr-stat__label">Roles</div>
+        </div>
+        <div class="fr-stat fr-stat--info">
+          <div class="fr-stat__icon"><i class="fas fa-users"></i></div>
+          <div class="fr-stat__value">{{ stats.totalNumberOfUsers }}</div>
+          <div class="fr-stat__label">Users</div>
+        </div>
+        <div class="fr-stat fr-stat--warning">
+          <div class="fr-stat__icon"><i class="fas fa-microchip"></i></div>
+          <div class="fr-stat__value">{{ stats.totalNumberOfNodes }}</div>
+          <div class="fr-stat__label">Total Nodes</div>
+        </div>
+        <div class="fr-stat fr-stat--success">
+          <div class="fr-stat__icon"><i class="fas fa-signal"></i></div>
+          <div class="fr-stat__value">{{ stats.totalNumberOfActiveNodes }}</div>
+          <div class="fr-stat__label">Active Nodes</div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-12 col-sm-6 col-md-3">
-          <div class="info-box">
-            <span class="info-box-icon bg-primary elevation-1">
-              <i class="fas fa-plus-circle"></i>
-            </span>
-            <div class="info-box-content">
-              <span class="info-box-text">Roles</span>
-              <span class="info-box-number">
-                {{ stats.totalNumberOfRoles }}+
-              </span>
-            </div>
-          </div>
-        </div>
-        <div class="col-12 col-sm-6 col-md-3">
-          <div class="info-box mb-3">
-            <span class="info-box-icon bg-warning elevation-1">
-              <i class="fas fa-users"></i>
-            </span>
-            <div class="info-box-content">
-              <span class="info-box-text">Users</span>
-              <span class="info-box-number">
-                {{ stats.totalNumberOfUsers }}+
-              </span>
-            </div>
-          </div>
-        </div>
-        <div class="clearfix hidden-md-up"></div>
-        <div class="col-12 col-sm-6 col-md-3">
-          <div class="info-box mb-3">
-            <span class="info-box-icon bg-info elevation-1">
-              <i class="fa-solid fa-circle-down"></i>
-            </span>
-            <div class="info-box-content">
-              <span class="info-box-text">Total Nodes</span>
-              <span class="info-box-number">
-                {{ stats.totalNumberOfNodes }}+
-              </span>
-            </div>
-          </div>
-        </div>
-        <div class="col-12 col-sm-6 col-md-3">
-          <div class="info-box mb-3">
-            <span class="info-box-icon bg-success elevation-1">
-              <i class="far fa-arrow-alt-circle-up"></i>
-            </span>
-            <div class="info-box-content">
-              <span class="info-box-text">Active Nodes</span>
-              <span class="info-box-number">
-                {{ stats.totalNumberOfActiveNodes }}+
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+
+      <app-agricultural-dashboard [readingsData]="historicalData"></app-agricultural-dashboard>
     </div>
   </section>
-  <app-agricultural-dashboard [readingsData]="historicalData"></app-agricultural-dashboard>
 </div>

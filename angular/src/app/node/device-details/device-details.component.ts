@@ -42,15 +42,33 @@ export class DeviceDetailsComponent extends AppComponentBase implements OnInit {
 
   loadDevice(): void {
     this.loading = true;
+    this.cd.detectChanges();
     this._nodeService
       .getDetail(this.deviceId)
-      .pipe(finalize(() => (this.loading = false)))
-      .subscribe((result) => {
-        this.device = result;
-        this._alertApi.getAlertsByNode(this.deviceId).subscribe((alerts) => {
-          this.deviceAlerts = alerts;
+      .pipe(
+        finalize(() => {
+          this.loading = false;
           this.cd.detectChanges();
-        });
+        })
+      )
+      .subscribe({
+        next: (result) => {
+          this.device = result;
+          this._alertApi.getAlertsByNode(this.deviceId).subscribe({
+            next: (alerts) => {
+              this.deviceAlerts = alerts;
+              this.cd.detectChanges();
+            },
+            error: () => {
+              this.deviceAlerts = [];
+              this.cd.detectChanges();
+            }
+          });
+        },
+        error: (err) => {
+          this.notify.error(this.l('ErrorOccurred'));
+          this.cd.detectChanges();
+        }
       });
   }
 

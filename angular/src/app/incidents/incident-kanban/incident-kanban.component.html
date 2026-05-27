@@ -1,28 +1,38 @@
-<div [@routerTransition]>
-  <section class="content-header">
+﻿<div [@routerTransition]>
+  <section class="content-header pb-0">
     <div class="container-fluid">
-      <div class="row mb-2 align-items-center">
-        <div class="col"><h1>{{ 'IncidentKanban' | localize }}</h1></div>
-        <div class="col-auto"><button class="btn btn-outline-secondary" routerLink="/app/incidents">Command center</button></div>
+      <div class="fr-page-header">
+        <div>
+          <h1 class="fr-page-title">{{ 'IncidentKanban' | localize }}</h1>
+          <p class="fr-page-sub">Visual board - drag through statuses</p>
+        </div>
+        <div class="ml-auto d-flex align-items-center">
+          <button class="fr-btn fr-btn-outline" routerLink="/app/incidents">Command center</button>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="content px-2" *ngIf="loading"><div class="text-center p-5"><i class="fas fa-spinner fa-spin fa-2x"></i></div></section>
+  <section class="content px-2 pt-3" *ngIf="loading">
+    <div class="fr-loading"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
+  </section>
 
-  <section class="content px-2" *ngIf="!loading">
-    <div class="kanban-row d-flex flex-nowrap overflow-auto pb-3">
-      <div class="kanban-col flex-shrink-0 mr-3" style="min-width:260px" *ngFor="let col of columns">
-        <div class="card card-outline card-primary">
-          <div class="card-header py-2"><strong>{{ columnTitle(col.status) }}</strong> <span class="badge badge-light float-right">{{ col.items.length }}</span></div>
-          <div class="card-body p-2" style="min-height:200px;max-height:70vh;overflow-y:auto">
-            <div class="kanban-card card mb-2 shadow-sm" *ngFor="let item of col.items" (click)="open(item)" style="cursor:pointer">
-              <div class="card-body p-2">
-                <div class="font-weight-bold">{{ item.title }}</div>
-                <small class="text-muted d-block">{{ item.facility?.displayText }}</small>
-                <div class="mt-2" *ngIf="canManage && nextStatus(item.status) !== null">
-                  <button class="btn btn-xs btn-outline-primary" (click)="advance(item, nextStatus(item.status)!, $event)">Advance</button>
-                </div>
+  <section class="content px-2 pt-3" *ngIf="!loading">
+    <div class="container-fluid-full">
+      <div class="fr-kanban">
+        <div class="fr-kanban-col" *ngFor="let col of columns">
+          <div class="fr-kanban-col__header">
+            <span>{{ columnTitle(col.status) }}</span>
+            <span class="fr-kanban-col__count">{{ col.items.length }}</span>
+          </div>
+          <div class="fr-kanban-col__body">
+            <div class="fr-kanban-item" *ngFor="let item of col.items" (click)="open(item)">
+              <div class="fr-kanban-item__title">{{ item.title }}</div>
+              <div class="fr-kanban-item__sub">{{ item.facility?.displayText }}</div>
+              <div class="mt-2" *ngIf="canManage && nextStatus(item.status) !== null">
+                <button class="fr-btn fr-btn-outline fr-btn-sm" (click)="advance(item, nextStatus(item.status)!, $event)">
+                  Advance
+                </button>
               </div>
             </div>
           </div>
@@ -31,5 +41,3 @@
     </div>
   </section>
 </div>
-
-

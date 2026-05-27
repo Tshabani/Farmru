@@ -1,61 +1,116 @@
 <div [@routerTransition]>
-  <section class="content-header">
+  <section class="content-header pb-0">
     <div class="container-fluid">
-      <div class="row align-items-center">
-        <div class="col"><h1>{{ "AlertDashboard" | localize }}</h1></div>
-        <div class="col-auto"><button class="btn btn-outline-primary" (click)="viewAll()">View all</button></div>
+      <div class="fr-page-header">
+        <div>
+          <h1 class="fr-page-title">{{ "AlertDashboard" | localize }}</h1>
+          <p class="fr-page-sub">Overview of active and critical alerts</p>
+        </div>
+        <div class="ml-auto d-flex align-items-center">
+          <button class="fr-btn fr-btn-outline" (click)="viewAll()">View all alerts</button>
+        </div>
       </div>
     </div>
   </section>
-  <section class="content px-2" *ngIf="loading"><div class="text-center p-5"><i class="fas fa-spinner fa-spin fa-2x"></i></div></section>
-  <section class="content px-2" *ngIf="!loading && stats">
+
+  <section class="content px-2 pt-3" *ngIf="loading">
+    <div class="fr-loading"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
+  </section>
+
+  <section class="content px-2 pt-3" *ngIf="!loading && stats">
     <div class="container-fluid">
-      <div class="row mb-3">
-        <div class="col-md-3"><div class="small-box bg-danger"><div class="inner"><h3>{{ stats.totalCritical }}</h3><p>Critical</p></div></div></div>
-        <div class="col-md-3"><div class="small-box bg-warning"><div class="inner"><h3>{{ stats.totalActive }}</h3><p>Active</p></div></div></div>
-        <div class="col-md-3"><div class="small-box bg-info"><div class="inner"><h3>{{ stats.totalUnacknowledged }}</h3><p>Unacknowledged</p></div></div></div>
+      <div class="fr-stat-row">
+        <div class="fr-stat fr-stat--danger">
+          <div class="fr-stat__icon"><i class="fas fa-exclamation-triangle"></i></div>
+          <div class="fr-stat__value">{{ stats.totalCritical }}</div>
+          <div class="fr-stat__label">Critical</div>
+        </div>
+        <div class="fr-stat fr-stat--warning">
+          <div class="fr-stat__icon"><i class="fas fa-bell"></i></div>
+          <div class="fr-stat__value">{{ stats.totalActive }}</div>
+          <div class="fr-stat__label">Active</div>
+        </div>
+        <div class="fr-stat fr-stat--info">
+          <div class="fr-stat__icon"><i class="fas fa-eye-slash"></i></div>
+          <div class="fr-stat__value">{{ stats.totalUnacknowledged }}</div>
+          <div class="fr-stat__label">Unacknowledged</div>
+        </div>
       </div>
+
       <div class="row mb-3" *ngIf="stats.byFacility?.length">
         <div class="col-md-6">
-          <div class="card">
-            <div class="card-header"><h3 class="card-title">By facility</h3></div>
-            <div class="card-body p-0 table-responsive">
-              <table class="table mb-0">
-                <tr *ngFor="let f of stats.byFacility">
-                  <td>{{ f.facilityName || 'Unassigned' }}</td>
-                  <td class="text-right"><span class="badge badge-danger mr-1">{{ f.criticalCount }}</span><span class="badge badge-warning">{{ f.activeCount }}</span></td>
-                </tr>
-              </table>
+          <div class="fr-card">
+            <div class="fr-card__header">
+              <h5 class="mb-0">By Facility</h5>
+            </div>
+            <div class="fr-card__body p-0">
+              <div class="table-responsive">
+                <table class="fr-table">
+                  <thead>
+                    <tr>
+                      <th>Facility</th>
+                      <th class="text-right">Critical</th>
+                      <th class="text-right">Active</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let f of stats.byFacility">
+                      <td>{{ f.facilityName || 'Unassigned' }}</td>
+                      <td class="text-right"><span class="fr-chip fr-chip-red">{{ f.criticalCount }}</span></td>
+                      <td class="text-right"><span class="fr-chip fr-chip-yellow">{{ f.activeCount }}</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
         <div class="col-md-6">
-          <div class="card">
-            <div class="card-header"><h3 class="card-title">By severity</h3></div>
-            <div class="card-body">
-              <span *ngFor="let s of stats.bySeverity" class="badge mr-2 mb-2" [ngClass]="severityClass(s.severity)">
+          <div class="fr-card">
+            <div class="fr-card__header">
+              <h5 class="mb-0">By Severity</h5>
+            </div>
+            <div class="fr-card__body">
+              <span *ngFor="let s of stats.bySeverity" class="fr-chip mr-2 mb-2" [ngClass]="severityClass(s.severity)">
                 {{ severityLabels[s.severity] }}: {{ s.count }}
               </span>
             </div>
           </div>
         </div>
       </div>
-      <div class="card"><div class="card-header"><h3 class="card-title">Critical alerts</h3></div>
-        <div class="card-body table-responsive p-0">
-          <table class="table table-hover mb-0">
-            <tr *ngFor="let a of criticalAlerts" (click)="openDetail(a)" style="cursor:pointer">
-              <td><span class="badge" [ngClass]="severityClass(a.severity)">{{ severityLabels[a.severity] }}</span></td>
-              <td>{{ a.title }}</td><td>{{ a.node?.displayText }}</td>
-              <td>
-                <button *ngIf="canManage && !a.isAcknowledged" class="btn btn-xs btn-secondary mr-1" (click)="acknowledge(a,$event)">Ack</button>
-                <button *ngIf="canManage" class="btn btn-xs btn-success" (click)="resolve(a,$event)">Resolve</button>
-              </td>
-            </tr>
-          </table>
+
+      <div class="fr-card">
+        <div class="fr-card__header">
+          <h5 class="mb-0">Critical Alerts</h5>
+        </div>
+        <div class="fr-card__body p-0">
+          <div class="table-responsive">
+            <table class="fr-table">
+              <thead>
+                <tr>
+                  <th>Severity</th>
+                  <th>Title</th>
+                  <th>Device</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let a of criticalAlerts" class="cursor-pointer" (click)="openDetail(a)">
+                  <td><span class="fr-chip" [ngClass]="severityClass(a.severity)">{{ severityLabels[a.severity] }}</span></td>
+                  <td>{{ a.title }}</td>
+                  <td>{{ a.node?.displayText }}</td>
+                  <td>
+                    <div class="fr-row-actions">
+                      <button *ngIf="canManage && !a.isAcknowledged" class="fr-btn fr-btn-secondary fr-btn-sm" (click)="acknowledge(a, $event)">Ack</button>
+                      <button *ngIf="canManage" class="fr-btn fr-btn-outline fr-btn-sm" (click)="resolve(a, $event)">Resolve</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </section>
 </div>
-
-

@@ -1,4 +1,4 @@
-<div [@routerTransition]>
+﻿<div [@routerTransition]>
   <section class="content-header">
     <div class="container-fluid">
       <h1>{{ 'TechnicianDispatch' | localize }}</h1>
@@ -29,7 +29,7 @@
                 <tr *ngFor="let s of suggestions">
                   <td>{{ s.displayName }}</td>
                   <td>{{ s.activeIncidents }}</td>
-                  <td>{{ s.distanceKm ?? '—' }}</td>
+                  <td>{{ s.distanceKm ?? '-' }}</td>
                   <td><button class="btn btn-xs btn-primary" (click)="assignSuggestion(s)">Assign</button></td>
                 </tr>
               </tbody>

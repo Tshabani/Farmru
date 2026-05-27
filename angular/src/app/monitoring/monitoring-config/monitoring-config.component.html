@@ -1,38 +1,89 @@
-<section class="content-header"><h1>{{ "MonitoringConfiguration" | localize }}</h1></section>
-<section class="content px-2" *ngIf="loading"><div class="text-center p-5"><i class="fas fa-spinner fa-spin"></i></div></section>
-<section class="content px-2" *ngIf="!loading && config">
-  <div class="card">
-    <div class="card-body">
-      <div class="form-group">
-        <label>{{ "MonitoringEnabled" | localize }}</label>
-        <input type="checkbox" [(ngModel)]="config.monitoringEnabled" />
+<div [@routerTransition]>
+  <section class="content-header pb-0">
+    <div class="container-fluid">
+      <div class="fr-page-header">
+        <div>
+          <button class="fr-btn fr-btn-ghost fr-btn-sm mb-2" (click)="back()">
+            <i class="fas fa-arrow-left mr-1"></i>{{ "Back" | localize }}
+          </button>
+          <h1 class="fr-page-title">{{ "MonitoringConfiguration" | localize }}</h1>
+          <p class="fr-page-sub">Configure thresholds and monitoring engine settings</p>
+        </div>
       </div>
-      <div class="form-group">
-        <label>{{ "OfflineDevices" | localize }} timeout (min)</label>
-        <input type="number" class="form-control" [(ngModel)]="config.offlineTimeoutMinutes" />
-      </div>
-      <div class="form-group">
-        <label>{{ "StaleTelemetryThresholdMinutes" | localize }}</label>
-        <input type="number" class="form-control" [(ngModel)]="config.staleTelemetryThresholdMinutes" />
-      </div>
-      <div class="form-group">
-        <label>{{ "EscalationTimeoutMinutes" | localize }}</label>
-        <input type="number" class="form-control" [(ngModel)]="config.escalationTimeoutMinutes" />
-      </div>
-      <div class="form-group">
-        <label>{{ "AnomalySensitivityPercent" | localize }}</label>
-        <input type="number" class="form-control" [(ngModel)]="config.anomalySensitivityPercent" />
-      </div>
-      <div class="form-group">
-        <label>Min battery %</label>
-        <input type="number" class="form-control" [(ngModel)]="config.minimumBatteryPercent" />
-      </div>
-      <div class="form-group">
-        <label>Critical battery %</label>
-        <input type="number" class="form-control" [(ngModel)]="config.criticalBatteryPercent" />
-      </div>
-      <button class="btn btn-secondary mr-2" (click)="back()">{{ "Back" | localize }}</button>
-      <button class="btn btn-primary" [disabled]="saving" (click)="save()">{{ "Save" | localize }}</button>
     </div>
-  </div>
-</section>
+  </section>
+
+  <section class="content px-2 pt-3" *ngIf="loading">
+    <div class="fr-loading"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
+  </section>
+
+  <section class="content px-2 pt-3" *ngIf="!loading && config">
+    <div class="container-fluid">
+      <div class="fr-card">
+        <div class="fr-card__body">
+          <div class="fr-form">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>{{ "MonitoringEnabled" | localize }}</label>
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="monitoringEnabled"
+                      [(ngModel)]="config.monitoringEnabled" />
+                    <label class="custom-control-label" for="monitoringEnabled"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>{{ "OfflineDevices" | localize }} timeout (min)</label>
+                  <input type="number" class="form-control" [(ngModel)]="config.offlineTimeoutMinutes" />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>{{ "StaleTelemetryThresholdMinutes" | localize }}</label>
+                  <input type="number" class="form-control" [(ngModel)]="config.staleTelemetryThresholdMinutes" />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>{{ "EscalationTimeoutMinutes" | localize }}</label>
+                  <input type="number" class="form-control" [(ngModel)]="config.escalationTimeoutMinutes" />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>{{ "AnomalySensitivityPercent" | localize }}</label>
+                  <input type="number" class="form-control" [(ngModel)]="config.anomalySensitivityPercent" />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Min battery %</label>
+                  <input type="number" class="form-control" [(ngModel)]="config.minimumBatteryPercent" />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Critical battery %</label>
+                  <input type="number" class="form-control" [(ngModel)]="config.criticalBatteryPercent" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="fr-card__footer">
+          <div class="d-flex align-items-center">
+            <button class="fr-btn fr-btn-primary" [disabled]="saving" (click)="save()">
+              <i class="fas fa-save mr-1"></i>{{ "Save" | localize }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

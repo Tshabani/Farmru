@@ -13,12 +13,18 @@ class PagedFacilityAppointmentsRequestDto extends PagedRequestDto {
 }
 
 @Component({
-  templateUrl: './facility-appointment.component.html',  
+  templateUrl: './facility-appointment.component.html',
+  styleUrls: ['./facility-appointment.component.scss'],
   animations: [appModuleAnimation()]
 })
 export class FacilityAppointmentComponent extends PagedListingComponentBase<FacilityAppointmentDto> {
   facilityAppointments: FacilityAppointmentDto[] = [];
   keyword = '';
+
+  initials(name: string): string {
+    if (!name) return '?';
+    return name.split(' ').slice(0, 2).map(w => w[0].toUpperCase()).join('');
+  }
 
   constructor(
     injector: Injector,

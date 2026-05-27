@@ -1,38 +1,46 @@
 <div [@routerTransition] class="gis-map-page">
-  <section class="content-header">
+  <section class="content-header pb-0">
     <div class="container-fluid">
-      <div class="row align-items-center">
-        <div class="col">
-          <h1>{{ "OperationalMap" | localize }}</h1>
+      <div class="fr-page-header">
+        <div>
+          <h1 class="fr-page-title">{{ "OperationalMap" | localize }}</h1>
+          <p class="fr-page-sub">Live device locations and operational activity feed</p>
         </div>
-        <div class="col-auto">
-          <button class="btn btn-outline-secondary mr-2" (click)="openExecutive()">{{ "ExecutiveGisDashboard" | localize }}</button>
-          <button class="btn btn-primary" (click)="openGeoFences()">{{ "GeoFences" | localize }}</button>
+        <div class="ml-auto d-flex align-items-center">
+          <button class="fr-btn fr-btn-outline mr-2" (click)="openExecutive()">{{ "ExecutiveGisDashboard" | localize }}</button>
+          <button class="fr-btn fr-btn-primary" (click)="openGeoFences()">{{ "GeoFences" | localize }}</button>
         </div>
       </div>
     </div>
   </section>
-  <section class="content px-2">
+
+  <section class="content px-2 pt-3">
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-9">
-          <div class="card">
-            <div class="card-body p-0">
-              <div #mapContainer class="operational-map" style="height: 70vh; min-height: 480px"></div>
+          <div class="fr-card">
+            <div class="fr-card__body p-0">
+              <div #mapContainer class="operational-map" style="height: 70vh; min-height: 480px;"></div>
             </div>
           </div>
         </div>
         <div class="col-lg-3">
-          <div class="card">
-            <div class="card-header"><h3 class="card-title">Live activity</h3></div>
-            <div class="card-body p-0" style="max-height: 70vh; overflow-y: auto">
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item" *ngFor="let f of feed">
-                  <small class="text-muted">{{ f.time | date: 'short' }}</small>
-                  <span class="d-block"><strong>{{ f.type }}</strong> {{ f.message }}</span>
-                </li>
-                <li class="list-group-item text-muted" *ngIf="!feed.length">Waiting for events…</li>
-              </ul>
+          <div class="fr-card">
+            <div class="fr-card__header">
+              <h5 class="mb-0">Live Activity</h5>
+            </div>
+            <div class="fr-card__body p-0" style="max-height: 70vh; overflow-y: auto;">
+              <div class="fr-feed">
+                <ng-container *ngFor="let f of feed">
+                  <div class="d-flex align-items-start px-3 py-2 border-bottom">
+                    <span class="fr-feed__time">{{ f.time | date: 'short' }}</span>
+                    <span class="fr-feed__msg ml-2">
+                      <strong class="fr-feed__type">{{ f.type }}</strong> {{ f.message }}
+                    </span>
+                  </div>
+                </ng-container>
+                <div class="fr-feed__empty" *ngIf="!feed.length">Waiting for events…</div>
+              </div>
             </div>
           </div>
         </div>

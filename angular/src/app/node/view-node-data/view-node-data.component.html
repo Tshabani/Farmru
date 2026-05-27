@@ -1,311 +1,185 @@
 <div [@routerTransition]>
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-            <h1>{{ "Node Data View" | localize }}</h1>
+  <section class="content-header pb-0">
+    <div class="container-fluid">
+      <div class="fr-page-header">
+        <div>
+          <h1 class="fr-page-title">{{ "Node Data View" | localize }}</h1>
+          <p class="fr-page-sub">Historical sensor readings and charts</p>
+        </div>
+        <div class="ml-auto d-flex align-items-center">
+          <button
+            type="button"
+            class="fr-btn fr-btn-primary fr-btn-sm"
+            (click)="exportToExcel()"
+            [disabled]="isExporting">
+            <i class="fas fa-file-excel mr-1"></i>{{ "ExportToExcel" | localize }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content px-2 pt-3">
+    <div class="container-fluid">
+
+      <!-- Filters card -->
+      <div class="fr-card mb-3">
+        <div class="fr-card__header">
+          <div class="fr-filters">
+            <!-- Period radios -->
+            <div class="fr-filter-group">
+              <span class="fr-filter-label">Period</span>
+              <div class="fr-radio-group">
+                <label class="fr-radio">
+                  <input type="radio" name="predefinedPeriod" [(ngModel)]="predefinedPeriod" [value]="''" />
+                  <span>{{ "None" | localize }}</span>
+                </label>
+                <label class="fr-radio">
+                  <input type="radio" name="predefinedPeriod" [(ngModel)]="predefinedPeriod" [value]="'today'" />
+                  <span>{{ "Today" | localize }}</span>
+                </label>
+                <label class="fr-radio">
+                  <input type="radio" name="predefinedPeriod" [(ngModel)]="predefinedPeriod" [value]="'week'" />
+                  <span>{{ "Week" | localize }}</span>
+                </label>
+                <label class="fr-radio">
+                  <input type="radio" name="predefinedPeriod" [(ngModel)]="predefinedPeriod" [value]="'month'" />
+                  <span>{{ "Month" | localize }}</span>
+                </label>
+                <label class="fr-radio">
+                  <input type="radio" name="predefinedPeriod" [(ngModel)]="predefinedPeriod" [value]="'year'" />
+                  <span>{{ "Year" | localize }}</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Date range -->
+            <input type="date" class="form-control" id="startDate" name="startDate" [(ngModel)]="startDate" style="max-width:150px;" />
+            <input type="date" class="form-control" id="endDate" name="endDate" [(ngModel)]="endDate" style="max-width:150px;" />
+
+            <!-- Search -->
+            <div class="fr-search">
+              <span class="fr-search__icon"><i class="fas fa-search"></i></span>
+              <input type="text" class="fr-search__input" [placeholder]="'SearchWithThreeDot' | localize"
+                [(ngModel)]="keyword" (keyup.enter)="getDataPage(1)" />
+              <button type="button" class="fr-search__btn fr-btn fr-btn-primary" (click)="getDataPage(1)">
+                {{ "Search" | localize }}
+              </button>
+            </div>
+            <button type="button" class="fr-btn fr-btn-ghost fr-btn-sm" (click)="clearFilters()">
+              {{ "Clear" | localize }}
+            </button>
           </div>
         </div>
       </div>
-    </section>
-    <section class="content px-2">
-      <div class="container-fluid">
-        <div class="card">
-          <div class="card-header">
-            <div class="row">
-              <div class="col-md-6">&emsp;</div>
-              <div class="col-md-6">
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <button
-                      type="button"
-                      class="btn bg-blue"
-                      (click)="getDataPage(1)"
-                      >
-                      <i class="fas fa-search"></i>
-                    </button>
-                  </div>
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="keyword"
-                    [placeholder]="'SearchWithThreeDot' | localize"
-                    [(ngModel)]="keyword"
-                    (keyup.enter)="getDataPage(1)"
-                    />
-                    <div class="input-group-append">
-                      <button
-                        type="button"
-                        class="btn btn-default"
-                        (click)="advancedFiltersVisible = !advancedFiltersVisible"
-                        >
-                        <i
-                          class="fas"
-                          [class.fa-angle-up]="advancedFiltersVisible"
-                          [class.fa-angle-down]="!advancedFiltersVisible"
-                        ></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            @if (advancedFiltersVisible) {
-              <div class="card mb-0 mt-1">
-                <div class="card-body">
-                  <form class="form-horizontal">
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group row mb-0">
-                          <label class="col-md-3 col-form-label">
-                            {{ "Predefined Period" | localize }}
-                          </label>
-                          <div class="col-md-9 pt-2">
-                            <div class="custom-control custom-radio d-inline">
-                              <input
-                                type="radio"
-                                class="custom-control-input"
-                                id="predefinedPeriodNone"
-                                name="predefinedPeriod"
-                                [(ngModel)]="predefinedPeriod"
-                                [value]="''"
-                              />
-                              <label class="custom-control-label" for="predefinedPeriodNone">
-                                {{ "None" | localize }}
-                              </label>
-                            </div>
-                            <div class="custom-control custom-radio d-inline mx-3">
-                              <input
-                                type="radio"
-                                class="custom-control-input"
-                                id="predefinedPeriodToday"
-                                name="predefinedPeriod"
-                                [(ngModel)]="predefinedPeriod"
-                                [value]="'today'"
-                              />
-                              <label class="custom-control-label" for="predefinedPeriodToday">
-                                {{ "Today" | localize }}
-                              </label>
-                            </div>
-                            <div class="custom-control custom-radio d-inline mx-3">
-                              <input
-                                type="radio"
-                                class="custom-control-input"
-                                id="predefinedPeriodWeek"
-                                name="predefinedPeriod"
-                                [(ngModel)]="predefinedPeriod"
-                                [value]="'week'"
-                              />
-                              <label class="custom-control-label" for="predefinedPeriodWeek">
-                                {{ "Week" | localize }}
-                              </label>
-                            </div>
-                            <div class="custom-control custom-radio d-inline mx-3">
-                              <input
-                                type="radio"
-                                class="custom-control-input"
-                                id="predefinedPeriodMonth"
-                                name="predefinedPeriod"
-                                [(ngModel)]="predefinedPeriod"
-                                [value]="'month'"
-                              />
-                              <label class="custom-control-label" for="predefinedPeriodMonth">
-                                {{ "Month" | localize }}
-                              </label>
-                            </div>
-                            <div class="custom-control custom-radio d-inline">
-                              <input
-                                type="radio"
-                                class="custom-control-input"
-                                id="predefinedPeriodYear"
-                                name="predefinedPeriod"
-                                [(ngModel)]="predefinedPeriod"
-                                [value]="'year'"
-                              />
-                              <label class="custom-control-label" for="predefinedPeriodYear">
-                                {{ "Year" | localize }}
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>     
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group row mb-0">
-                          <label class="col-md-3 col-form-label">
-                            {{ "Custom date" | localize }}
-                          </label>
-                          <div class="col-md-9 pt-2">
-                            <div class="d-inline">
-                              <input
-                                type="date"
-                                class="form-control"
-                                id="startDate"
-                                name="startDate"
-                                [(ngModel)]="startDate"
-                              />
-                              <label for="startDate">
-                                {{ "Start Date" | localize }}
-                              </label>
-                            </div>
-                            <div class="d-inline mx-3">
-                              <input
-                                type="date"
-                                class="form-control"
-                                id="endDate"
-                                name="endDate"
-                                [(ngModel)]="endDate"
-                              />
-                              <label for="endDate">
-                                {{ "End Date" | localize }}
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    </form>
-                    <div class="row">
-                      <div class="col-12">
-                        <label for="startDate">
-                          {{ "Graph Options" | localize }}
-                        </label>
-                      </div>
-                      <div *ngFor="let option of graphOptions" class="col">
-                        <label>
-                          <input type="checkbox" [checked]="option.selected" (change)="toggleGraph(option.key, $event)" />
-                          {{ option.label }}
-                        </label>
-                      </div>
-                    </div>
-                    </div>
-                      <div class="card-footer">
-                        <button
-                          type="button"
-                          class="btn bg-blue"
-                          (click)="getDataPage(1)"
-                          >
-                          {{ "Search" | localize }}
-                        </button>
-                        <button
-                          type="button"
-                          class="btn btn-default float-right"
-                          (click)="clearFilters()"
-                          >
-                          {{ "Clear" | localize }}
-                        </button>
-                      </div>
-                    </div>
-                  }
-                </div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-striped table-bordered"
-                  [busy]="isTableLoading">
-                  <thead class="bg-light">
-                    <tr>
-                      <th>{{ "Latitude" | localize }}</th>
-                      <th>{{ "Longitude" | localize }}</th>
-                      <th>{{ "Creation Time" | localize }}</th>
-                      <th>{{ "Moisture" | localize }}</th>
-                      <th>{{ "Nitrogen" | localize }}</th>
-                      <th>{{ "Phosphorus" | localize }}</th>
-                      <th>{{ "Potassium" | localize }}</th>
-                      <th>{{ "Soil PH" | localize }}</th>
-                      <th>{{ "Soil Temperature" | localize }}</th>
-                      <th>{{ "Solar Panel Voltage" | localize }}</th>
-                      <th>{{ "Battery Voltage" | localize }}</th>
-                      <th>{{ "Conductivity" | localize }}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @for (
-                      nodeDataItem of nodeData
-                      | paginate
-                      : {
-                      id: 'server',
-                      itemsPerPage: pageSize,
-                      currentPage: pageNumber,
-                      totalItems: totalItems
-                    }
-                    ; track
-                    nodeDataItem.id) {
-                    <tr>
-                      <td>{{ nodeDataItem.latitude }}</td>
-                      <td>{{ nodeDataItem.longitude}}</td>
-                      <td>{{ nodeDataItem.creationTime.toDate() | date: 'dd MMMM yyyy HH:mm:ss' }}</td>
-                      <td>{{ nodeDataItem.moisture }}</td>
-                      <td>{{ nodeDataItem.nitrogen }}</td>
-                      <td>{{ nodeDataItem.phosphorus }}</td>
-                      <td>{{ nodeDataItem.potassium }}</td>
-                      <td>{{ nodeDataItem.soilPH }}</td>
-                      <td>{{ nodeDataItem.soilTemperature }}</td>
-                      <td>{{ nodeDataItem.solarPanelVoltage }}</td>
-                      <td>{{ nodeDataItem.batteryVoltage }}</td>
-                      <td>{{ nodeDataItem.conductivity }}</td>
-                    </tr>
-                  }
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="card-footer table-card-footer bg-light border-top">
-            <div class="row">
-              <div class="col-sm-4 col-12 text-sm-left text-center">
-                <button class="btn btn-secondary"
-                  (click)="refresh()">
-                  <i class="fas fa-redo-alt"></i>
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-success ml-2"
-                  (click)="exportToExcel()"
-                  [disabled]="isExporting"
-                  >
-                  <i class="fas fa-file-excel"></i>
-                  {{ "ExportToExcel" | localize }}
-                </button>
-              </div>
-              <div class="col-sm-4 col-12 text-center">
-                <p class="mb-0 my-2">
-                  {{ "TotalRecordsCount" | localize: totalItems }}
-                </p>
-              </div>
-              <div class="col-sm-4 col-12">
-                <div class="float-sm-right m-auto">
-                  <abp-pagination-controls id="server"
-                    (pageChange)="getDataPage($event)">
-                  </abp-pagination-controls>
-                </div>
-              </div>
-            </div>
+
+      <!-- Data table card -->
+      <div class="fr-card mb-3">
+        <div class="fr-card__body">
+          <div class="table-responsive">
+            <table class="fr-table" [busy]="isTableLoading">
+              <thead>
+                <tr>
+                  <th>{{ "Creation Time" | localize }}</th>
+                  <th>{{ "Moisture" | localize }}</th>
+                  <th>{{ "Nitrogen" | localize }}</th>
+                  <th>{{ "Phosphorus" | localize }}</th>
+                  <th>{{ "Potassium" | localize }}</th>
+                  <th>{{ "Soil PH" | localize }}</th>
+                  <th>{{ "Soil Temperature" | localize }}</th>
+                  <th>{{ "Solar Panel Voltage" | localize }}</th>
+                  <th>{{ "Battery Voltage" | localize }}</th>
+                  <th>{{ "Conductivity" | localize }}</th>
+                  <th>{{ "Latitude" | localize }}</th>
+                  <th>{{ "Longitude" | localize }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of nodeData | paginate : { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems }; track item.id) {
+                <tr>
+                  <td>{{ item.creationTime.toDate() | date: 'dd MMM yyyy HH:mm' }}</td>
+                  <td>{{ item.moisture }}</td>
+                  <td>{{ item.nitrogen }}</td>
+                  <td>{{ item.phosphorus }}</td>
+                  <td>{{ item.potassium }}</td>
+                  <td>{{ item.soilPH }}</td>
+                  <td>{{ item.soilTemperature }}</td>
+                  <td>{{ item.solarPanelVoltage }}</td>
+                  <td>{{ item.batteryVoltage }}</td>
+                  <td>{{ item.conductivity }}</td>
+                  <td>{{ item.latitude }}</td>
+                  <td>{{ item.longitude }}</td>
+                </tr>
+                }
+              </tbody>
+            </table>
           </div>
         </div>
-        <div class="graph-container" [busy]="isTableLoading">
-          <div class="row">
-            @if(pieChart) {
-              <div class="col-md-6 col-sm-6 col-12 text-center">
-                <div class="bg-white border mb-3 text-center" style="display: block;">
-                  <google-chart [data]="pieChart"></google-chart> 
-                </div>
-              </div>
-            }
-            @if(barChart) {
-              <div class="col-md-6 col-sm-6 col-12 text-center">
-                <div class="bg-white border mb-3 text-center" style="display: block;">
-                  <google-chart [data]="barChart"></google-chart>
-                </div>
-              </div> 
-            }
-            @if(lineChart) {
-              <div class="col-md-12 col-sm-12 col-12 text-center">
-                <div class="bg-white border mb-3 text-center" style="display: block;height: 600px;">
-                  <google-chart [data]="lineChart"></google-chart>
-                </div>
-              </div>
-            }
-            </div> 
+        <div class="fr-card__footer">
+          <button class="fr-btn fr-btn-ghost fr-btn-sm" (click)="refresh()">
+            <i class="fas fa-redo-alt"></i>
+          </button>
+          <span class="fr-total">Total: <strong>{{ totalItems }}</strong></span>
+          <abp-pagination-controls id="server" (pageChange)="getDataPage($event)"></abp-pagination-controls>
         </div>
       </div>
-    </section>
-  </div>
+
+      <!-- Graph Options + Charts -->
+      <div class="fr-card mb-3" [busy]="isTableLoading">
+        <!-- Graph options bar — directly above charts -->
+        <div class="fr-card__header" style="border-bottom: 1px solid #e8ecf0;">
+          <div class="d-flex flex-wrap align-items-center" style="gap: 16px;">
+            <span class="fr-filter-label">Graph Options</span>
+            <div *ngFor="let option of graphOptions" class="d-flex align-items-center" style="gap: 6px;">
+              <label class="fr-graph-option-label">
+                <input
+                  type="checkbox"
+                  class="fr-graph-checkbox"
+                  [(ngModel)]="option.selected"
+                  (ngModelChange)="updateChart()" />
+                {{ option.label }}
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="fr-card__body">
+          <!-- Line chart — fixed-height container so it never collapses during re-draw -->
+          <div class="fr-chart-area">
+            @if (lineChart) {
+              <google-chart [data]="lineChart" style="width:100%;display:block;"></google-chart>
+            } @else if (!isChartUpdating) {
+              <div class="fr-empty" style="padding-top: 80px;">
+                <div class="fr-empty__icon"><i class="fas fa-chart-line"></i></div>
+                <div class="fr-empty__title">No chart data</div>
+                <div class="fr-empty__sub">Select at least one option above and search for data.</div>
+              </div>
+            }
+          </div>
+
+          <!-- Pie / bar charts -->
+          @if (pieChart || barChart) {
+            <div class="row mt-3">
+              @if (pieChart) {
+                <div class="col-md-6">
+                  <div class="fr-chart-wrap mb-3">
+                    <google-chart [data]="pieChart"></google-chart>
+                  </div>
+                </div>
+              }
+              @if (barChart) {
+                <div class="col-md-6">
+                  <div class="fr-chart-wrap mb-3">
+                    <google-chart [data]="barChart"></google-chart>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>

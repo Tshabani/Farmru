@@ -1,67 +1,111 @@
-<div [@routerTransition]>
-  <section class="content-header">
+﻿<div [@routerTransition]>
+  <section class="content-header pb-0">
     <div class="container-fluid">
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1>{{ 'IncidentCommandCenter' | localize }}</h1>
+      <div class="fr-page-header">
+        <div>
+          <h1 class="fr-page-title">{{ 'IncidentCommandCenter' | localize }}</h1>
+          <p class="fr-page-sub">Unified incident management and technician oversight</p>
         </div>
-        <div class="col-sm-6 text-right">
-          <button class="btn btn-outline-primary mr-2" (click)="goKanban()">{{ 'IncidentKanban' | localize }}</button>
-          <button class="btn btn-outline-secondary" (click)="goDispatch()">{{ 'TechnicianDispatch' | localize }}</button>
+        <div class="ml-auto d-flex align-items-center">
+          <button class="fr-btn fr-btn-outline mr-2" (click)="goKanban()">{{ 'IncidentKanban' | localize }}</button>
+          <button class="fr-btn fr-btn-ghost" (click)="goDispatch()">{{ 'TechnicianDispatch' | localize }}</button>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="content px-2" *ngIf="loading"><div class="text-center p-5"><i class="fas fa-spinner fa-spin fa-2x"></i></div></section>
+  <section class="content px-2 pt-3" *ngIf="loading">
+    <div class="fr-loading"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
+  </section>
 
-  <section class="content px-2" *ngIf="!loading && dashboard">
+  <section class="content px-2 pt-3" *ngIf="!loading && dashboard">
     <div class="container-fluid">
-      <div class="row mb-3">
-        <div class="col-md-2"><div class="small-box bg-info"><div class="inner"><h3>{{ dashboard.totalActive }}</h3><p>{{ 'ActiveIncidents' | localize }}</p></div></div></div>
-        <div class="col-md-2"><div class="small-box bg-warning"><div class="inner"><h3>{{ dashboard.overdueCount }}</h3><p>{{ 'OverdueIncidents' | localize }}</p></div></div></div>
-        <div class="col-md-2"><div class="small-box bg-danger"><div class="inner"><h3>{{ dashboard.slaBreachedCount }}</h3><p>{{ 'SlaBreaches' | localize }}</p></div></div></div>
-        <div class="col-md-2"><div class="small-box bg-secondary"><div class="inner"><h3>{{ dashboard.escalatedCount }}</h3><p>Escalated</p></div></div></div>
-        <div class="col-md-2"><div class="small-box bg-success"><div class="inner"><h3>{{ dashboard.slaCompliancePercent }}%</h3><p>{{ 'SlaCompliance' | localize }}</p></div></div></div>
-        <div class="col-md-2"><div class="small-box bg-primary"><div class="inner"><h3>{{ dashboard.averageResponseMinutes | number:'1.0-0' }}m</h3><p>Avg response</p></div></div></div>
+      <div class="fr-stat-row">
+        <div class="fr-stat fr-stat--info">
+          <div class="fr-stat__icon"><i class="fas fa-fire"></i></div>
+          <div class="fr-stat__value">{{ dashboard.totalActive }}</div>
+          <div class="fr-stat__label">{{ 'ActiveIncidents' | localize }}</div>
+        </div>
+        <div class="fr-stat fr-stat--warning">
+          <div class="fr-stat__icon"><i class="fas fa-clock"></i></div>
+          <div class="fr-stat__value">{{ dashboard.overdueCount }}</div>
+          <div class="fr-stat__label">{{ 'OverdueIncidents' | localize }}</div>
+        </div>
+        <div class="fr-stat fr-stat--danger">
+          <div class="fr-stat__icon"><i class="fas fa-ban"></i></div>
+          <div class="fr-stat__value">{{ dashboard.slaBreachedCount }}</div>
+          <div class="fr-stat__label">{{ 'SlaBreaches' | localize }}</div>
+        </div>
+        <div class="fr-stat fr-stat--secondary">
+          <div class="fr-stat__icon"><i class="fas fa-arrow-up"></i></div>
+          <div class="fr-stat__value">{{ dashboard.escalatedCount }}</div>
+          <div class="fr-stat__label">Escalated</div>
+        </div>
+        <div class="fr-stat fr-stat--success">
+          <div class="fr-stat__icon"><i class="fas fa-check-circle"></i></div>
+          <div class="fr-stat__value">{{ dashboard.slaCompliancePercent }}%</div>
+          <div class="fr-stat__label">{{ 'SlaCompliance' | localize }}</div>
+        </div>
+        <div class="fr-stat fr-stat--info">
+          <div class="fr-stat__icon"><i class="fas fa-stopwatch"></i></div>
+          <div class="fr-stat__value">{{ dashboard.averageResponseMinutes | number:'1.0-0' }}m</div>
+          <div class="fr-stat__label">Avg Response</div>
+        </div>
       </div>
 
       <div class="row">
         <div class="col-lg-8">
-          <div class="card">
-            <div class="card-header"><h3 class="card-title">Active queue</h3></div>
-            <div class="card-body p-0 table-responsive">
-              <table class="table table-striped mb-0">
-                <thead><tr><th>Title</th><th>Status</th><th>Priority</th><th>SLA</th><th>Assignee</th></tr></thead>
-                <tbody>
-                  <ng-container *ngFor="let col of dashboard.kanban">
-                    <tr *ngFor="let item of col.items" class="cursor-pointer" (click)="openIncident(item)">
-                      <td>{{ item.title }}</td>
-                      <td>{{ statusLabels[item.status] }}</td>
-                      <td><span class="badge" [ngClass]="priorityClass(item.priority)">{{ priorityLabels[item.priority] }}</span></td>
-                      <td><span class="badge" [ngClass]="slaClass(item.slaStatus)">{{ item.slaStatus }}</span></td>
-                      <td>{{ item.assignedTo?.displayText || '—' }}</td>
+          <div class="fr-card">
+            <div class="fr-card__header">
+              <h5 class="mb-0">Active Queue</h5>
+            </div>
+            <div class="fr-card__body p-0">
+              <div class="table-responsive">
+                <table class="fr-table">
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Status</th>
+                      <th>Priority</th>
+                      <th>SLA</th>
+                      <th>Assignee</th>
                     </tr>
-                  </ng-container>
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let col of dashboard.kanban">
+                      <tr *ngFor="let item of col.items" class="cursor-pointer" (click)="openIncident(item)">
+                        <td>{{ item.title }}</td>
+                        <td>{{ statusLabels[item.status] }}</td>
+                        <td><span class="fr-chip" [ngClass]="priorityClass(item.priority)">{{ priorityLabels[item.priority] }}</span></td>
+                        <td><span class="fr-chip" [ngClass]="slaClass(item.slaStatus)">{{ item.slaStatus }}</span></td>
+                        <td>{{ item.assignedTo?.displayText || '-' }}</td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
+
         <div class="col-lg-4">
-          <div class="card">
-            <div class="card-header"><h3 class="card-title">{{ 'TechnicianWorkload' | localize }}</h3></div>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item d-flex justify-content-between" *ngFor="let w of dashboard.technicianWorkload">
-                <span>{{ w.displayName }}</span>
-                <span class="badge badge-primary">{{ w.activeAssignments }}</span>
-              </li>
-            </ul>
+          <div class="fr-card">
+            <div class="fr-card__header">
+              <h5 class="mb-0">{{ 'TechnicianWorkload' | localize }}</h5>
+            </div>
+            <div class="fr-card__body p-0">
+              <ul class="fr-info-list">
+                <li *ngFor="let w of dashboard.technicianWorkload">
+                  <span class="fr-info-list__label">{{ w.displayName }}</span>
+                  <span class="fr-info-list__value">
+                    <span class="fr-chip fr-chip-brand">{{ w.activeAssignments }}</span>
+                  </span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 </div>
-
-

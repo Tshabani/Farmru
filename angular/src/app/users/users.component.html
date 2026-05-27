@@ -1,238 +1,126 @@
-<div [@routerTransition]>
-  <section class="content-header">
+﻿<div [@routerTransition]>
+  <section class="content-header pb-0">
     <div class="container-fluid">
-      <div class="row">
-        <div class="col-6">
-          <h1>{{ "Users" | localize }}</h1>
+      <div class="fr-page-header">
+        <div>
+          <h1 class="fr-page-title">{{ "Users" | localize }}</h1>
+          <p class="fr-page-sub">Manage system users and accounts</p>
         </div>
-        <div class="col-6 text-right">
-          <a href="javascript:;" class="btn bg-blue" (click)="createUser()">
-            <i class="fa fa-plus-square"></i>
-            {{ "Create" | localize }}
-          </a>
+        <div class="ml-auto d-flex align-items-center">
+          <button class="fr-btn fr-btn-primary" (click)="createUser()">
+            <i class="fa fa-plus-square mr-1"></i>{{ "Create" | localize }}
+          </button>
         </div>
       </div>
     </div>
   </section>
-  <section class="content px-2">
+
+  <section class="content px-2 pt-3">
     <div class="container-fluid">
-      <div class="card">
-        <div class="card-header">
-          <div class="row">
-            <div class="col-md-6">&emsp;</div>
-            <div class="col-md-6">
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <button
-                    type="button"
-                    class="btn bg-blue"
-                    (click)="getDataPage(1)"
-                    >
-                    <i class="fas fa-search"></i>
-                  </button>
-                </div>
-                <input
-                  type="text"
-                  class="form-control"
-                  name="keyword"
+      <div class="fr-card">
+        <div class="fr-card__header">
+          <div class="row align-items-center">
+            <div class="col-md-5 ml-auto">
+              <div class="fr-search">
+                <span class="fr-search__icon"><i class="fas fa-search"></i></span>
+                <input type="text" class="fr-search__input" name="keyword"
                   [placeholder]="'SearchWithThreeDot' | localize"
-                  [(ngModel)]="keyword"
-                  (keyup.enter)="getDataPage(1)"
-                  />
-                  <div class="input-group-append">
-                    <button
-                      type="button"
-                      class="btn btn-default"
-                      (click)="advancedFiltersVisible = !advancedFiltersVisible"
-                      >
-                      <i
-                        class="fas"
-                        [class.fa-angle-up]="advancedFiltersVisible"
-                        [class.fa-angle-down]="!advancedFiltersVisible"
-                      ></i>
-                    </button>
-                  </div>
-                </div>
+                  [(ngModel)]="keyword" (keyup.enter)="getDataPage(1)" />
+                <button type="button" class="fr-search__btn fr-btn fr-btn-primary" (click)="getDataPage(1)">
+                  {{ "Search" | localize }}
+                </button>
+                <button type="button" class="fr-btn fr-btn-ghost fr-btn-sm ml-1 mr-2"
+                  (click)="advancedFiltersVisible = !advancedFiltersVisible">
+                  <i class="fas" [class.fa-angle-up]="advancedFiltersVisible" [class.fa-angle-down]="!advancedFiltersVisible"></i>
+                </button>
               </div>
             </div>
-            @if (advancedFiltersVisible) {
-              <div class="card mb-0 mt-1">
-                <div class="card-body">
-                  <form class="form-horizontal">
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group row mb-0">
-                          <label class="col-md-3 col-form-label">
-                            {{ "IsActive" | localize }}
-                          </label>
-                          <div class="col-md-9 pt-2">
-                            <div class="custom-control custom-radio d-inline">
-                              <input
-                                type="radio"
-                                class="custom-control-input"
-                                id="isActiveAll"
-                                name="isActive"
-                                [(ngModel)]="isActive"
-                                [value]="undefined"
-                                checked
-                                />
-                                <label class="custom-control-label" for="isActiveAll">
-                                  {{ "All" | localize }}
-                                </label>
-                              </div>
-                              <div class="custom-control custom-radio d-inline mx-3">
-                                <input
-                                  type="radio"
-                                  class="custom-control-input"
-                                  id="isActiveActive"
-                                  name="isActive"
-                                  [(ngModel)]="isActive"
-                                  [value]="true"
-                                  />
-                                  <label
-                                    class="custom-control-label"
-                                    for="isActiveActive"
-                                    >
-                                    {{ "Yes" | localize }}
-                                  </label>
-                                </div>
-                                <div class="custom-control custom-radio d-inline">
-                                  <input
-                                    type="radio"
-                                    class="custom-control-input"
-                                    id="isActivePassive"
-                                    name="isActive"
-                                    [(ngModel)]="isActive"
-                                    [value]="false"
-                                    />
-                                    <label
-                                      class="custom-control-label"
-                                      for="isActivePassive"
-                                      >
-                                      {{ "No" | localize }}
-                                    </label>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </form>
-                      </div>
-                      <div class="card-footer">
-                        <button
-                          type="button"
-                          class="btn bg-blue"
-                          (click)="getDataPage(1)"
-                          >
-                          {{ "Search" | localize }}
-                        </button>
-                        <button
-                          type="button"
-                          class="btn btn-default float-right"
-                          (click)="clearFilters()"
-                          >
-                          {{ "Clear" | localize }}
-                        </button>
-                      </div>
-                    </div>
-                  }
-                </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table table-striped table-bordered" [busy]="isTableLoading">
-                      <thead class="bg-light">
-                        <tr>
-                          <th>{{ "UserName" | localize }}</th>
-                          <th>{{ "FullName" | localize }}</th>
-                          <th>{{ "EmailAddress" | localize }}</th>
-                          <th>{{ "IsActive" | localize }}</th>
-                          <th style="width: 310px;">{{ "Actions" | localize }}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        @for (
-                          user of users
-                          | paginate
-                          : {
-                          id: 'server',
-                          itemsPerPage: pageSize,
-                          currentPage: pageNumber,
-                          totalItems: totalItems
-                        }
-                        ; track
-                        user.id) {
-                        <tr
-                          >
-                          <td>{{ user.userName }}</td>
-                          <td>{{ user.person.fullName }}</td>
-                          <td>{{ user.emailAddress }}</td>
-                          <td>
-                            <div class="custom-control custom-checkbox">
-                              <input
-                                type="checkbox"
-                                class="custom-control-input"
-                                disabled
-                                [checked]="user.isActive"
-                                />
-                                <label class="custom-control-label"></label>
-                              </div>
-                          </td>
-                            <td>
-                              <button
-                                type="button"
-                                class="btn btn-sm bg-secondary"
-                                (click)="editUser(user)"
-                                >
-                                <i class="fas fa-pencil-alt"></i>
-                                {{ "Edit" | localize }}
-                              </button>
-                              <button
-                                type="button"
-                                class="btn btn-sm bg-danger mx-2"
-                                (click)="delete(user)"
-                                >
-                                <i class="fas fa-trash"></i>
-                                {{ "Delete" | localize }}
-                              </button>
-                              <button
-                                type="button"
-                                class="btn btn-sm bg-secondary"
-                                (click)="resetPassword(user)"
-                                >
-                                <i class="fas fa-lock"></i>
-                                {{ "ResetPassword" | localize }}
-                              </button>
-                            </td>
-                        </tr>
-                        }
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <div class="card-footer table-card-footer bg-light border-top">
-                  <div class="row">
-                    <div class="col-sm-4 col-12 text-sm-left text-center">
-                      <button class="btn btn-secondary" (click)="refresh()">
-                        <i class="fas fa-redo-alt"></i>
+          </div>
+
+          @if (advancedFiltersVisible) {
+          <div class="fr-filters mt-2">
+            <div class="fr-filter-group">
+              <span class="fr-filter-label">{{ "IsActive" | localize }}</span>
+              <div class="fr-radio-group">
+                <label class="fr-radio">
+                  <input type="radio" name="isActive" [(ngModel)]="isActive" [value]="undefined" />
+                  <span>{{ "All" | localize }}</span>
+                </label>
+                <label class="fr-radio">
+                  <input type="radio" name="isActive" [(ngModel)]="isActive" [value]="true" />
+                  <span>{{ "Yes" | localize }}</span>
+                </label>
+                <label class="fr-radio">
+                  <input type="radio" name="isActive" [(ngModel)]="isActive" [value]="false" />
+                  <span>{{ "No" | localize }}</span>
+                </label>
+              </div>
+            </div>
+            <button type="button" class="fr-btn fr-btn-primary fr-btn-sm ml-auto" (click)="getDataPage(1)">
+              {{ "Search" | localize }}
+            </button>
+            <button type="button" class="fr-btn fr-btn-ghost fr-btn-sm" (click)="clearFilters()">
+              {{ "Clear" | localize }}
+            </button>
+          </div>
+          }
+        </div>
+
+        <div class="fr-card__body">
+          <div class="table-responsive">
+            <table class="fr-table" [busy]="isTableLoading">
+              <thead>
+                <tr>
+                  <th>{{ "UserName" | localize }}</th>
+                  <th>{{ "FullName" | localize }}</th>
+                  <th>{{ "EmailAddress" | localize }}</th>
+                  <th>{{ "IsActive" | localize }}</th>
+                  <th>{{ "Actions" | localize }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (
+                  user of users
+                  | paginate : { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems }
+                  ; track user.id) {
+                <tr>
+                  <td>{{ user.userName }}</td>
+                  <td>{{ user.person.fullName }}</td>
+                  <td>{{ user.emailAddress }}</td>
+                  <td>
+                    <span class="fr-chip" [class.fr-chip-green]="user.isActive" [class.fr-chip-grey]="!user.isActive">
+                      {{ user.isActive ? ("Yes" | localize) : ("No" | localize) }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="fr-row-actions">
+                      <button type="button" class="fr-btn fr-btn-outline fr-btn-sm" (click)="editUser(user)">
+                        <i class="fas fa-pencil-alt mr-1"></i>{{ "Edit" | localize }}
+                      </button>
+                      <button type="button" class="fr-btn fr-btn-danger fr-btn-sm" (click)="delete(user)">
+                        <i class="fas fa-trash mr-1"></i>{{ "Delete" | localize }}
+                      </button>
+                      <button type="button" class="fr-btn fr-btn-secondary fr-btn-sm" (click)="resetPassword(user)">
+                        <i class="fas fa-lock mr-1"></i>{{ "ResetPassword" | localize }}
                       </button>
                     </div>
-                    <div class="col-sm-4 col-12 text-center">
-                      <p class="mb-0 my-2">
-                        {{ "TotalRecordsCount" | localize: totalItems }}
-                      </p>
-                    </div>
-                    <div class="col-sm-4 col-12">
-                      <div class="float-sm-right m-auto">
-                        <abp-pagination-controls
-                          id="server"
-                          (pageChange)="getDataPage($event)"
-                          >
-                        </abp-pagination-controls>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
+
+        <div class="fr-card__footer">
+          <button class="fr-btn fr-btn-ghost fr-btn-sm" (click)="refresh()">
+            <i class="fas fa-redo-alt"></i>
+          </button>
+          <span class="fr-total">Total: <strong>{{ totalItems }}</strong></span>
+          <abp-pagination-controls id="server" (pageChange)="getDataPage($event)"></abp-pagination-controls>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+

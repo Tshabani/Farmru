@@ -1,100 +1,108 @@
 <div [@routerTransition]>
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-6">
-            <h1>{{ "Facility appointment" | localize }}</h1>
-          </div>
-          <div class="col-6 text-right">
-            <a href="javascript:;" class="btn bg-blue" (click)="createFacilityAppointment()">
-              <i class="fa fa-plus-square"></i>
-              {{ "Create" | localize }}
-            </a>
+
+  <!-- ── Page Header ─────────────────────────────────────────────────────── -->
+  <section class="content-header pb-0">
+    <div class="container-fluid">
+      <div class="fa-page-header">
+        <div>
+          <h4 class="fa-page-title">Facility Appointments</h4>
+          <small class="fa-page-sub">Manage user–facility access assignments</small>
+        </div>
+        <button class="fa-btn-brand" (click)="createFacilityAppointment()">
+          <i class="fas fa-plus mr-2"></i> New Appointment
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Content ────────────────────────────────────────────────────────── -->
+  <section class="content px-2 pt-3">
+    <div class="container-fluid">
+
+      <!-- Search bar -->
+      <div class="row mb-3">
+        <div class="col-md-5 col-12 ml-auto">
+          <div class="fa-search-bar">
+            <i class="fas fa-search fa-search-bar__icon"></i>
+            <input
+              type="text"
+              class="fa-search-bar__input"
+              placeholder="Search appointments…"
+              [(ngModel)]="keyword"
+              (keyup.enter)="getDataPage(1)" />
+            <button class="fa-search-bar__btn" (click)="getDataPage(1)">Search</button>
           </div>
         </div>
       </div>
-    </section>
-    <section class="content px-2">
-      <div class="container-fluid">
-        <div class="card">
-          <div class="card-header">
-            <div class="row">
-              <div class="col-md-6">&emsp;</div>
-              <div class="col-md-6">
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <button type="button" class="btn bg-blue" (click)="getDataPage(1)">
-                      <i class="fas fa-search"></i>
-                    </button>
+
+      <!-- Cards grid -->
+      <div class="row" [busy]="isTableLoading">
+        @for (appointment of facilityAppointments
+              | paginate: { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems };
+              track appointment.id) {
+
+          <div class="col-xl-4 col-md-6 col-12 mb-3">
+            <div class="fa-card">
+              <div class="fa-card__accent"></div>
+              <div class="fa-card__body">
+
+                <!-- Avatar + user info -->
+                <div class="fa-user-row">
+                  <div class="fa-avatar">{{ initials(appointment.appointedUser?.displayText) }}</div>
+                  <div class="fa-user-info">
+                    <div class="fa-user-name">{{ appointment.appointedUser?.displayText }}</div>
+                    <span class="fa-badge">Field User</span>
                   </div>
-                  <input type="text" class="form-control" name="keyword" [placeholder]="'SearchWithThreeDot' | localize"
-                    [(ngModel)]="keyword" (keyup.enter)="getDataPage(1)" />
                 </div>
-              </div>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-striped table-bordered" [busy]="isTableLoading">
-                <thead class="bg-light">
-                  <tr>
-                    <th>{{ "AppointedUser" | localize }}</th>
-                    <th>{{ "Facility " | localize }}</th>
-                    <th style="width: 155px;">{{ "Actions" | localize }}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @for (
-                  appointment of facilityAppointments
-                  | paginate
-                  : {
-                  id: 'server',
-                  itemsPerPage: pageSize,
-                  currentPage: pageNumber,
-                  totalItems: totalItems
-                  }
-                  ; track
-                  appointment.id) {
-                  <tr>
-                    <td>{{ appointment.appointedUser.displayText }}</td>
-                    <td>{{ appointment.facility.displayText }}</td>
-                    <td>
-                      <button type="button" class="btn btn-sm bg-secondary" (click)="editFacilityAppointment(appointment)">
-                        <i class="fas fa-pencil-alt"></i>
-                        {{ "Edit" | localize }}
-                      </button>
-                      <button type="button" class="btn btn-sm bg-danger ml-2" (click)="delete(appointment)">
-                        <i class="fas fa-trash"></i>
-                        {{ "Delete" | localize }}
-                      </button>
-                    </td>
-                  </tr>
-                  }
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="card-footer table-card-footer bg-light border-top">
-            <div class="row">
-              <div class="col-sm-4 col-12 text-sm-left text-center">
-                <button class="btn btn-secondary" (click)="refresh()">
-                  <i class="fas fa-redo-alt"></i>
-                </button>
-              </div>
-              <div class="col-sm-4 col-12 text-center">
-                <p class="mb-0 my-2">
-                  {{ "TotalRecordsCount" | localize: totalItems }}
-                </p>
-              </div>
-              <div class="col-sm-4 col-12">
-                <div class="float-sm-right m-auto">
-                  <abp-pagination-controls id="server" (pageChange)="getDataPage($event)">
-                  </abp-pagination-controls>
+
+                <!-- Facility -->
+                <div class="fa-info-row">
+                  <i class="fas fa-building fa-info-row__icon"></i>
+                  <span class="fa-info-row__text">{{ appointment.facility?.displayText }}</span>
                 </div>
+
+                <div class="fa-divider"></div>
+
+                <!-- Actions -->
+                <div class="fa-actions">
+                  <button class="fa-btn-edit" (click)="editFacilityAppointment(appointment)">
+                    <i class="fas fa-pencil-alt mr-1"></i> Edit
+                  </button>
+                  <button class="fa-btn-delete" (click)="delete(appointment)">
+                    <i class="fas fa-trash mr-1"></i> Delete
+                  </button>
+                </div>
+
               </div>
             </div>
           </div>
-        </div>
+        }
+
+        <!-- Empty state -->
+        @if (!isTableLoading && facilityAppointments?.length === 0) {
+          <div class="col-12">
+            <div class="fa-empty">
+              <i class="fas fa-user-slash fa-empty__icon"></i>
+              <p class="fa-empty__title">No appointments found</p>
+              <p class="fa-empty__sub">Try adjusting your search or create a new appointment.</p>
+              <button class="fa-btn-brand mt-2" (click)="createFacilityAppointment()">
+                <i class="fas fa-plus mr-2"></i> New Appointment
+              </button>
+            </div>
+          </div>
+        }
       </div>
-    </section>
-  </div>
+
+      <!-- Footer -->
+      <div class="fa-footer">
+        <span class="fa-footer__count">
+          <i class="fas fa-list-ul mr-1"></i>
+          Total: <strong>{{ totalItems }}</strong> record{{ totalItems !== 1 ? 's' : '' }}
+        </span>
+        <abp-pagination-controls id="server" (pageChange)="getDataPage($event)">
+        </abp-pagination-controls>
+      </div>
+
+    </div>
+  </section>
+</div>
