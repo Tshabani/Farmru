@@ -75,7 +75,7 @@ Per the Bounded Context Map in Product Plan Section 22, Phase 1 introduces one n
                                  ▼
                     ┌───────────────────────────┐
                     │  WeatherAlertEvaluator     │──► Alert (existing entity,
-                    │  (new domain service)      │    AlertSource.Weather)
+                    │  (new domain service)      │    AlertType.WeatherFrost, etc.)
                     └────────────┬──────────────┘
                                  │
                     ┌────────────▼──────────────┐
@@ -521,7 +521,7 @@ Unchanged from the existing platform: ABP's shared-database, discriminator-colum
 Following the existing dated-migration naming convention exactly as seen in the repository's migration history:
 
 1. `Added_Weather_Observations` — `WeatherObservations`, `WeatherForecastDaily`, `EvapotranspirationReadings`
-2. `Added_Weather_Alert_Rules` — `WeatherAlertRules`, plus extend the existing `Alert` entity's `AlertSource` enum with `Weather` (an enum extension, not a schema change, unless `AlertSource` is stored as a string lookup table rather than an int — verify against the existing `Alert` entity before writing this migration)
+2. `Added_Weather_Alert_Rules` — `WeatherAlertRules`, plus extend the existing `Alert.AlertType` enum with five weather values (`WeatherFrost`, `WeatherHeatStress`, `WeatherHighWind`, `WeatherLightning`, `WeatherSevereRain`) — **corrected per ADR-009** (`/docs/adr/ADR-009-Alert-Classification-Strategy.md`): `Alert` has no `AlertSource` concept, contrary to this document's original assumption; Sprint 1 Checkpoint 2 found this via direct inspection before writing the migration, exactly as this section originally instructed ("verify against the existing `Alert` entity before writing this migration"). `AlertType` remains the sole classification mechanism for Phase 1.
 3. `Added_Fields` — `Fields` table, FK to `Facilities` and to the existing `GeoFences` table
 4. `Added_Crop_Reference_Data` — `CropTypes`, `SeedSuppliers`, `SeedVarieties`
 5. `Added_Crop_Seasons` — `CropSeasons`, `GrowthStageEvents`, `HarvestRecords`
@@ -685,7 +685,7 @@ Each engine interface lives in the Application layer and follows `OperationalMon
 
 ### 5.3 SignalR Updates
 
-**No new hubs.** Reuses the existing `AlertNotificationHub` for weather-driven alerts (they're just `Alert` rows with `AlertSource = Weather`, per Section 2.1 — the existing hub's tenant-group push logic doesn't need to know the difference). No Phase 1 module needs a dedicated real-time channel of its own — Crop Management and Fertilizer are inherently lower-frequency, user-driven-write workflows, not telemetry streams, so they're served fine by standard request/response plus the existing alert channel for the one case (weather alerts) that is genuinely push-worthy.
+**No new hubs.** Reuses the existing `AlertNotificationHub` for weather-driven alerts (they're just `Alert` rows with one of the new `WeatherFrost`/`WeatherHeatStress`/`WeatherHighWind`/`WeatherLightning`/`WeatherSevereRain` `AlertType` values, per Section 2.1 and ADR-009 — the existing hub's tenant-group push logic doesn't need to know the difference). No Phase 1 module needs a dedicated real-time channel of its own — Crop Management and Fertilizer are inherently lower-frequency, user-driven-write workflows, not telemetry streams, so they're served fine by standard request/response plus the existing alert channel for the one case (weather alerts) that is genuinely push-worthy.
 
 ### 5.4 Event Publishing
 
@@ -885,7 +885,7 @@ Then a WeatherObservation is recorded with ObservedAt within the last hour
 
 Given a WeatherAlertRule for Frost with ThresholdValue = 2.0°C on a Facility
 When a WeatherForecastDaily is recorded with TempMinCelsius = 1.0°C for that Facility
-Then an Alert is created with AlertSource = Weather and Severity matching the rule
+Then an Alert is created with AlertType = WeatherFrost (or the matching weather AlertType, per ADR-009) and Severity matching the rule
   And the Alert appears via the existing AlertNotificationHub within 2 seconds (Product Plan Section 26 target)
 ```
 

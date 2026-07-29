@@ -206,5 +206,12 @@
     <text name="OverdueIncidents" value="Overdue incidents" />
     <text name="SlaCompliance" value="SLA compliance" />
     <text name="TechnicianWorkload" value="Technician workload" />
+    <text name="Weather" value="Weather" />
+    <text name="WeatherConfiguration" value="Weather configuration" />
+    <text name="FacilityNotFound" value="Facility not found." />
+    <text name="WeatherAlertRuleNotFound" value="Weather alert rule not found." />
+    <text name="WeatherAlertRuleMustBeScopedToFacilityOrOrganisation" value="A weather alert rule must be scoped to either a Facility or an Organisation, not both, not neither." />
+    <text name="NoWeatherDataAvailable" value="No weather data is available for this Facility yet." />
+    <text name="OrganisationNotFound" value="Organisation not found." />
   </texts>
 </localizationDictionary>

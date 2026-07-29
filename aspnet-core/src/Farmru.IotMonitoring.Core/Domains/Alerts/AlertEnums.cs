@@ -16,6 +16,15 @@ namespace Farmru.IotMonitoring.Domains.Alerts
         TemperatureLow = 4,
         TelemetryAnomaly = 5,
         GeoFenceBreach = 6,
-        SensorFailure = 7
+        SensorFailure = 7,
+
+        // Weather Intelligence (Phase 1) — see ADR-009: Alert has no separate AlertSource
+        // concept, so weather-driven alerts are represented as AlertType values rather than
+        // a new classification field.
+        WeatherFrost = 8,
+        WeatherHeatStress = 9,
+        WeatherHighWind = 10,
+        WeatherLightning = 11,
+        WeatherSevereRain = 12
     }
 }

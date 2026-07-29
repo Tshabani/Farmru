@@ -123,7 +123,7 @@ Each module below follows a consistent template: **Purpose · Key User Stories �
 - `WeatherForecastDaily` / `WeatherForecastHourly` (FacilityId, validFrom, precipitationProbability, tempMin/Max, windGust, frostRisk, heatStressIndex)
 - `EvapotranspirationReading` (FacilityId, date, ET0/ETc, cropCoefficient reference)
 - `WeatherAlertRule` (FacilityId or OrganisationId scope, alertType enum: Frost/Wind/Heat/Lightning/RainSevere, threshold, severity)
-- Extend `Alert.AlertSource` enum with `Weather`.
+- Extend `Alert.AlertType` with weather-specific values (`WeatherFrost`, `WeatherHeatStress`, `WeatherHighWind`, `WeatherLightning`, `WeatherSevereRain`) — corrected per ADR-009 (`Alert` has no separate `AlertSource` concept; see `/docs/adr/ADR-009-Alert-Classification-Strategy.md`).
 
 **API Surface:** `WeatherAppService` (GetCurrent, GetForecast, GetHistory, GetEvapotranspiration), `WeatherAlertRuleAppService` (CRUD).
 
@@ -1079,6 +1079,7 @@ ADRs are not written here in full (each is properly a standalone, timestamped do
 | ADR-006 | Blob/imagery storage | Cloud object storage (e.g., Azure Blob, given existing ASP.NET Core hosting) vs. alternative | Needed before Drone/Satellite/Mobile-attachment modules can ship (Section 9) |
 | ADR-007 | Client-side vs. server-side composition for Digital Twin / Command Center | Orchestration AppService composing existing services server-side vs. client composing multiple existing API calls | Affects latency budget (Section 26) and caching strategy at scale |
 | ADR-008 | **Validation responsibility** (DTO shape vs. AppService cross-field vs. domain invariant vs. cross-aggregate rules, and the mandatory `DomainRuleException`→`UserFriendlyException` boundary translation) | Introduce FluentValidation; introduce a global exception filter now; leave each module to reinvent its own convention | Resolved during Phase 1 Sprint 0 when DTO validation was found to have no existing convention at all — recorded as **Accepted** in `/docs/adr/ADR-008-Validation-Responsibility.md`, the first ADR actually closed rather than left as a placeholder in this log |
+| ADR-009 | **Alert classification strategy** (how Weather, and later Disease Risk/Pest Monitoring/Predictive Maintenance, classify alerts on the shared `Alert` aggregate) | Introduce a new `AlertSource` field/enum on `Alert` (this document's original assumption) | Resolved during Phase 1 Sprint 1 Checkpoint 2 when implementation found `Alert` has no `AlertSource` concept — recorded as **Accepted** in `/docs/adr/ADR-009-Alert-Classification-Strategy.md`: Phase 1 extends the existing `AlertType` enum instead; `AlertSource` is deferred pending evidence from Phase 2's alert-producing modules |
 
 **Process recommendation:** adopt a lightweight ADR template (Context → Decision → Alternatives Considered → Consequences), stored in-repo alongside the code it governs (e.g., `/docs/adr/`), one file per decision, numbered sequentially, never edited after acceptance — only superseded by a new ADR that references it. This gives future engineers (and future planning documents) a trail of *why*, which this document establishes the need for but deliberately doesn't pre-empt, since real alternatives can only be weighed properly at build time with current vendor pricing/capability in hand.
 

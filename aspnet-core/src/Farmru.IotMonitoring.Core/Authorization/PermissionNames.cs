@@ -39,5 +39,9 @@
         public const string Pages_Incidents = "Pages.Incidents";
 
         public const string Pages_Incidents_Manage = "Pages.Incidents.Manage";
+
+        public const string Pages_Weather = "Pages.Weather";
+
+        public const string Pages_Weather_Configure = "Pages.Weather.Configure";
     }
 }

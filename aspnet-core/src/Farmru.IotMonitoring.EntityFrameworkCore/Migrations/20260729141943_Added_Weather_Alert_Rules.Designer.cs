@@ -4,6 +4,7 @@ using Farmru.IotMonitoring.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Farmru.IotMonitoring.Migrations
 {
     [DbContext(typeof(IotMonitoringDbContext))]
-    partial class IotMonitoringDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260729141943_Added_Weather_Alert_Rules")]
+    partial class Added_Weather_Alert_Rules
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2951,10 +2954,6 @@ namespace Farmru.IotMonitoring.Migrations
 
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
-
-                    b.Property<decimal?>("LightningProbabilityPercent")
-                        .HasPrecision(5, 2)
-                        .HasColumnType("decimal(5,2)");
 
                     b.Property<DateTime>("ObservedAt")
                         .HasColumnType("datetime2");

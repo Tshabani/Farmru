@@ -4,6 +4,7 @@ using Farmru.IotMonitoring.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Farmru.IotMonitoring.Migrations
 {
     [DbContext(typeof(IotMonitoringDbContext))]
-    partial class IotMonitoringDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260729141144_Added_Weather_Observations")]
+    partial class Added_Weather_Observations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2781,71 +2784,6 @@ namespace Farmru.IotMonitoring.Migrations
                     b.ToTable("EvapotranspirationReadings");
                 });
 
-            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Weather.WeatherAlertRule", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("AlertType")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("CreatorUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("DeleterUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("DeletionTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("FacilityId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("LastModifierUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid?>("OrganisationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Severity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("ThresholdValue")
-                        .HasPrecision(6, 2)
-                        .HasColumnType("decimal(6,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FacilityId");
-
-                    b.HasIndex("OrganisationId");
-
-                    b.HasIndex("TenantId", "FacilityId");
-
-                    b.HasIndex("TenantId", "OrganisationId");
-
-                    b.ToTable("WeatherAlertRules", t =>
-                        {
-                            t.HasCheckConstraint("CK_WeatherAlertRules_FacilityOrOrganisation", "([FacilityId] IS NOT NULL AND [OrganisationId] IS NULL) OR ([FacilityId] IS NULL AND [OrganisationId] IS NOT NULL)");
-                        });
-                });
-
             modelBuilder.Entity("Farmru.IotMonitoring.Domains.Weather.WeatherForecastDaily", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2951,10 +2889,6 @@ namespace Farmru.IotMonitoring.Migrations
 
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
-
-                    b.Property<decimal?>("LightningProbabilityPercent")
-                        .HasPrecision(5, 2)
-                        .HasColumnType("decimal(5,2)");
 
                     b.Property<DateTime>("ObservedAt")
                         .HasColumnType("datetime2");
@@ -3466,21 +3400,6 @@ namespace Farmru.IotMonitoring.Migrations
                         .IsRequired();
 
                     b.Navigation("Facility");
-                });
-
-            modelBuilder.Entity("Farmru.IotMonitoring.Domains.Weather.WeatherAlertRule", b =>
-                {
-                    b.HasOne("Farmru.IotMonitoring.Domains.Facilities.Facility", "Facility")
-                        .WithMany()
-                        .HasForeignKey("FacilityId");
-
-                    b.HasOne("Farmru.IotMonitoring.Domains.Organisations.Organisation", "Organisation")
-                        .WithMany()
-                        .HasForeignKey("OrganisationId");
-
-                    b.Navigation("Facility");
-
-                    b.Navigation("Organisation");
                 });
 
             modelBuilder.Entity("Farmru.IotMonitoring.Domains.Weather.WeatherForecastDaily", b =>

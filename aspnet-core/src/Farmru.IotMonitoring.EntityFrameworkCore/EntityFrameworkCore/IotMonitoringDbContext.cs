@@ -13,6 +13,7 @@ using Farmru.IotMonitoring.Domains.Stats;
 using Farmru.IotMonitoring.Domains.Alerts;
 using Farmru.IotMonitoring.Domains.Monitoring;
 using Farmru.IotMonitoring.Domains.Geo;
+using Farmru.IotMonitoring.Domains.Weather;
 
 namespace Farmru.IotMonitoring.EntityFrameworkCore
 {
@@ -36,6 +37,10 @@ namespace Farmru.IotMonitoring.EntityFrameworkCore
         public DbSet<AlertThresholdConfiguration> AlertThresholdConfigurations { get; set; }
         public DbSet<MonitoringExecutionHistory> MonitoringExecutionHistories { get; set; }
         public DbSet<GeoFence> GeoFences { get; set; }
+        public DbSet<WeatherObservation> WeatherObservations { get; set; }
+        public DbSet<WeatherForecastDaily> WeatherForecastDailies { get; set; }
+        public DbSet<EvapotranspirationReading> EvapotranspirationReadings { get; set; }
+        public DbSet<WeatherAlertRule> WeatherAlertRules { get; set; }
 
         public IotMonitoringDbContext(DbContextOptions<IotMonitoringDbContext> options)
             : base(options)
@@ -109,6 +114,48 @@ namespace Farmru.IotMonitoring.EntityFrameworkCore
             modelBuilder.Entity<IncidentAttachment>(b =>
             {
                 b.HasIndex(e => new { e.TenantId, e.IncidentId });
+            });
+
+            modelBuilder.Entity<WeatherObservation>(b =>
+            {
+                b.HasOne(w => w.Facility).WithMany().HasForeignKey(w => w.FacilityId);
+                b.HasIndex(e => new { e.TenantId, e.FacilityId, e.ObservedAt });
+                b.Property(e => e.TemperatureCelsius).HasPrecision(5, 2);
+                b.Property(e => e.HumidityPercent).HasPrecision(5, 2);
+                b.Property(e => e.WindSpeedKph).HasPrecision(5, 2);
+                b.Property(e => e.PrecipitationMm).HasPrecision(6, 2);
+                b.Property(e => e.PressureHpa).HasPrecision(6, 2);
+                b.Property(e => e.UvIndex).HasPrecision(4, 2);
+                b.Property(e => e.LightningProbabilityPercent).HasPrecision(5, 2);
+            });
+
+            modelBuilder.Entity<WeatherForecastDaily>(b =>
+            {
+                b.HasOne(w => w.Facility).WithMany().HasForeignKey(w => w.FacilityId);
+                b.HasIndex(e => new { e.TenantId, e.FacilityId, e.ForecastFor, e.GeneratedAt });
+                b.Property(e => e.TempMinCelsius).HasPrecision(5, 2);
+                b.Property(e => e.TempMaxCelsius).HasPrecision(5, 2);
+                b.Property(e => e.WindGustKph).HasPrecision(5, 2);
+            });
+
+            modelBuilder.Entity<EvapotranspirationReading>(b =>
+            {
+                b.HasOne(e => e.Facility).WithMany().HasForeignKey(e => e.FacilityId);
+                b.HasIndex(e => new { e.TenantId, e.FacilityId, e.Date });
+                b.Property(e => e.Et0Mm).HasPrecision(5, 2);
+                b.Property(e => e.EtcMm).HasPrecision(5, 2);
+            });
+
+            modelBuilder.Entity<WeatherAlertRule>(b =>
+            {
+                b.HasOne(w => w.Facility).WithMany().HasForeignKey(w => w.FacilityId);
+                b.HasOne(w => w.Organisation).WithMany().HasForeignKey(w => w.OrganisationId);
+                b.HasIndex(e => new { e.TenantId, e.FacilityId });
+                b.HasIndex(e => new { e.TenantId, e.OrganisationId });
+                b.Property(e => e.ThresholdValue).HasPrecision(6, 2);
+                b.ToTable(t => t.HasCheckConstraint(
+                    "CK_WeatherAlertRules_FacilityOrOrganisation",
+                    "([FacilityId] IS NOT NULL AND [OrganisationId] IS NULL) OR ([FacilityId] IS NULL AND [OrganisationId] IS NOT NULL)"));
             });
         }
     }
