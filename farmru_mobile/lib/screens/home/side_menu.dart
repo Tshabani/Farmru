@@ -8,6 +8,9 @@ import '../monitoring/monitoring_screen.dart';
 import '../gis/operational_map_screen.dart';
 import '../Incidents/IncidentsList.dart';
 import '../Task/TaskList.dart';
+import '../weather/weather_screen.dart';
+import '../crops/crop_season_list_screen.dart';
+import '../nutrients/nutrient_balance_screen.dart';
 import '../account/profile_screen.dart';
 import '../account/policies_screen.dart';
 import '../account/settings_screen.dart';
@@ -77,6 +80,25 @@ class _SideMenuState extends State<SideMenu> {
                   icon: Icons.task_alt_rounded,
                   label: 'Tasks',
                   onTap: () => _navigate(const TasksListPage()),
+                ),
+                const SizedBox(height: 8),
+                const Divider(indent: 16, endIndent: 16),
+                const SizedBox(height: 8),
+                const _SectionLabel('Agronomy'),
+                _MenuItem(
+                  icon: Icons.wb_cloudy_rounded,
+                  label: 'Weather',
+                  onTap: () => _navigate(const WeatherScreen()),
+                ),
+                _MenuItem(
+                  icon: Icons.grass_rounded,
+                  label: 'Crop Seasons',
+                  onTap: () => _navigate(const CropSeasonListScreen()),
+                ),
+                _MenuItem(
+                  icon: Icons.science_rounded,
+                  label: 'Nutrient Balance',
+                  onTap: () => _navigate(const NutrientBalanceScreen()),
                 ),
                 const SizedBox(height: 8),
                 const Divider(indent: 16, endIndent: 16),
