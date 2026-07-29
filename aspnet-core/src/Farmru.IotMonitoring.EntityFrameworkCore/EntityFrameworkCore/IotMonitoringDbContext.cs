@@ -15,6 +15,7 @@ using Farmru.IotMonitoring.Domains.Monitoring;
 using Farmru.IotMonitoring.Domains.Geo;
 using Farmru.IotMonitoring.Domains.Weather;
 using Farmru.IotMonitoring.Domains.Crops;
+using Farmru.IotMonitoring.Domains.Nutrients;
 
 namespace Farmru.IotMonitoring.EntityFrameworkCore
 {
@@ -49,6 +50,9 @@ namespace Farmru.IotMonitoring.EntityFrameworkCore
         public DbSet<CropSeason> CropSeasons { get; set; }
         public DbSet<GrowthStageEvent> GrowthStageEvents { get; set; }
         public DbSet<HarvestRecord> HarvestRecords { get; set; }
+        public DbSet<FertilizerProduct> FertilizerProducts { get; set; }
+        public DbSet<FertilizerApplication> FertilizerApplications { get; set; }
+        public DbSet<NutrientBalanceSnapshot> NutrientBalanceSnapshots { get; set; }
 
         public IotMonitoringDbContext(DbContextOptions<IotMonitoringDbContext> options)
             : base(options)
@@ -206,6 +210,38 @@ namespace Farmru.IotMonitoring.EntityFrameworkCore
             {
                 b.HasIndex(e => e.CropSeasonId).IsUnique();
                 b.Property(e => e.ActualYieldKg).HasPrecision(10, 2);
+            });
+
+            modelBuilder.Entity<FertilizerProduct>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.Name });
+                b.Property(e => e.NitrogenPercent).HasPrecision(5, 2);
+                b.Property(e => e.PhosphorusPercent).HasPrecision(5, 2);
+                b.Property(e => e.PotassiumPercent).HasPrecision(5, 2);
+                b.Property(e => e.UnitCostPerKg).HasPrecision(8, 2);
+            });
+
+            modelBuilder.Entity<FertilizerApplication>(b =>
+            {
+                b.HasOne(a => a.Field).WithMany().HasForeignKey(a => a.FieldId);
+                b.HasOne(a => a.CropSeason).WithMany().HasForeignKey(a => a.CropSeasonId);
+                b.HasOne(a => a.Product).WithMany().HasForeignKey(a => a.ProductId);
+                b.HasOne(a => a.Operator).WithMany().HasForeignKey(a => a.OperatorPersonId);
+                b.HasIndex(e => new { e.TenantId, e.FieldId, e.ApplicationDate });
+                b.Property(e => e.RateKgPerHectare).HasPrecision(8, 2);
+                b.Property(e => e.Cost).HasPrecision(10, 2);
+            });
+
+            modelBuilder.Entity<NutrientBalanceSnapshot>(b =>
+            {
+                b.HasOne(s => s.Field).WithMany().HasForeignKey(s => s.FieldId);
+                b.HasIndex(e => new { e.TenantId, e.FieldId, e.SnapshotDate });
+                b.Property(e => e.SensedNitrogen).HasPrecision(6, 2);
+                b.Property(e => e.SensedPhosphorus).HasPrecision(6, 2);
+                b.Property(e => e.SensedPotassium).HasPrecision(6, 2);
+                b.Property(e => e.AppliedNitrogenTrailing30d).HasPrecision(8, 2);
+                b.Property(e => e.AppliedPhosphorusTrailing30d).HasPrecision(8, 2);
+                b.Property(e => e.AppliedPotassiumTrailing30d).HasPrecision(8, 2);
             });
         }
     }

@@ -225,5 +225,10 @@
     <text name="CropSeasonNotFound" value="Crop season not found." />
     <text name="FieldAlreadyHasOpenSeason" value="This Field already has an open Crop Season. Harvest or close it before planting a new one." />
     <text name="SeedVarietiesCannotBeEdited" value="Seed varieties cannot be edited once created. Deactivate and create a new variety instead." />
+    <text name="Nutrients" value="Nutrients" />
+    <text name="NutrientApplication" value="Nutrient application" />
+    <text name="FertilizerProductNotFound" value="Fertilizer product not found." />
+    <text name="PersonNotFoundForOperator" value="The specified operator was not found." />
+    <text name="NoNutrientBalanceDataAvailable" value="No nutrient balance data is available for this Field yet." />
   </texts>
 </localizationDictionary>

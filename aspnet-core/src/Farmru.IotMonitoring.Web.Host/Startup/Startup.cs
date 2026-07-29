@@ -49,6 +49,7 @@ namespace Farmru.IotMonitoring.Web.Host.Startup
             services.AddSignalR();
             services.AddHostedService<Farmru.IotMonitoring.Web.Host.Monitoring.OperationalMonitoringHostedService>();
             services.AddHostedService<Farmru.IotMonitoring.Web.Host.Weather.WeatherAlertEvaluationHostedService>();
+            services.AddHostedService<Farmru.IotMonitoring.Web.Host.Nutrients.NutrientBalanceEvaluationHostedService>();
             // WeatherSyncHostedService is intentionally not registered yet: it resolves IWeatherProvider,
             // which has no concrete implementation until ADR-001 (weather provider selection) closes —
             // registering it now would fail DI resolution at startup. See Sprint0-004-WeatherProvider.md.

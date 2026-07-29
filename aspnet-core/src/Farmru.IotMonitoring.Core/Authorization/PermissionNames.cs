@@ -53,5 +53,9 @@
         public const string Pages_Crops_Manage = "Pages.Crops.Manage";
 
         public const string Pages_Crops_Harvest = "Pages.Crops.Harvest";
+
+        public const string Pages_Nutrients = "Pages.Nutrients";
+
+        public const string Pages_Nutrients_Apply = "Pages.Nutrients.Apply";
     }
 }
