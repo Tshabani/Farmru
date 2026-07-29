@@ -6,10 +6,14 @@
           <h1 class="fr-page-title">{{ "Nutrients" | localize }}</h1>
           <p class="fr-page-sub">Nutrient balance and fertilizer application log</p>
         </div>
-        <div class="ml-auto d-flex align-items-center" *ngIf="fields.length">
-          <select class="form-control" style="width: auto;" [(ngModel)]="selectedFieldId" (ngModelChange)="onFieldChange()">
+        <div class="ml-auto d-flex align-items-center">
+          <a class="fr-btn fr-btn-outline mr-2" routerLink="/app/nutrients/products">{{ "FertilizerProducts" | localize }}</a>
+          <select class="form-control mr-2" style="width: auto;" *ngIf="fields.length" [(ngModel)]="selectedFieldId" (ngModelChange)="onFieldChange()">
             <option *ngFor="let f of fields" [value]="f.id">{{ f.name }}</option>
           </select>
+          <button class="fr-btn fr-btn-primary" *ngIf="canApply && fields.length" (click)="recordApplication()">
+            <i class="fas fa-plus mr-1"></i>{{ "RecordFertilizerApplication" | localize }}
+          </button>
         </div>
       </div>
     </div>

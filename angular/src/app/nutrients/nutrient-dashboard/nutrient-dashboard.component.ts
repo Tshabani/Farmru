@@ -1,8 +1,10 @@
 import { ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CropApiService, FieldDto } from '../../crops/services/crop-api.service';
 import { NutrientApiService, NutrientBalanceSnapshotDto, FertilizerApplicationDto } from '../services/nutrient-api.service';
+import { RecordApplicationComponent } from './record-application/record-application.component';
 
 @Component({
   templateUrl: './nutrient-dashboard.component.html',
@@ -22,6 +24,7 @@ export class NutrientDashboardComponent extends AppComponentBase implements OnIn
     injector: Injector,
     private cropApi: CropApiService,
     private nutrientApi: NutrientApiService,
+    private modalService: BsModalService,
     private cd: ChangeDetectorRef
   ) {
     super(injector);
@@ -77,5 +80,13 @@ export class NutrientDashboardComponent extends AppComponentBase implements OnIn
 
   statusClass(status: number): string {
     return ['fr-chip-red', 'fr-chip-green', 'fr-chip-yellow'][status] ?? 'fr-chip-grey';
+  }
+
+  recordApplication(): void {
+    if (!this.selectedFieldId) {
+      return;
+    }
+    const ref: BsModalRef = this.modalService.show(RecordApplicationComponent, { initialState: { fieldId: this.selectedFieldId } });
+    ref.content.onSave.subscribe(() => this.load());
   }
 }

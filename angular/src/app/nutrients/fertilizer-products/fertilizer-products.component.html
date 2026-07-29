@@ -1,0 +1,76 @@
+<div [@routerTransition]>
+  <section class="content-header pb-0">
+    <div class="container-fluid">
+      <div class="fr-page-header">
+        <div>
+          <h1 class="fr-page-title">{{ "FertilizerProducts" | localize }}</h1>
+          <p class="fr-page-sub">Fertilizer product catalog</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content px-2 pt-3" *ngIf="loading">
+    <div class="fr-loading"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
+  </section>
+
+  <section class="content px-2 pt-3" *ngIf="!loading">
+    <div class="container-fluid">
+      <div class="fr-card mb-3" *ngIf="canApply">
+        <div class="fr-card__header"><h5 class="mb-0">{{ "CreateNewFertilizerProduct" | localize }}</h5></div>
+        <div class="fr-card__body">
+          <form #productForm="ngForm" (ngSubmit)="create()" class="form-row align-items-end">
+            <div class="col-md-3">
+              <label>{{ "Name" | localize }}</label>
+              <input type="text" class="form-control" name="prodName" required minlength="2" [(ngModel)]="newProduct.name" />
+            </div>
+            <div class="col-md-2">
+              <label>N %</label>
+              <input type="number" class="form-control" name="prodN" required min="0" max="100" [(ngModel)]="newProduct.nitrogenPercent" />
+            </div>
+            <div class="col-md-2">
+              <label>P %</label>
+              <input type="number" class="form-control" name="prodP" required min="0" max="100" [(ngModel)]="newProduct.phosphorusPercent" />
+            </div>
+            <div class="col-md-2">
+              <label>K %</label>
+              <input type="number" class="form-control" name="prodK" required min="0" max="100" [(ngModel)]="newProduct.potassiumPercent" />
+            </div>
+            <div class="col-md-2">
+              <label>{{ "UnitCostPerKg" | localize }}</label>
+              <input type="number" class="form-control" name="prodCost" min="0" step="0.01" [(ngModel)]="newProduct.unitCostPerKg" />
+            </div>
+            <div class="col-md-1">
+              <button type="submit" class="fr-btn fr-btn-primary" [disabled]="!productForm.form.valid">{{ "Add" | localize }}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="fr-card mb-3" *ngIf="!products.length">
+        <div class="fr-card__body text-center text-muted py-4">No Fertilizer Products have been added yet.</div>
+      </div>
+
+      <div class="fr-card" *ngIf="products.length">
+        <div class="fr-card__body p-0">
+          <div class="table-responsive">
+            <table class="fr-table">
+              <thead>
+                <tr><th>Name</th><th class="text-right">N %</th><th class="text-right">P %</th><th class="text-right">K %</th><th class="text-right">Cost/kg</th></tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let p of products">
+                  <td>{{ p.name }}</td>
+                  <td class="text-right">{{ p.nitrogenPercent | number: '1.0-1' }}</td>
+                  <td class="text-right">{{ p.phosphorusPercent | number: '1.0-1' }}</td>
+                  <td class="text-right">{{ p.potassiumPercent | number: '1.0-1' }}</td>
+                  <td class="text-right">{{ p.unitCostPerKg != null ? (p.unitCostPerKg | number: '1.2-2') : '-' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
