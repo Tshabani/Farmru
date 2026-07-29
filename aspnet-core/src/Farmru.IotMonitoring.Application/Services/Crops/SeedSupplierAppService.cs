@@ -24,6 +24,7 @@ namespace Farmru.IotMonitoring.Services.Crops
         {
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Crops_Manage)]
         public override async Task<SeedSupplierDto> CreateAsync(CreateSeedSupplierInput input)
         {
             try
@@ -39,6 +40,7 @@ namespace Farmru.IotMonitoring.Services.Crops
             }
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Crops_Manage)]
         public override async Task<SeedSupplierDto> UpdateAsync(SeedSupplierDto input)
         {
             var supplier = await Repository.GetAsync(input.Id);
@@ -53,6 +55,12 @@ namespace Farmru.IotMonitoring.Services.Crops
             {
                 throw new UserFriendlyException(ex.Message);
             }
+        }
+
+        [AbpAuthorize(PermissionNames.Pages_Crops_Manage)]
+        public override async Task DeleteAsync(EntityDto<Guid> input)
+        {
+            await base.DeleteAsync(input);
         }
     }
 }

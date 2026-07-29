@@ -70,6 +70,52 @@ namespace Farmru.IotMonitoring.Services.Crops
             }
         }
 
+        // Overridden to call Field's domain methods explicitly, matching the established
+        // AsyncCrudAppService override convention (see OrganisationAppService, CropTypeAppService)
+        // rather than falling through to the base implementation's ObjectMapper.Map(input, entity),
+        // which would fail at runtime since FieldDto carries no [AutoMap(typeof(Field))] profile
+        // (its Facility navigation is a hand-mapped EntityWithDisplayNameDto, not AutoMapper-convention-friendly).
+        // Facility is intentionally not reassignable here — Field.Create is the only place a
+        // Field's owning Facility is set, matching the domain model (Technical Design Section 2.2
+        // defines no "move Field to a different Facility" behavior).
+        [AbpAuthorize(PermissionNames.Pages_Fields_Manage)]
+        public override async Task<FieldDto> UpdateAsync(FieldDto input)
+        {
+            var field = await Repository.GetAll().Include(f => f.Facility).FirstOrDefaultAsync(f => f.Id == input.Id)
+                ?? throw new UserFriendlyException(L("FieldNotFound"));
+
+            try
+            {
+                field.SetName(input.Name);
+                field.UpdateDetails(input.AreaHectares, input.SoilType);
+
+                if (input.BoundaryGeoFenceId != field.BoundaryGeoFenceId)
+                {
+                    GeoFence boundary = null;
+                    if (input.BoundaryGeoFenceId.HasValue)
+                    {
+                        boundary = await _geoFenceRepository.FirstOrDefaultAsync(input.BoundaryGeoFenceId.Value);
+                    }
+
+                    field.AssignBoundary(boundary);
+                }
+
+                await Repository.UpdateAsync(field);
+                await CurrentUnitOfWork.SaveChangesAsync();
+                return MapToEntityDto(field);
+            }
+            catch (DomainRuleException ex)
+            {
+                throw new UserFriendlyException(ex.Message);
+            }
+        }
+
+        [AbpAuthorize(PermissionNames.Pages_Fields_Manage)]
+        public override async Task DeleteAsync(EntityDto<Guid> input)
+        {
+            await base.DeleteAsync(input);
+        }
+
         protected override IQueryable<Field> CreateFilteredQuery(PagedFieldResultRequestDto input)
         {
             var query = Repository.GetAll().Include(f => f.Facility).AsQueryable();

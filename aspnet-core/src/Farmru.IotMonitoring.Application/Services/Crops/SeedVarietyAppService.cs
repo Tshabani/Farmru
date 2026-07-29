@@ -31,6 +31,7 @@ namespace Farmru.IotMonitoring.Services.Crops
             _supplierRepository = supplierRepository;
         }
 
+        [AbpAuthorize(PermissionNames.Pages_Crops_Manage)]
         public override async Task<SeedVarietyDto> CreateAsync(CreateSeedVarietyInput input)
         {
             var cropType = await _cropTypeRepository.FirstOrDefaultAsync(input.CropTypeId)
@@ -62,6 +63,12 @@ namespace Farmru.IotMonitoring.Services.Crops
         public override Task<SeedVarietyDto> UpdateAsync(SeedVarietyDto input)
         {
             throw new UserFriendlyException(L("SeedVarietiesCannotBeEdited"));
+        }
+
+        [AbpAuthorize(PermissionNames.Pages_Crops_Manage)]
+        public override async Task DeleteAsync(EntityDto<Guid> input)
+        {
+            await base.DeleteAsync(input);
         }
 
         protected override IQueryable<SeedVariety> CreateFilteredQuery(PagedResultRequestDto input)
