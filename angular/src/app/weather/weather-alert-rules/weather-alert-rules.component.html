@@ -1,0 +1,67 @@
+<div [@routerTransition]>
+  <section class="content-header pb-0">
+    <div class="container-fluid">
+      <div class="fr-page-header">
+        <div>
+          <h1 class="fr-page-title">{{ "WeatherAlertRules" | localize }}</h1>
+          <p class="fr-page-sub">Threshold-based weather alert configuration</p>
+        </div>
+        <div class="ml-auto d-flex align-items-center" *ngIf="facilities.length">
+          <select class="form-control mr-2" style="width: auto;" [(ngModel)]="selectedFacilityId" (ngModelChange)="onFacilityChange()">
+            <option *ngFor="let f of facilities" [value]="f.id">{{ f.name }}</option>
+          </select>
+          <button class="fr-btn fr-btn-primary" *ngIf="canConfigure" (click)="create()">
+            <i class="fas fa-plus mr-1"></i>{{ "CreateWeatherAlertRule" | localize }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content px-2 pt-3" *ngIf="loading">
+    <div class="fr-loading"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
+  </section>
+
+  <section class="content px-2 pt-3" *ngIf="!loading">
+    <div class="container-fluid">
+      <div class="fr-card mb-3" *ngIf="!facilities.length">
+        <div class="fr-card__body text-center text-muted py-4">No Facilities are available yet.</div>
+      </div>
+
+      <div class="fr-card mb-3" *ngIf="facilities.length && !rules.length">
+        <div class="fr-card__body text-center text-muted py-4">No weather alert rules have been configured for this Facility yet.</div>
+      </div>
+
+      <div class="fr-card" *ngIf="rules.length">
+        <div class="fr-card__body p-0">
+          <div class="table-responsive">
+            <table class="fr-table">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th class="text-right">Threshold</th>
+                  <th>Severity</th>
+                  <th>Status</th>
+                  <th *ngIf="canConfigure">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let r of rules">
+                  <td>{{ alertTypeLabels[r.alertType] }}</td>
+                  <td class="text-right">{{ r.thresholdValue | number: '1.0-2' }}</td>
+                  <td>{{ severityLabels[r.severity] }}</td>
+                  <td>
+                    <span class="fr-chip" [ngClass]="r.isActive ? 'fr-chip-green' : 'fr-chip-grey'">{{ r.isActive ? 'Active' : 'Inactive' }}</span>
+                  </td>
+                  <td *ngIf="canConfigure">
+                    <button class="fr-btn fr-btn-outline fr-btn-sm" *ngIf="r.isActive" (click)="deactivate(r)">{{ "Deactivate" | localize }}</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

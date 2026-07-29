@@ -1,0 +1,28 @@
+<form class="form-horizontal" autocomplete="off" #ruleForm="ngForm" (ngSubmit)="save()">
+  <abp-modal-header [title]="'CreateWeatherAlertRule' | localize" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+  <div class="modal-body">
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label">{{ "AlertType" | localize }}</label>
+      <div class="col-md-9">
+        <select class="form-control" name="alertType" required [(ngModel)]="input.alertType">
+          <option *ngFor="let o of alertTypeOptions" [value]="o.value">{{ o.label }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label">{{ "ThresholdValue" | localize }}</label>
+      <div class="col-md-9">
+        <input type="number" class="form-control" name="thresholdValue" required step="0.1" [(ngModel)]="input.thresholdValue" />
+      </div>
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label">{{ "Severity" | localize }}</label>
+      <div class="col-md-9">
+        <select class="form-control" name="severity" required [(ngModel)]="input.severity">
+          <option *ngFor="let o of severityOptions" [value]="o.value">{{ o.label }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!ruleForm.form.valid || saving" (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+</form>

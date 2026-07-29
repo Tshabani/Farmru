@@ -6,8 +6,9 @@
           <h1 class="fr-page-title">{{ "Weather" | localize }}</h1>
           <p class="fr-page-sub">Current conditions and 7-day forecast per Facility</p>
         </div>
-        <div class="ml-auto d-flex align-items-center" *ngIf="facilities.length">
-          <select class="form-control" style="width: auto;" [(ngModel)]="selectedFacilityId" (ngModelChange)="onFacilityChange()">
+        <div class="ml-auto d-flex align-items-center">
+          <a class="fr-btn fr-btn-outline mr-2" *ngIf="canConfigure" routerLink="/app/weather/alert-rules">{{ "WeatherAlertRules" | localize }}</a>
+          <select class="form-control" style="width: auto;" *ngIf="facilities.length" [(ngModel)]="selectedFacilityId" (ngModelChange)="onFacilityChange()">
             <option *ngFor="let f of facilities" [value]="f.id">{{ f.name }}</option>
           </select>
         </div>
