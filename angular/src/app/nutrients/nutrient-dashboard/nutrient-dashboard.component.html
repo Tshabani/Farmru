@@ -1,0 +1,106 @@
+<div [@routerTransition]>
+  <section class="content-header pb-0">
+    <div class="container-fluid">
+      <div class="fr-page-header">
+        <div>
+          <h1 class="fr-page-title">{{ "Nutrients" | localize }}</h1>
+          <p class="fr-page-sub">Nutrient balance and fertilizer application log</p>
+        </div>
+        <div class="ml-auto d-flex align-items-center" *ngIf="fields.length">
+          <select class="form-control" style="width: auto;" [(ngModel)]="selectedFieldId" (ngModelChange)="onFieldChange()">
+            <option *ngFor="let f of fields" [value]="f.id">{{ f.name }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content px-2 pt-3" *ngIf="loading">
+    <div class="fr-loading"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
+  </section>
+
+  <section class="content px-2 pt-3" *ngIf="!loading">
+    <div class="container-fluid">
+      <div class="fr-card mb-3" *ngIf="!fields.length">
+        <div class="fr-card__body text-center text-muted py-4">
+          <i class="fas fa-flask fa-2x mb-2"></i>
+          <p class="mb-0">No Fields have been set up yet.</p>
+        </div>
+      </div>
+
+      <div class="fr-card mb-3" *ngIf="fields.length && !latest">
+        <div class="fr-card__body text-center text-muted py-4">
+          <i class="fas fa-flask fa-2x mb-2"></i>
+          <p class="mb-0">No nutrient balance data is available for this Field yet.</p>
+        </div>
+      </div>
+
+      <div class="row mb-3" *ngIf="latest">
+        <div class="col-md-4">
+          <div class="fr-card">
+            <div class="fr-card__header d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">Nitrogen (N)</h5>
+              <span class="fr-chip" [ngClass]="statusClass(latest.nitrogenStatus)">{{ statusLabels[latest.nitrogenStatus] }}</span>
+            </div>
+            <div class="fr-card__body">
+              <p class="mb-1">Sensed: {{ latest.sensedNitrogen | number: '1.0-1' }}</p>
+              <p class="mb-0">Applied (30d): {{ latest.appliedNitrogenTrailing30d | number: '1.0-1' }} kg/ha</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="fr-card">
+            <div class="fr-card__header d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">Phosphorus (P)</h5>
+              <span class="fr-chip" [ngClass]="statusClass(latest.phosphorusStatus)">{{ statusLabels[latest.phosphorusStatus] }}</span>
+            </div>
+            <div class="fr-card__body">
+              <p class="mb-1">Sensed: {{ latest.sensedPhosphorus | number: '1.0-1' }}</p>
+              <p class="mb-0">Applied (30d): {{ latest.appliedPhosphorusTrailing30d | number: '1.0-1' }} kg/ha</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="fr-card">
+            <div class="fr-card__header d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">Potassium (K)</h5>
+              <span class="fr-chip" [ngClass]="statusClass(latest.potassiumStatus)">{{ statusLabels[latest.potassiumStatus] }}</span>
+            </div>
+            <div class="fr-card__body">
+              <p class="mb-1">Sensed: {{ latest.sensedPotassium | number: '1.0-1' }}</p>
+              <p class="mb-0">Applied (30d): {{ latest.appliedPotassiumTrailing30d | number: '1.0-1' }} kg/ha</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fr-card" *ngIf="applications.length">
+        <div class="fr-card__header"><h5 class="mb-0">Fertilizer Application Log</h5></div>
+        <div class="fr-card__body p-0">
+          <div class="table-responsive">
+            <table class="fr-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Product</th>
+                  <th class="text-right">Rate (kg/ha)</th>
+                  <th class="text-right">Cost</th>
+                  <th>Operator</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let a of applications">
+                  <td>{{ a.applicationDate | date: 'mediumDate' }}</td>
+                  <td>{{ a.product?.displayText }}</td>
+                  <td class="text-right">{{ a.rateKgPerHectare | number: '1.0-1' }}</td>
+                  <td class="text-right">{{ a.cost != null ? (a.cost | number: '1.2-2') : '-' }}</td>
+                  <td>{{ a.operator?.displayText || '-' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

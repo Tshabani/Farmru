@@ -1,0 +1,103 @@
+<div [@routerTransition]>
+  <section class="content-header pb-0">
+    <div class="container-fluid">
+      <div class="fr-page-header">
+        <div>
+          <h1 class="fr-page-title">{{ "Weather" | localize }}</h1>
+          <p class="fr-page-sub">Current conditions and 7-day forecast per Facility</p>
+        </div>
+        <div class="ml-auto d-flex align-items-center" *ngIf="facilities.length">
+          <select class="form-control" style="width: auto;" [(ngModel)]="selectedFacilityId" (ngModelChange)="onFacilityChange()">
+            <option *ngFor="let f of facilities" [value]="f.id">{{ f.name }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content px-2 pt-3" *ngIf="loading">
+    <div class="fr-loading"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
+  </section>
+
+  <section class="content px-2 pt-3" *ngIf="!loading">
+    <div class="container-fluid">
+      <div class="fr-card mb-3" *ngIf="!facilities.length">
+        <div class="fr-card__body text-center text-muted py-4">
+          <i class="fas fa-cloud fa-2x mb-2"></i>
+          <p class="mb-0">No Facilities are available yet.</p>
+        </div>
+      </div>
+
+      <div class="fr-card mb-3" *ngIf="facilities.length && !current">
+        <div class="fr-card__body text-center text-muted py-4">
+          <i class="fas fa-cloud fa-2x mb-2"></i>
+          <p class="mb-0">No weather data is available for this Facility yet.</p>
+        </div>
+      </div>
+
+      <div class="row mb-3" *ngIf="current">
+        <div class="col-md-4">
+          <div class="fr-stat fr-stat--info">
+            <div class="fr-stat__icon"><i class="fas fa-thermometer-half"></i></div>
+            <div class="fr-stat__value">{{ current.temperatureCelsius | number: '1.0-1' }}°C</div>
+            <div class="fr-stat__label">Temperature</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="fr-stat fr-stat--info">
+            <div class="fr-stat__icon"><i class="fas fa-tint"></i></div>
+            <div class="fr-stat__value">{{ current.humidityPercent | number: '1.0-0' }}%</div>
+            <div class="fr-stat__label">Humidity</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="fr-stat fr-stat--warning">
+            <div class="fr-stat__icon"><i class="fas fa-wind"></i></div>
+            <div class="fr-stat__value">{{ current.windSpeedKph != null ? (current.windSpeedKph | number: '1.0-0') : '-' }} kph</div>
+            <div class="fr-stat__label">Wind Speed</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fr-card" *ngIf="forecast.length">
+        <div class="fr-card__header">
+          <h5 class="mb-0">7-Day Forecast</h5>
+        </div>
+        <div class="fr-card__body p-0">
+          <div class="table-responsive">
+            <table class="fr-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th class="text-right">Min</th>
+                  <th class="text-right">Max</th>
+                  <th class="text-right">Rain %</th>
+                  <th>Frost Risk</th>
+                  <th>Heat Stress</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let day of forecast">
+                  <td>{{ day.forecastFor | date: 'mediumDate' }}</td>
+                  <td class="text-right">{{ day.tempMinCelsius | number: '1.0-1' }}°C</td>
+                  <td class="text-right">{{ day.tempMaxCelsius | number: '1.0-1' }}°C</td>
+                  <td class="text-right">{{ day.precipitationProbabilityPercent }}%</td>
+                  <td>
+                    <span class="fr-chip" [ngClass]="day.frostRisk > 0 ? 'fr-chip-red' : 'fr-chip-grey'">
+                      {{ frostRiskLabels[day.frostRisk] }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="fr-chip" [ngClass]="day.heatStress > 0 ? 'fr-chip-yellow' : 'fr-chip-grey'">
+                      {{ heatStressLabels[day.heatStress] }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,80 @@
+<div [@routerTransition]>
+  <section class="content-header pb-0">
+    <div class="container-fluid">
+      <div class="fr-page-header">
+        <div>
+          <h1 class="fr-page-title">{{ season?.cropType?.displayText || ('Crops' | localize) }}</h1>
+          <p class="fr-page-sub" *ngIf="season">{{ season.field?.displayText }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content px-2 pt-3" *ngIf="loading">
+    <div class="fr-loading"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
+  </section>
+
+  <section class="content px-2 pt-3" *ngIf="!loading">
+    <div class="container-fluid">
+      <div class="fr-card mb-3" *ngIf="!season">
+        <div class="fr-card__body text-center text-muted py-4">Crop season not found.</div>
+      </div>
+
+      <div *ngIf="season">
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <div class="fr-stat fr-stat--info">
+              <div class="fr-stat__value">{{ statusLabels[season.status] }}</div>
+              <div class="fr-stat__label">Status</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="fr-stat fr-stat--info">
+              <div class="fr-stat__value">{{ season.plantingDate | date: 'mediumDate' }}</div>
+              <div class="fr-stat__label">Planted</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="fr-stat fr-stat--info">
+              <div class="fr-stat__value">{{ season.expectedHarvestDate | date: 'mediumDate' }}</div>
+              <div class="fr-stat__label">Expected Harvest</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fr-card mb-3" *ngIf="season.harvest">
+          <div class="fr-card__header"><h5 class="mb-0">Harvest</h5></div>
+          <div class="fr-card__body">
+            <p class="mb-1"><strong>{{ season.harvest.actualYieldKg | number: '1.0-1' }} kg</strong></p>
+            <p class="mb-1 text-muted">Harvested {{ season.harvest.harvestDate | date: 'mediumDate' }}</p>
+            <p class="mb-0" *ngIf="season.harvest.qualityGrade">Grade: {{ season.harvest.qualityGrade }}</p>
+          </div>
+        </div>
+
+        <div class="fr-card">
+          <div class="fr-card__header"><h5 class="mb-0">Growth Stage Timeline</h5></div>
+          <div class="fr-card__body p-0">
+            <div class="table-responsive">
+              <table class="fr-table">
+                <thead>
+                  <tr>
+                    <th>Stage</th>
+                    <th>Date</th>
+                    <th>Source</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let e of season.stageEvents">
+                    <td>{{ stageLabels[e.stage] }}</td>
+                    <td>{{ e.observedDate | date: 'mediumDate' }}</td>
+                    <td>{{ e.source === 1 ? 'Satellite' : 'Manual' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

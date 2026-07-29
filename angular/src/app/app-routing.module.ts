@@ -98,6 +98,24 @@ import { AppComponent } from './app.component';
                         data: { permission: 'Pages.Facility.Appointments' },
                         canActivate: [AppRouteGuard]
                     },
+                    {
+                        path: 'weather',
+                        loadChildren: () => import('./weather/weather.module').then((m) => m.WeatherModule),
+                        data: { permission: 'Pages.Weather' },
+                        canActivate: [AppRouteGuard]
+                    },
+                    {
+                        path: 'crops',
+                        loadChildren: () => import('./crops/crops.module').then((m) => m.CropsModule),
+                        data: { permission: 'Pages.Crops' },
+                        canActivate: [AppRouteGuard]
+                    },
+                    {
+                        path: 'nutrients',
+                        loadChildren: () => import('./nutrients/nutrients.module').then((m) => m.NutrientsModule),
+                        data: { permission: 'Pages.Nutrients' },
+                        canActivate: [AppRouteGuard]
+                    },
                 ]
             }
         ])

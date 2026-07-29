@@ -103,6 +103,24 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
         "Pages.Incidents"
       ),
       new MenuItem(
+        this.l("Weather"),
+        "/app/weather",
+        "fas fa-cloud-sun",
+        "Pages.Weather"
+      ),
+      new MenuItem(
+        this.l("Crops"),
+        "/app/crops",
+        "fas fa-seedling",
+        "Pages.Crops"
+      ),
+      new MenuItem(
+        this.l("Nutrients"),
+        "/app/nutrients",
+        "fas fa-flask",
+        "Pages.Nutrients"
+      ),
+      new MenuItem(
         this.l("Organisations"),
         "/app/organisation",
         "fa-solid fa-sitemap",  

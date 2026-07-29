@@ -1,0 +1,64 @@
+<div [@routerTransition]>
+  <section class="content-header pb-0">
+    <div class="container-fluid">
+      <div class="fr-page-header">
+        <div>
+          <h1 class="fr-page-title">{{ "Crops" | localize }}</h1>
+          <p class="fr-page-sub">Crop Seasons per Field</p>
+        </div>
+        <div class="ml-auto d-flex align-items-center" *ngIf="fields.length">
+          <select class="form-control" style="width: auto;" [(ngModel)]="selectedFieldId" (ngModelChange)="onFieldChange()">
+            <option *ngFor="let f of fields" [value]="f.id">{{ f.name }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content px-2 pt-3" *ngIf="loading">
+    <div class="fr-loading"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
+  </section>
+
+  <section class="content px-2 pt-3" *ngIf="!loading">
+    <div class="container-fluid">
+      <div class="fr-card mb-3" *ngIf="!fields.length">
+        <div class="fr-card__body text-center text-muted py-4">
+          <i class="fas fa-seedling fa-2x mb-2"></i>
+          <p class="mb-0">No Fields have been set up yet.</p>
+        </div>
+      </div>
+
+      <div class="fr-card mb-3" *ngIf="fields.length && !seasons.length">
+        <div class="fr-card__body text-center text-muted py-4">
+          <i class="fas fa-seedling fa-2x mb-2"></i>
+          <p class="mb-0">No Crop Seasons have been planted on this Field yet.</p>
+        </div>
+      </div>
+
+      <div class="fr-card" *ngIf="seasons.length">
+        <div class="fr-card__body p-0">
+          <div class="table-responsive">
+            <table class="fr-table">
+              <thead>
+                <tr>
+                  <th>Crop</th>
+                  <th>Planted</th>
+                  <th>Expected Harvest</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let s of seasons" class="cursor-pointer" (click)="openDetail(s)">
+                  <td>{{ s.cropType?.displayText }}</td>
+                  <td>{{ s.plantingDate | date: 'mediumDate' }}</td>
+                  <td>{{ s.expectedHarvestDate | date: 'mediumDate' }}</td>
+                  <td><span class="fr-chip" [ngClass]="statusClass(s.status)">{{ statusLabels[s.status] }}</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
