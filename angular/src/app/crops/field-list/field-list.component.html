@@ -1,0 +1,64 @@
+<div [@routerTransition]>
+  <section class="content-header pb-0">
+    <div class="container-fluid">
+      <div class="fr-page-header">
+        <div>
+          <h1 class="fr-page-title">{{ "Fields" | localize }}</h1>
+          <p class="fr-page-sub">Field management</p>
+        </div>
+        <div class="ml-auto d-flex align-items-center">
+          <button class="fr-btn fr-btn-primary" *ngIf="canManage" (click)="create()">
+            <i class="fas fa-plus mr-1"></i>{{ "CreateNewField" | localize }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content px-2 pt-3" *ngIf="loading">
+    <div class="fr-loading"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
+  </section>
+
+  <section class="content px-2 pt-3" *ngIf="!loading">
+    <div class="container-fluid">
+      <div class="fr-card mb-3" *ngIf="!fields.length">
+        <div class="fr-card__body text-center text-muted py-4">
+          <i class="fas fa-seedling fa-2x mb-2"></i>
+          <p class="mb-0">No Fields have been set up yet.</p>
+        </div>
+      </div>
+
+      <div class="fr-card" *ngIf="fields.length">
+        <div class="fr-card__body p-0">
+          <div class="table-responsive">
+            <table class="fr-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Facility</th>
+                  <th class="text-right">Area (ha)</th>
+                  <th>Soil Type</th>
+                  <th *ngIf="canManage">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let f of fields">
+                  <td>{{ f.name }}</td>
+                  <td>{{ f.facility?.displayText }}</td>
+                  <td class="text-right">{{ f.areaHectares != null ? (f.areaHectares | number: '1.0-2') : '-' }}</td>
+                  <td>{{ f.soilType || '-' }}</td>
+                  <td *ngIf="canManage">
+                    <div class="fr-row-actions">
+                      <button class="fr-btn fr-btn-outline fr-btn-sm" (click)="edit(f)"><i class="fas fa-edit"></i></button>
+                      <button class="fr-btn fr-btn-outline fr-btn-sm" (click)="delete(f)"><i class="fas fa-trash"></i></button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

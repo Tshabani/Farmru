@@ -1,0 +1,208 @@
+<div [@routerTransition]>
+  <section class="content-header pb-0">
+    <div class="container-fluid">
+      <div class="fr-page-header">
+        <div>
+          <h1 class="fr-page-title">{{ "CropReferenceData" | localize }}</h1>
+          <p class="fr-page-sub">Crop Types, Seed Varieties, and Seed Suppliers</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content px-2 pt-3" *ngIf="loading">
+    <div class="fr-loading"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
+  </section>
+
+  <section class="content px-2 pt-3" *ngIf="!loading">
+    <div class="container-fluid">
+      <ul class="nav nav-tabs mb-3">
+        <li class="nav-item"><a class="nav-link" [class.active]="activeTab === 'cropTypes'" (click)="setTab('cropTypes')" href="javascript:;">{{ "CropTypes" | localize }}</a></li>
+        <li class="nav-item"><a class="nav-link" [class.active]="activeTab === 'seedVarieties'" (click)="setTab('seedVarieties')" href="javascript:;">{{ "SeedVarieties" | localize }}</a></li>
+        <li class="nav-item"><a class="nav-link" [class.active]="activeTab === 'seedSuppliers'" (click)="setTab('seedSuppliers')" href="javascript:;">{{ "SeedSuppliers" | localize }}</a></li>
+      </ul>
+
+      <!-- Crop Types -->
+      <div *ngIf="activeTab === 'cropTypes'">
+        <div class="fr-card mb-3" *ngIf="canManage">
+          <div class="fr-card__header"><h5 class="mb-0">{{ "CreateNewCropType" | localize }}</h5></div>
+          <div class="fr-card__body">
+            <form #cropTypeForm="ngForm" (ngSubmit)="createCropType()" class="form-row align-items-end">
+              <div class="col-md-3">
+                <label>{{ "Name" | localize }}</label>
+                <input type="text" class="form-control" name="ctName" required minlength="2" [(ngModel)]="newCropType.name" />
+              </div>
+              <div class="col-md-3">
+                <label>{{ "ScientificName" | localize }}</label>
+                <input type="text" class="form-control" name="ctSci" [(ngModel)]="newCropType.scientificName" />
+              </div>
+              <div class="col-md-3">
+                <label>{{ "TypicalGrowthDurationDays" | localize }}</label>
+                <input type="number" class="form-control" name="ctDuration" required min="1" [(ngModel)]="newCropType.typicalGrowthDurationDays" />
+              </div>
+              <div class="col-md-3">
+                <button type="submit" class="fr-btn fr-btn-primary" [disabled]="!cropTypeForm.form.valid">{{ "Add" | localize }}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="fr-card mb-3" *ngIf="!cropTypes.length">
+          <div class="fr-card__body text-center text-muted py-4">No Crop Types have been added yet.</div>
+        </div>
+
+        <div class="fr-card" *ngIf="cropTypes.length">
+          <div class="fr-card__body p-0">
+            <div class="table-responsive">
+              <table class="fr-table">
+                <thead><tr><th>Name</th><th>Scientific Name</th><th>Growth Days</th><th>Active</th><th *ngIf="canManage">Actions</th></tr></thead>
+                <tbody>
+                  <tr *ngFor="let c of cropTypes">
+                    <ng-container *ngIf="editingCropType?.id !== c.id; else editRow">
+                      <td>{{ c.name }}</td>
+                      <td>{{ c.scientificName || '-' }}</td>
+                      <td>{{ c.typicalGrowthDurationDays }}</td>
+                      <td>{{ c.isActive ? 'Yes' : 'No' }}</td>
+                      <td *ngIf="canManage">
+                        <div class="fr-row-actions">
+                          <button class="fr-btn fr-btn-outline fr-btn-sm" (click)="editCropType(c)"><i class="fas fa-edit"></i></button>
+                          <button class="fr-btn fr-btn-outline fr-btn-sm" (click)="deleteCropType(c)"><i class="fas fa-trash"></i></button>
+                        </div>
+                      </td>
+                    </ng-container>
+                    <ng-template #editRow>
+                      <td><input class="form-control" [(ngModel)]="editingCropType!.name" name="editName{{c.id}}" /></td>
+                      <td><input class="form-control" [(ngModel)]="editingCropType!.scientificName" name="editSci{{c.id}}" /></td>
+                      <td><input type="number" class="form-control" [(ngModel)]="editingCropType!.typicalGrowthDurationDays" name="editDur{{c.id}}" /></td>
+                      <td>
+                        <input type="checkbox" [(ngModel)]="editingCropType!.isActive" name="editActive{{c.id}}" />
+                      </td>
+                      <td>
+                        <button class="fr-btn fr-btn-primary fr-btn-sm" (click)="saveCropType()">{{ "Save" | localize }}</button>
+                      </td>
+                    </ng-template>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seed Varieties -->
+      <div *ngIf="activeTab === 'seedVarieties'">
+        <div class="fr-card mb-3" *ngIf="canManage">
+          <div class="fr-card__header"><h5 class="mb-0">{{ "CreateNewSeedVariety" | localize }}</h5></div>
+          <div class="fr-card__body">
+            <form #varietyForm="ngForm" (ngSubmit)="createSeedVariety()" class="form-row align-items-end">
+              <div class="col-md-3">
+                <label>{{ "CropType" | localize }}</label>
+                <select class="form-control" name="varietyCropType" required [(ngModel)]="newSeedVariety.cropTypeId">
+                  <option *ngFor="let c of cropTypes" [value]="c.id">{{ c.name }}</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label>{{ "Name" | localize }}</label>
+                <input type="text" class="form-control" name="varietyName" required minlength="2" [(ngModel)]="newSeedVariety.name" />
+              </div>
+              <div class="col-md-3">
+                <label>{{ "SeedSupplier" | localize }}</label>
+                <select class="form-control" name="varietySupplier" [(ngModel)]="newSeedVariety.supplierId">
+                  <option [value]="undefined">-</option>
+                  <option *ngFor="let s of seedSuppliers" [value]="s.id">{{ s.name }}</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label>{{ "DaysToMaturity" | localize }}</label>
+                <input type="number" class="form-control" name="varietyDays" min="1" [(ngModel)]="newSeedVariety.daysToMaturity" />
+              </div>
+              <div class="col-md-1">
+                <button type="submit" class="fr-btn fr-btn-primary" [disabled]="!varietyForm.form.valid">{{ "Add" | localize }}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="fr-card mb-3" *ngIf="!seedVarieties.length">
+          <div class="fr-card__body text-center text-muted py-4">No Seed Varieties have been added yet.</div>
+        </div>
+
+        <div class="fr-card" *ngIf="seedVarieties.length">
+          <div class="fr-card__body p-0">
+            <div class="table-responsive">
+              <table class="fr-table">
+                <thead><tr><th>Name</th><th>Crop Type</th><th>Supplier</th><th>Days to Maturity</th><th *ngIf="canManage">Actions</th></tr></thead>
+                <tbody>
+                  <tr *ngFor="let v of seedVarieties">
+                    <td>{{ v.name }}</td>
+                    <td>{{ v.cropType?.displayText }}</td>
+                    <td>{{ v.supplier?.displayText || '-' }}</td>
+                    <td>{{ v.daysToMaturity || '-' }}</td>
+                    <td *ngIf="canManage">
+                      <button class="fr-btn fr-btn-outline fr-btn-sm" (click)="deleteSeedVariety(v)"><i class="fas fa-trash"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seed Suppliers -->
+      <div *ngIf="activeTab === 'seedSuppliers'">
+        <div class="fr-card mb-3" *ngIf="canManage">
+          <div class="fr-card__header"><h5 class="mb-0">{{ "CreateNewSeedSupplier" | localize }}</h5></div>
+          <div class="fr-card__body">
+            <form #supplierForm="ngForm" (ngSubmit)="createSeedSupplier()" class="form-row align-items-end">
+              <div class="col-md-4">
+                <label>{{ "Name" | localize }}</label>
+                <input type="text" class="form-control" name="supplierName" required minlength="2" [(ngModel)]="newSeedSupplier.name" />
+              </div>
+              <div class="col-md-4">
+                <label>{{ "ContactInfo" | localize }}</label>
+                <input type="text" class="form-control" name="supplierContact" [(ngModel)]="newSeedSupplier.contactInfo" />
+              </div>
+              <div class="col-md-4">
+                <button type="submit" class="fr-btn fr-btn-primary" [disabled]="!supplierForm.form.valid">{{ "Add" | localize }}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="fr-card mb-3" *ngIf="!seedSuppliers.length">
+          <div class="fr-card__body text-center text-muted py-4">No Seed Suppliers have been added yet.</div>
+        </div>
+
+        <div class="fr-card" *ngIf="seedSuppliers.length">
+          <div class="fr-card__body p-0">
+            <div class="table-responsive">
+              <table class="fr-table">
+                <thead><tr><th>Name</th><th>Contact Info</th><th *ngIf="canManage">Actions</th></tr></thead>
+                <tbody>
+                  <tr *ngFor="let s of seedSuppliers">
+                    <ng-container *ngIf="editingSeedSupplier?.id !== s.id; else editSupplierRow">
+                      <td>{{ s.name }}</td>
+                      <td>{{ s.contactInfo || '-' }}</td>
+                      <td *ngIf="canManage">
+                        <div class="fr-row-actions">
+                          <button class="fr-btn fr-btn-outline fr-btn-sm" (click)="editSeedSupplier(s)"><i class="fas fa-edit"></i></button>
+                          <button class="fr-btn fr-btn-outline fr-btn-sm" (click)="deleteSeedSupplier(s)"><i class="fas fa-trash"></i></button>
+                        </div>
+                      </td>
+                    </ng-container>
+                    <ng-template #editSupplierRow>
+                      <td><input class="form-control" [(ngModel)]="editingSeedSupplier!.name" name="editSupplierName{{s.id}}" /></td>
+                      <td><input class="form-control" [(ngModel)]="editingSeedSupplier!.contactInfo" name="editSupplierContact{{s.id}}" /></td>
+                      <td><button class="fr-btn fr-btn-primary fr-btn-sm" (click)="saveSeedSupplier()">{{ "Save" | localize }}</button></td>
+                    </ng-template>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

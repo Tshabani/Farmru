@@ -230,5 +230,64 @@
     <text name="FertilizerProductNotFound" value="Fertilizer product not found." />
     <text name="PersonNotFoundForOperator" value="The specified operator was not found." />
     <text name="NoNutrientBalanceDataAvailable" value="No nutrient balance data is available for this Field yet." />
+
+    <!-- Angular web workflows: Field management -->
+    <text name="CreateNewField" value="Create new Field" />
+    <text name="EditField" value="Edit Field" />
+    <text name="AreaHectares" value="Area (hectares)" />
+    <text name="SoilType" value="Soil type" />
+    <text name="FieldDeleteWarningMessage" value="Field '{0}' will be deleted. Are you sure?" />
+
+    <!-- Angular web workflows: Crop Season -->
+    <text name="Field" value="Field" />
+    <text name="CropType" value="Crop type" />
+    <text name="SeedVariety" value="Seed variety" />
+    <text name="PlantCropSeason" value="Plant Crop Season" />
+    <text name="PlantingDate" value="Planting date" />
+    <text name="ExpectedHarvestDate" value="Expected harvest date" />
+    <text name="ExpectedYieldKg" value="Expected yield (kg)" />
+    <text name="PlantPopulationPerHectare" value="Plant population per hectare" />
+    <text name="LogGrowthStage" value="Log growth stage" />
+    <text name="Stage" value="Stage" />
+    <text name="ObservedDate" value="Observed date" />
+    <text name="HarvestCropSeason" value="Harvest" />
+    <text name="HarvestDate" value="Harvest date" />
+    <text name="ActualYieldKg" value="Actual yield (kg)" />
+    <text name="QualityGrade" value="Quality grade" />
+    <text name="CloseSeason" value="Close season" />
+    <text name="CloseSeasonConfirmMessage" value="This Crop Season will be closed and can no longer be edited. Are you sure?" />
+
+    <!-- Angular web workflows: Crop reference data -->
+    <text name="CropReferenceData" value="Crop Reference Data" />
+    <text name="CropTypes" value="Crop Types" />
+    <text name="SeedVarieties" value="Seed Varieties" />
+    <text name="SeedSuppliers" value="Seed Suppliers" />
+    <text name="CreateNewCropType" value="Create new Crop Type" />
+    <text name="ScientificName" value="Scientific name" />
+    <text name="TypicalGrowthDurationDays" value="Typical growth duration (days)" />
+    <text name="Add" value="Add" />
+    <text name="CropTypeDeleteWarningMessage" value="Crop type '{0}' will be deleted. Are you sure?" />
+    <text name="CreateNewSeedVariety" value="Create new Seed Variety" />
+    <text name="DaysToMaturity" value="Days to maturity" />
+    <text name="SeedVarietyDeleteWarningMessage" value="Seed variety '{0}' will be deleted. Are you sure?" />
+    <text name="CreateNewSeedSupplier" value="Create new Seed Supplier" />
+    <text name="ContactInfo" value="Contact info" />
+    <text name="SeedSupplierDeleteWarningMessage" value="Seed supplier '{0}' will be deleted. Are you sure?" />
+
+    <!-- Angular web workflows: Weather alert rules -->
+    <text name="WeatherAlertRules" value="Weather Alert Rules" />
+    <text name="CreateWeatherAlertRule" value="Create Weather Alert Rule" />
+    <text name="ThresholdValue" value="Threshold value" />
+    <text name="DeactivateWeatherAlertRuleConfirmMessage" value="This weather alert rule will be deactivated. Are you sure?" />
+
+    <!-- Angular web workflows: Fertilizer & Nutrient management -->
+    <text name="FertilizerProducts" value="Fertilizer Products" />
+    <text name="CreateNewFertilizerProduct" value="Create new Fertilizer Product" />
+    <text name="UnitCostPerKg" value="Unit cost per kg" />
+    <text name="RecordFertilizerApplication" value="Record Application" />
+    <text name="FertilizerProduct" value="Fertilizer product" />
+    <text name="RateKgPerHectare" value="Rate (kg/ha)" />
+    <text name="ApplicationDate" value="Application date" />
+    <text name="Cost" value="Cost" />
   </texts>
 </localizationDictionary>

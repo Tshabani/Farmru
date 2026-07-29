@@ -20,6 +20,12 @@ export interface FieldDto {
   boundaryGeoFenceId?: string;
 }
 
+export interface SeedSupplierDto {
+  id: string;
+  name: string;
+  contactInfo?: string;
+}
+
 export interface CropTypeDto {
   id: string;
   name: string;
@@ -89,6 +95,10 @@ export class CropApiService {
     return this.http.get<{ totalCount: number; items: FieldDto[] }>(`${this.baseUrl}/api/services/app/Field/GetAll`, { params });
   }
 
+  getField(id: string): Observable<FieldDto> {
+    return this.http.get<FieldDto>(`${this.baseUrl}/api/services/app/Field/Get`, { params: { Id: id } });
+  }
+
   getFieldsByFacility(facilityId: string): Observable<FieldDto[]> {
     return this.http.get<FieldDto[]>(`${this.baseUrl}/api/services/app/Field/GetByFacility`, {
       params: { FacilityId: facilityId },
@@ -97,6 +107,14 @@ export class CropApiService {
 
   createField(input: { facilityId: string; name: string; areaHectares?: number; soilType?: string }): Observable<FieldDto> {
     return this.http.post<FieldDto>(`${this.baseUrl}/api/services/app/Field/Create`, input);
+  }
+
+  updateField(input: { id: string; name: string; areaHectares?: number; soilType?: string; boundaryGeoFenceId?: string }): Observable<FieldDto> {
+    return this.http.put<FieldDto>(`${this.baseUrl}/api/services/app/Field/Update`, input);
+  }
+
+  deleteField(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/api/services/app/Field/Delete`, { params: { Id: id } });
   }
 
   // Crop reference data
@@ -108,6 +126,40 @@ export class CropApiService {
 
   createCropType(input: { name: string; scientificName?: string; typicalGrowthDurationDays: number }): Observable<CropTypeDto> {
     return this.http.post<CropTypeDto>(`${this.baseUrl}/api/services/app/CropType/Create`, input);
+  }
+
+  updateCropType(input: CropTypeDto): Observable<CropTypeDto> {
+    return this.http.put<CropTypeDto>(`${this.baseUrl}/api/services/app/CropType/Update`, input);
+  }
+
+  deleteCropType(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/api/services/app/CropType/Delete`, { params: { Id: id } });
+  }
+
+  createSeedSupplier(input: { name: string; contactInfo?: string }): Observable<SeedSupplierDto> {
+    return this.http.post<SeedSupplierDto>(`${this.baseUrl}/api/services/app/SeedSupplier/Create`, input);
+  }
+
+  updateSeedSupplier(input: SeedSupplierDto): Observable<SeedSupplierDto> {
+    return this.http.put<SeedSupplierDto>(`${this.baseUrl}/api/services/app/SeedSupplier/Update`, input);
+  }
+
+  deleteSeedSupplier(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/api/services/app/SeedSupplier/Delete`, { params: { Id: id } });
+  }
+
+  getSeedSuppliers(): Observable<{ totalCount: number; items: SeedSupplierDto[] }> {
+    return this.http.get<{ totalCount: number; items: SeedSupplierDto[] }>(`${this.baseUrl}/api/services/app/SeedSupplier/GetAll`, {
+      params: { SkipCount: 0, MaxResultCount: 200 },
+    });
+  }
+
+  createSeedVariety(input: { cropTypeId: string; supplierId?: string; name: string; daysToMaturity?: number }): Observable<SeedVarietyDto> {
+    return this.http.post<SeedVarietyDto>(`${this.baseUrl}/api/services/app/SeedVariety/Create`, input);
+  }
+
+  deleteSeedVariety(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/api/services/app/SeedVariety/Delete`, { params: { Id: id } });
   }
 
   getSeedVarieties(): Observable<{ totalCount: number; items: SeedVarietyDto[] }> {

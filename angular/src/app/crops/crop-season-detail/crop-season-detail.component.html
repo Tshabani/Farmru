@@ -6,6 +6,17 @@
           <h1 class="fr-page-title">{{ season?.cropType?.displayText || ('Crops' | localize) }}</h1>
           <p class="fr-page-sub" *ngIf="season">{{ season.field?.displayText }}</p>
         </div>
+        <div class="ml-auto d-flex align-items-center" *ngIf="season">
+          <button class="fr-btn fr-btn-outline mr-2" *ngIf="canManage && season.status < 2" (click)="logGrowthStage()">
+            {{ "LogGrowthStage" | localize }}
+          </button>
+          <button class="fr-btn fr-btn-outline mr-2" *ngIf="canHarvest && season.status === 1" (click)="harvest()">
+            {{ "HarvestCropSeason" | localize }}
+          </button>
+          <button class="fr-btn fr-btn-outline" *ngIf="canManage && season.status === 2" (click)="closeSeason()">
+            {{ "CloseSeason" | localize }}
+          </button>
+        </div>
       </div>
     </div>
   </section>

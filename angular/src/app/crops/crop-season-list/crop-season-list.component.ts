@@ -2,7 +2,9 @@ import { ChangeDetectorRef, Component, Injector, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
 import { appModuleAnimation } from '@shared/animations/routerTransition';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CropApiService, CropSeasonDto, FieldDto } from '../services/crop-api.service';
+import { PlantCropSeasonComponent } from './plant-crop-season/plant-crop-season.component';
 
 @Component({
   templateUrl: './crop-season-list.component.html',
@@ -21,6 +23,7 @@ export class CropSeasonListComponent extends AppComponentBase implements OnInit 
     injector: Injector,
     private cropApi: CropApiService,
     private router: Router,
+    private modalService: BsModalService,
     private cd: ChangeDetectorRef
   ) {
     super(injector);
@@ -69,5 +72,13 @@ export class CropSeasonListComponent extends AppComponentBase implements OnInit 
 
   openDetail(season: CropSeasonDto): void {
     this.router.navigate(['/app/crops', season.id]);
+  }
+
+  plantSeason(): void {
+    const ref: BsModalRef = this.modalService.show(PlantCropSeasonComponent, {
+      class: 'modal-lg',
+      initialState: { fieldId: this.selectedFieldId },
+    });
+    ref.content.onSave.subscribe(() => this.load());
   }
 }

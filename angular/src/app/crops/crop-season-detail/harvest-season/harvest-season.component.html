@@ -1,0 +1,24 @@
+<form class="form-horizontal" autocomplete="off" #harvestForm="ngForm" (ngSubmit)="save()">
+  <abp-modal-header [title]="'HarvestCropSeason' | localize" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+  <div class="modal-body">
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label">{{ "HarvestDate" | localize }}</label>
+      <div class="col-md-9">
+        <input type="date" class="form-control" name="harvestDate" required [(ngModel)]="input.harvestDate" />
+      </div>
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label">{{ "ActualYieldKg" | localize }}</label>
+      <div class="col-md-9">
+        <input type="number" class="form-control" name="actualYieldKg" required min="0" step="0.1" [(ngModel)]="input.actualYieldKg" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label">{{ "QualityGrade" | localize }}</label>
+      <div class="col-md-9">
+        <input type="text" class="form-control" name="qualityGrade" maxlength="50" [(ngModel)]="input.qualityGrade" />
+      </div>
+    </div>
+  </div>
+  <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!harvestForm.form.valid || saving" (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+</form>

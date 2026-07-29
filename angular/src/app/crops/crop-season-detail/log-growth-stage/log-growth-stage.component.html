@@ -1,0 +1,20 @@
+<form class="form-horizontal" autocomplete="off" #stageForm="ngForm" (ngSubmit)="save()">
+  <abp-modal-header [title]="'LogGrowthStage' | localize" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+  <div class="modal-body">
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label">{{ "Stage" | localize }}</label>
+      <div class="col-md-9">
+        <select class="form-control" name="stage" required [(ngModel)]="input.stage">
+          <option *ngFor="let s of stageOptions" [value]="s.value">{{ s.label }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label">{{ "ObservedDate" | localize }}</label>
+      <div class="col-md-9">
+        <input type="date" class="form-control" name="observedDate" required [(ngModel)]="input.observedDate" />
+      </div>
+    </div>
+  </div>
+  <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!stageForm.form.valid || saving" (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+</form>
