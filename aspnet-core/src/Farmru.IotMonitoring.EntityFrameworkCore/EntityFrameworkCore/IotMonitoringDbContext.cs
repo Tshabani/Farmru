@@ -14,6 +14,7 @@ using Farmru.IotMonitoring.Domains.Alerts;
 using Farmru.IotMonitoring.Domains.Monitoring;
 using Farmru.IotMonitoring.Domains.Geo;
 using Farmru.IotMonitoring.Domains.Weather;
+using Farmru.IotMonitoring.Domains.Crops;
 
 namespace Farmru.IotMonitoring.EntityFrameworkCore
 {
@@ -41,6 +42,13 @@ namespace Farmru.IotMonitoring.EntityFrameworkCore
         public DbSet<WeatherForecastDaily> WeatherForecastDailies { get; set; }
         public DbSet<EvapotranspirationReading> EvapotranspirationReadings { get; set; }
         public DbSet<WeatherAlertRule> WeatherAlertRules { get; set; }
+        public DbSet<Field> Fields { get; set; }
+        public DbSet<CropType> CropTypes { get; set; }
+        public DbSet<SeedSupplier> SeedSuppliers { get; set; }
+        public DbSet<SeedVariety> SeedVarieties { get; set; }
+        public DbSet<CropSeason> CropSeasons { get; set; }
+        public DbSet<GrowthStageEvent> GrowthStageEvents { get; set; }
+        public DbSet<HarvestRecord> HarvestRecords { get; set; }
 
         public IotMonitoringDbContext(DbContextOptions<IotMonitoringDbContext> options)
             : base(options)
@@ -156,6 +164,48 @@ namespace Farmru.IotMonitoring.EntityFrameworkCore
                 b.ToTable(t => t.HasCheckConstraint(
                     "CK_WeatherAlertRules_FacilityOrOrganisation",
                     "([FacilityId] IS NOT NULL AND [OrganisationId] IS NULL) OR ([FacilityId] IS NULL AND [OrganisationId] IS NOT NULL)"));
+            });
+
+            modelBuilder.Entity<Field>(b =>
+            {
+                b.HasOne(f => f.Facility).WithMany().HasForeignKey(f => f.FacilityId);
+                b.HasOne(f => f.Boundary).WithMany().HasForeignKey(f => f.BoundaryGeoFenceId);
+                b.HasIndex(e => new { e.TenantId, e.FacilityId });
+                b.Property(e => e.AreaHectares).HasPrecision(8, 2);
+            });
+
+            modelBuilder.Entity<CropType>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.IsActive });
+            });
+
+            modelBuilder.Entity<SeedVariety>(b =>
+            {
+                b.HasOne(v => v.CropType).WithMany().HasForeignKey(v => v.CropTypeId);
+                b.HasOne(v => v.Supplier).WithMany().HasForeignKey(v => v.SupplierId);
+                b.HasIndex(e => new { e.TenantId, e.CropTypeId });
+            });
+
+            modelBuilder.Entity<CropSeason>(b =>
+            {
+                b.HasOne(s => s.Field).WithMany().HasForeignKey(s => s.FieldId);
+                b.HasOne(s => s.CropType).WithMany().HasForeignKey(s => s.CropTypeId);
+                b.HasOne(s => s.SeedVariety).WithMany().HasForeignKey(s => s.SeedVarietyId);
+                b.HasMany(s => s.StageEvents).WithOne(e => e.CropSeason).HasForeignKey(e => e.CropSeasonId);
+                b.HasOne(s => s.Harvest).WithOne(h => h.CropSeason).HasForeignKey<HarvestRecord>(h => h.CropSeasonId);
+                b.HasIndex(e => new { e.TenantId, e.FieldId, e.Status });
+                b.Property(e => e.ExpectedYieldKg).HasPrecision(10, 2);
+            });
+
+            modelBuilder.Entity<GrowthStageEvent>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.CropSeasonId, e.ObservedDate });
+            });
+
+            modelBuilder.Entity<HarvestRecord>(b =>
+            {
+                b.HasIndex(e => e.CropSeasonId).IsUnique();
+                b.Property(e => e.ActualYieldKg).HasPrecision(10, 2);
             });
         }
     }

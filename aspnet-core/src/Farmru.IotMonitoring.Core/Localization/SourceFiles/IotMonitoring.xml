@@ -213,5 +213,17 @@
     <text name="WeatherAlertRuleMustBeScopedToFacilityOrOrganisation" value="A weather alert rule must be scoped to either a Facility or an Organisation, not both, not neither." />
     <text name="NoWeatherDataAvailable" value="No weather data is available for this Facility yet." />
     <text name="OrganisationNotFound" value="Organisation not found." />
+    <text name="Fields" value="Fields" />
+    <text name="FieldManagement" value="Field management" />
+    <text name="Crops" value="Crops" />
+    <text name="CropManagement" value="Crop management" />
+    <text name="CropHarvest" value="Crop harvest" />
+    <text name="FieldNotFound" value="Field not found." />
+    <text name="CropTypeNotFound" value="Crop type not found." />
+    <text name="SeedVarietyNotFound" value="Seed variety not found." />
+    <text name="SeedSupplierNotFound" value="Seed supplier not found." />
+    <text name="CropSeasonNotFound" value="Crop season not found." />
+    <text name="FieldAlreadyHasOpenSeason" value="This Field already has an open Crop Season. Harvest or close it before planting a new one." />
+    <text name="SeedVarietiesCannotBeEdited" value="Seed varieties cannot be edited once created. Deactivate and create a new variety instead." />
   </texts>
 </localizationDictionary>

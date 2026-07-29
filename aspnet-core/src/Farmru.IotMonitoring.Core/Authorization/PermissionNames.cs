@@ -43,5 +43,15 @@
         public const string Pages_Weather = "Pages.Weather";
 
         public const string Pages_Weather_Configure = "Pages.Weather.Configure";
+
+        public const string Pages_Fields = "Pages.Fields";
+
+        public const string Pages_Fields_Manage = "Pages.Fields.Manage";
+
+        public const string Pages_Crops = "Pages.Crops";
+
+        public const string Pages_Crops_Manage = "Pages.Crops.Manage";
+
+        public const string Pages_Crops_Harvest = "Pages.Crops.Harvest";
     }
 }

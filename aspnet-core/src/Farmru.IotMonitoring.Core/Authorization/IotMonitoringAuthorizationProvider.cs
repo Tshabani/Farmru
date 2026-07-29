@@ -34,6 +34,13 @@ namespace Farmru.IotMonitoring.Authorization
 
             var weather = context.CreatePermission(PermissionNames.Pages_Weather, L("Weather"));
             weather.CreateChildPermission(PermissionNames.Pages_Weather_Configure, L("WeatherConfiguration"));
+
+            var fields = context.CreatePermission(PermissionNames.Pages_Fields, L("Fields"));
+            fields.CreateChildPermission(PermissionNames.Pages_Fields_Manage, L("FieldManagement"));
+
+            var crops = context.CreatePermission(PermissionNames.Pages_Crops, L("Crops"));
+            crops.CreateChildPermission(PermissionNames.Pages_Crops_Manage, L("CropManagement"));
+            crops.CreateChildPermission(PermissionNames.Pages_Crops_Harvest, L("CropHarvest"));
         }
 
         private static ILocalizableString L(string name)
