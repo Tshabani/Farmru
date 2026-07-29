@@ -111,4 +111,4 @@ None of these gates were attempted in the implementation environment (no reachab
 
 ## 8. Freeze Point
 
-This document corresponds to the repository state at commit `fde60ef`, tagged `phase1-complete` (local tag, not pushed). Phase 2 work should branch from this point; comparisons against "what Phase 1 delivered" should reference this tag, not a moving branch tip.
+This document corresponds to the repository state at commit `00e6c21` (this document's own commit), tagged `phase1-complete` (local tag, not pushed). Phase 2 work should branch from this point; comparisons against "what Phase 1 delivered" should reference this tag, not a moving branch tip.
